@@ -1,0 +1,5137 @@
+/* ==========================================
+   1. GLOBAL STYLES & RESET
+   ========================================== */
+* {
+  padding: 0;
+  margin: 0;
+}
+
+@font-face {
+  font-family: 'Afacad-Regular';
+  src: url('/public/assets/fonts/Afacad/static/Afacad-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Afacad-Bold';
+  src: url('/public/assets/fonts/Afacad/static/Afacad-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Afacad-Medium';
+  src: url('/public/assets/fonts/Afacad/static/Afacad-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'Philosopher-Bold';
+  src: url('/public/assets/fonts/Philosopher/Philosopher-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Afacad-SemiBold';
+  src: url('/public/assets/fonts/Afacad/static/Afacad-SemiBold.ttf');
+}
+
+
+/* Apply it to your elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Philosopher-Bold' !important;
+}
+
+body {
+  background-color: #fff;
+  color: #FFFFFF;
+  font-family: 'Afacad-Regular' !important;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+.container {
+  max-width: 1450px;
+}
+
+/* ==========================================
+   2. REUSABLE COMPONENTS & BUTTONS
+   ========================================== */
+.nav-bar {
+  padding: 20px 0;
+  background-color: #3C4D4B;
+  color: #fff;
+}
+
+.header {
+  padding: 15px 0;
+}
+
+.web-logo img {
+  width: 280px;
+}
+
+
+.custom-btn {
+  width: fit-content;
+  padding: 10px 30px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.transparent-btn {
+  border-color: #000;
+  color: #000;
+  background-color: transparent !important;
+}
+
+.yellow-btn {
+  background-color: #CFB28D;
+  border-color: #CFB28D;
+}
+
+.list-area li {
+  padding-left: 20px;
+}
+
+
+.sd-hero-container {
+
+  background-color: #ffffff;
+}
+
+.sd-left-content {
+  position: relative;
+  z-index: 5;
+}
+
+/* Background image with exact dark teal overlay tint */
+.sd-hero-bg {
+  position: relative;
+  background: url('/public/assets/img/banner-bg.png') no-repeat center center/cover;
+  height: 76vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Decorative Gold Top Line Accent */
+.sd-gold-line {
+  width: 32px;
+  height: 1.5px;
+  background-color: #cda27b;
+  margin-right: 10px;
+}
+
+.read-more-btn {
+  background-color: #3C4D4B;
+  padding: 10px 40px;
+  border: 1px solid #3C4D4B;
+  color: #fff;
+  border-radius: 8px;
+}
+
+/* Top Mini Heading Content Stat */
+.sd-stat-text {
+  color: #dcb896;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Main Display Title Typography */
+.sd-main-title {
+  font-size: 60px !important;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+/* Main Title Italic Color Accent */
+.sd-title-italic {
+  color: #CFB28D;
+}
+
+
+/* Sub-description Paragraph Body styling */
+.sd-sub-desc {
+  color: #FFFFFF !important;
+  font-size: 20px;
+  max-width: 520px;
+  font-size: 15px;
+}
+
+/* Left Grid Dots Replicated Precisely */
+.sd-dots-overlay {
+  position: absolute;
+  left: 20px;
+  top: 45%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: 6px;
+  width: 35px;
+  word-break: break-all;
+  user-select: none;
+}
+
+
+/* ==========================================
+   4. STACKED / ROTATED CARDS
+   ========================================== */
+.sd-cards-wrapper {
+  position: relative;
+  height: 340px;
+}
+
+.sd-card-base {
+  position: absolute;
+  width: 411px;
+  border-radius: 2px !important;
+  border: none !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18) !important;
+  padding: 16px !important;
+
+}
+
+.sd-card-1 {
+  background-color: #ffffff !important;
+  top: -76px;
+  left: 11%;
+  transform: rotate(-4.5deg);
+  z-index: 3;
+}
+
+.sd-card-2 {
+  background-color: #dcb896 !important;
+  top: 65px;
+  right: 8%;
+  transform: rotate(3deg);
+  z-index: 2;
+}
+
+.sd-card-3 {
+  background-color: #ffffff !important;
+  bottom: -7px;
+  left: 14%;
+  transform: rotate(-1.5deg);
+  z-index: 1;
+}
+
+/* Micro Elements Inside Stacked Cards */
+.sd-card-meta {
+  font-size: 16px !important;
+  font-weight: 500;
+}
+
+.sd-card-badge {
+  background-color: #ffffff !important;
+  border-color: #dcb896 !important;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.sd-card-title {
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.sd-card-footer-text {
+  font-size: 14px;
+  color: #64748B !important;
+}
+
+
+
+
+.sd-input-label {
+  font-size: 13px;
+  color: #3C4D4B !important;
+}
+
+/* AntD Input Override to make them translucent brown-bordered inside the panel */
+.sd-search-panel .ant-input {
+  background-color: transparent !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #223333 !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+}
+
+.sd-search-panel .ant-input::placeholder {
+  color: rgba(34, 51, 51, 0.65) !important;
+}
+
+.sd-search-panel .ant-input:focus,
+.sd-search-panel .ant-input:hover {
+  border-color: #2c3e3f !important;
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: none !important;
+}
+
+/* AntD Button Specific Style to match image search button */
+.sd-search-btn {
+  background-color: #384e4e !important;
+  border: none !important;
+  height: 42px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sd-search-btn:hover {
+  background-color: #293b3b !important;
+}
+
+/* Popular Keywords Filter Divider Layout */
+.sd-popular-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.sd-popular-title {
+  font-size: 16px;
+  color: #3C4D4B !important;
+}
+
+/* Popular filter badges pill shape */
+.sd-badge-pill {
+  background-color: #ffffff !important;
+  color: #2c3e3f !important;
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Advanced Dropdown Action Font Parameters */
+.sd-advanced-link {
+  color: #3C4D4B !important;
+  font-size: 13px;
+}
+
+.sd-icon-nano {
+  font-size: 10px;
+}
+
+.sd-search-btn .anticon {
+  font-size: 16px;
+  margin-right: 2px;
+}
+
+/* ==========================================
+   1. TOP STATS BAR WITH DOT BACKGROUNDS
+   ========================================== */
+.sd-content-section {
+  background-color: #ffffff;
+
+
+}
+
+.sd-content-section .sd-title {
+  font-size: 38px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.sd-stats-bar {
+  background-color: #3C4D4B;
+  /* Dark Teal exact match */
+  color: #ffffff;
+  padding: 40px 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-image: url("../../../public/assets/img/banner-bottom-bg.png");
+  background-position: right center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0 0 40px 0;
+}
+
+.sd-stats-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  z-index: 2;
+}
+
+.sd-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.sd-stat-icon {
+  font-size: 32px;
+  color: #CFB28D;
+  /* Gold Accent */
+}
+
+
+.sd-stat-item p {
+  font-size: 16px;
+  color: #C5C5C5;
+  margin: 0;
+}
+
+.sd-stat-item .sd-title {
+  font-family: 'Afacad-SemiBold' !important;
+  font-size: 40px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Dots effect mimicking grid layout */
+
+
+/* ==========================================
+   2. HEADINGS & TABS CUSTOMIZATION
+   ========================================== */
+.sd-explore-heading {
+  font-size: 48px;
+  color: #3C4D4B;
+  line-height: 1.3;
+}
+
+/* ==========================================
+   1. ANT DESIGN TABS OVERRIDES (EXACT MATCH)
+   ========================================== */
+.sd-custom-tabs-nav .ant-tabs-nav {
+  margin-bottom: 20px !important;
+  border-bottom: 2px solid #eef1f1 !important;
+}
+
+.sd-custom-tabs-nav .ant-tabs-tab {
+  padding: 14px 8px !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  color: #556666 !important;
+}
+
+.sd-custom-tabs-nav .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #3C4D4B !important;
+  font-weight: 600 !important;
+}
+
+.sd-custom-tabs-nav .ant-tabs-ink-bar {
+  background: #223333 !important;
+  height: 3px !important;
+}
+
+.sd-view-all-pub {
+  color: #cda27b !important;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+
+/* ==========================================
+   2. LEFT SIDEBAR CARD STYLING
+   ========================================== */
+.sd-sidebar-card {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.015);
+}
+
+.sd-sidebar-header-title {
+  font-family: 'Afacad-SemiBold' !important;
+  font-size: 18px;
+  font-weight: 600;
+  color: #3C4D4B;
+  padding: 20px 20px 14px 20px;
+  border-bottom: 1px solid #f3f5f5;
+}
+
+.sd-sidebar-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sd-sidebar-li-item {
+  display: flex;
+  align-items: center;
+  padding: 11px 20px;
+  border-bottom: 1px solid #f8fbfb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sd-sidebar-li-item:hover {
+  background-color: #f5f8f8;
+}
+
+.sd-li-icon {
+  color: #000;
+  font-size: 16px;
+}
+
+.sd-li-text {
+  font-size: 16px;
+  color: #3C4D4B;
+  font-weight: 500;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.sd-btn-browse-all {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #4a3b2c !important;
+  font-weight: 500 !important;
+  height: 42px !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  transition: opacity 0.2s;
+  width: 60% !important;
+}
+
+.sd-btn-browse-all:hover {
+  opacity: 0.9;
+}
+
+
+/* ==========================================
+   3. MIDDLE SLIDER / CAROUSEL & CONTENT OVERLAY
+   ========================================== */
+.sd-middle-carousel {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sd-carousel-slide-item {
+  position: relative;
+  min-height: 280px;
+  background-image: url('../../../public/assets/img/book-gernal.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+}
+
+.sd-btn-carousel-oa img {
+  margin-right: 9px;
+}
+
+/* Gold/Brown Warm Tint Overlay matching the image precisely */
+
+
+.sd-carousel-overlay-content {
+  position: relative;
+  z-index: 2;
+  padding: 35px;
+  color: #3C4D4B;
+  max-width: 400px;
+}
+
+.sd-carousel-title {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #3C4D4B;
+  margin-bottom: 15px;
+  max-width: 85%;
+}
+
+.sd-carousel-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000000;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.sd-btn-carousel-oa {
+  background: transparent;
+  border: 1px solid #3C4D4B;
+  padding: 8px 18px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  color: #3C4D4B;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.sd-btn-carousel-oa:hover {
+  background-color: rgba(27, 40, 40, 0.05);
+}
+
+
+/* ==========================================
+   4. ARTICLE CARDS & TYPOGRAPHY
+   ========================================== */
+.sd-section-heading-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3C4D4B;
+  display: flex;
+  align-items: center;
+
+}
+
+.sd-section-heading-title .anticon-clock-circle {
+  color: #000 !important;
+  font-size: 20px;
+}
+
+.sd-border-bottom {
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.sd-section-heading-link {
+  font-family: 'Afacad-SemiBold' !important;
+  color: #CFB28D;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sd-article-item-card {
+  border: 1px solid #E2E8F0;
+  background-color: transparent;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.sd-art-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #3C4D4B;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.sd-art-meta {
+  font-size: 14px;
+  color: #64748B;
+  margin-bottom: 12px;
+}
+
+
+/* ==========================================
+   5. CUSTOM BADGES (STATUS PILLS)
+   ========================================== */
+.sd-badge-pill-status {
+  display: inline-block;
+  align-items: center;
+  font-size: 14px;
+  padding: 9px 17px;
+  border-radius: 4px;
+  font-weight: 400;
+
+}
+
+.sd-badge-pill-status img {
+  display: inline-block;
+}
+
+.oa-color {
+  background-color: #E4DBD1;
+  color: #3C4D4B;
+}
+
+.ra-color {
+  background-color: #E3EEF8;
+  color: #3C4D4B;
+}
+
+
+/* ==========================================
+   6. RIGHT SIDEBAR (RECENT PUBLICATIONS)
+   ========================================== */
+.sd-recent-publications-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+
+.sd-recent-publications-card .sd-section-heading-title.sd-border-bottom {
+  padding: 24px 20px;
+}
+
+.sd-recent-img-wrapper {
+  max-height: 114px;
+  overflow: hidden;
+  border-radius: 12px;
+  width: 158px;
+}
+
+.sd-recent-img-wrapper img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.sd-recent-pub-row-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  border: 1px solid #E2E8F0;
+  padding-bottom: 15px;
+  padding: 10px;
+  background: transparent;
+  border-radius: 12px;
+}
+
+
+
+
+.sd-recent-details-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.sd-recent-pub-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #223333;
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.sd-recent-pub-meta {
+  font-size: 14px;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+
+.sd-recent-publications-card .sd-section-heading-title+.d-flex {
+  padding: 24px 20px;
+}
+
+/* ==========================================
+   7. BOTTOM CALL TO ACTION BANNER RIBBON
+   ========================================== */
+.sd-bottom-ribbon-banner {
+  background-color: #d2b897;
+  /* Exact warm khaki/beige tone ribbon */
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 15px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.sd-ribbon-icon-box {
+  background-color: #3c4d4b;
+  color: #ffffff;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.sd-ribbon-text-msg {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #382918;
+}
+
+/* ==========================================
+   1. SECTION FONTS & GENERAL STYLING
+   ========================================== */
+
+
+.sd-articles-main-heading {
+
+  /* Matching serif style heading from previous layout */
+  font-size: 34px;
+  font-weight: 500;
+  color: #3c4d4b;
+}
+
+
+/* ==========================================
+   2. ARTICLE CARD MAIN LAYOUT (LIGHT & DARK STRUCTURE)
+   ========================================== */
+.sd-article-card {
+  border-radius: 20px;
+  /* Precise smooth corners from image */
+  overflow: hidden;
+  width: 100%;
+  max-width: 410px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+/* Light Card Specific Colors */
+.sd-light-card {
+  background-color: #ffffff;
+  border: 1px solid #ebf0ef;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.sd-light-card .sd-art-card-title {
+  color: #223333;
+}
+
+.sd-light-card .sd-art-card-desc {
+  color: #778888;
+}
+
+.sd-light-card .sd-meta-text-info {
+  color: #8fa0a0;
+}
+
+.sd-light-card .sd-read-more-link {
+  color: #223333;
+  border-bottom: 1px solid #223333;
+}
+
+.sd-article-card:hover .sd-read-more-link {
+  color: #223333;
+  border-bottom: 1px solid #223333;
+}
+
+/* Active Dark Card Specific Colors (Exact matching of image color tone) */
+.sd-active-dark-card,
+.sd-article-card:hover {
+  background-color: #3b4b49;
+  /* Precise deep slate teal tone */
+  border: 1px solid #3b4b49;
+  box-shadow: 0 10px 30px rgba(59, 75, 73, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sd-active-dark-card .sd-art-card-title,
+.sd-article-card:hover .sd-art-card-title {
+  color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sd-active-dark-card .sd-art-card-desc,
+.sd-art-card-title:hover .sd-art-card-desc {
+  color: rgba(255, 255, 255, 0.65);
+  /* soft grey white contrast text */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sd-active-dark-card .sd-meta-text-info,
+.sd-art-card-desc:hover .sd-meta-text-info {
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sd-active-dark-card .sd-read-more-link,
+.sd-meta-text-info:hover .sd-read-more-link {
+  color: #cfb28d;
+  /* Golden accent links on dark theme */
+  border-bottom: 1px solid #cfb28d;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* ==========================================
+   3. INTERNAL IMAGE BOX WITH GOLD ACCENT STAR
+   ========================================== */
+.sd-card-img-box {
+  position: relative;
+  padding: 16px 16px 0 16px;
+  /* Inset padding inside card frame */
+}
+
+.sd-card-img-box img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 14px;
+  /* Image inner rounding */
+}
+
+/* Replicating the distinct golden cross/star flare asset seen in image */
+.sd-gold-star-accent {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  color: #ffebaa;
+  font-size: 24px;
+  opacity: 0.85;
+  pointer-events: none;
+  animation: pulse 3s infinite;
+}
+
+
+/* ==========================================
+   4. TYPOGRAPHY AND CONTENT SPACING
+   ========================================== */
+.sd-card-body-content {
+  padding: 24px 20px;
+}
+
+.sd-art-card-title {
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.sd-art-card-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 400;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* cleanly clamping long text to match structure layout */
+}
+
+
+/* ==========================================
+   5. PROFILE AVATAR & META FOOTER
+   ========================================== */
+.sd-author-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sd-meta-text-info {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.sd-read-more-link {
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none !important;
+  padding-bottom: 1px;
+  white-space: nowrap;
+}
+
+
+/* ==========================================
+   6. SLIDER CONTROL BUTTONS / NAVIGATION PAGINATION
+   ========================================== */
+.sd-btn-pag-arrow {
+  width: 44px;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.sd-arrow-left {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  color: #1e293b;
+}
+
+.sd-arrow-right {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  color: #1e293b;
+  margin-left: -1px;
+  /* border overlap collapse */
+}
+
+/* Active Highlight state for pagination arrows matching brownish-khaki hue */
+.sd-btn-pag-arrow:hover {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #4a3b2c !important;
+}
+
+.sd-btn-pag-arrow:hover:not(.active) {
+  background-color: #f8fafc;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+.artical-sec {
+  background-color: #FBFBFB;
+  padding: 30px 0;
+}
+
+/* ==========================================
+   1. TOP DARK TEAL BANNER RIBBON
+   ========================================== */
+.sd-oa-section-wrapper {
+  background-color: #ffffff;
+
+  overflow: hidden;
+}
+
+.sd-oa-top-banner {
+  background-color: #3C4D4B;
+  background-image: url('../../../public/assets/img/sciencedirect-bg.png');
+  color: #ffffff;
+  padding: 45px 0;
+
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Left side matrix pattern precisely duplicated from image overlay */
+.sd-oa-banner-dots-left {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  bottom: 15px;
+  width: 60px;
+  opacity: 0.12;
+  background-image: radial-gradient(#ffffff 2px, transparent 2px);
+  background-size: 10px 10px;
+  pointer-events: none;
+}
+
+.sd-oa-lock-icon-box {
+  background-color: #cfb28d;
+  /* Exact soft gold color tone */
+  color: #3c4d4b;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.sd-oa-banner-heading {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.sd-oa-highlight-gold {
+  color: #cfb28d;
+  font-weight: 600;
+}
+
+.sd-oa-banner-subtext {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #C5C5C5;
+  margin-bottom: 0;
+  max-width: 95%;
+}
+
+.sd-oa-btn-gold {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #4a3b2c !important;
+  font-weight: 500 !important;
+  height: 42px !important;
+  padding: 0 24px !important;
+  border-radius: 6px !important;
+  font-size: 13.5px !important;
+}
+
+.sd-oa-banner-link {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.sd-oa-banner-link:hover {
+  opacity: 1;
+}
+
+
+/* ==========================================
+   2. LOWER CONTENT LEFT SIDE (TYPOGRAPHY & LOGOS)
+   ========================================== */
+.sd-oa-lower-content {
+  padding: 100px 0 !important;
+  background: #FBFBFB;
+}
+
+.sd-oa-mini-accent-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #cfb28d;
+  letter-spacing: 0.5px;
+}
+
+.sd-oa-line-accent {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.sd-oa-main-title-serif {
+
+  font-size: 42px;
+  font-weight: 500;
+  color: #3C4D4B;
+  line-height: 1.25;
+}
+
+.sd-oa-title-italic-gold {
+  color: #cfb28d;
+
+}
+
+.sd-oa-left-desc {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #3C4D4B;
+  max-width: 320px;
+}
+
+/* INDEXING BADGE BUTTONS STYLING */
+.sd-oa-logo-card-btn {
+  border: 1px solid #ebefee;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px 24px;
+  min-height: 70px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.sd-oa-logo-card-btn:hover {
+  border-color: #cfb28d;
+  box-shadow: 0 4px 12px rgba(207, 178, 141, 0.1);
+}
+
+.sd-oa-logo-img-wrapper {
+  max-width: 290px;
+  height: 73px;
+}
+
+.sd-oa-brand-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: grayscale(20%);
+}
+
+.sd-oa-brand-fallback {
+  font-size: 15px;
+  font-weight: 700;
+  color: #334444;
+  letter-spacing: 0.5px;
+}
+
+.sd-oa-logo-arrow {
+  color: #223333;
+  font-size: 15px;
+}
+
+
+/* ==========================================
+   3. LOWER CONTENT RIGHT SIDE (OVERLAPPING SYSTEM)
+   ========================================== */
+.sd-oa-right-image-container {
+  position: relative;
+  width: 100%;
+  padding-right: 120px;
+  /* Leave space layout padding for absolute overlap */
+}
+
+/* Photo Background Container */
+.sd-oa-bg-photo-frame {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Yellowish/Sepia vintage transparent overlay exact matching the image graphic */
+.sd-oa-bg-photo-frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(207, 178, 141, 0.5);
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+.sd-oa-main-bg-img {
+  width: 100%;
+  height: 580px;
+  object-fit: cover;
+  display: block;
+}
+
+/* FLOATING OVERLAP CARD DESIGN POSITIONING */
+.sd-oa-floating-overlap-card {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 350px;
+  background-color: #354543;
+  /* Dark precise warm teal shade */
+  border-radius: 12px;
+  padding: 30px 24px;
+  color: #ffffff;
+  z-index: 5;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+}
+
+.sd-oa-float-icon-box {
+  color: #cfb28d;
+  font-size: 24px;
+}
+
+.sd-oa-float-title {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.sd-oa-float-title::before {
+  content: '';
+  width: 90px;
+  height: 1.5px;
+  background-color: #FFFFFF;
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+}
+
+.sd-oa-float-tag {
+  font-size: 14px;
+  color: #cfb28d;
+  letter-spacing: 0.5px;
+}
+
+.sd-oa-float-desc {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0;
+}
+
+.sd-oa-float-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* CHECKLIST STYLE */
+.sd-oa-float-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sd-oa-float-checklist li {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+}
+
+.sd-oa-float-checklist li .anticon {
+  color: #cfb28d;
+  /* Golden bullets */
+  font-size: 13px;
+}
+
+.sd-oa-float-btn-more {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #4a3b2c !important;
+  font-weight: 500 !important;
+  height: 38px !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+}
+
+/* Responsive Handling */
+@media (max-width: 991px) {
+  .sd-oa-right-image-container {
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sd-oa-floating-overlap-card {
+    position: relative;
+    top: 0;
+    transform: translateY(0);
+    width: 100%;
+    max-width: 520px;
+    margin-top: -60px;
+    right: 0;
+  }
+}
+
+/* ==========================================
+   1. MAIN FOOTER BACKGROUND WRAPPER
+   ========================================== */
+.sd-main-footer-section {
+  background-image: url('../../../public/assets/img/footer-bg.png');
+  /* Exact deep teal tone used consistently across modules */
+  background-position: right;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  margin-top: 100px;
+  /* Space allowance for floating search ribbon panel overlay */
+  padding-bottom: 30px;
+
+}
+
+/* ==========================================
+   2. FLOATING SEARCH RIBBON OVERLAY
+   ========================================== */
+.sd-footer-search-ribbon {
+  background-image: url('../../../public/assets/img/footer-top-bg.png');
+  background-position: right;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 30px 56px;
+  position: relative;
+  top: -65px;
+  /* Pull upward to layer over content area boundary precisely */
+  margin-bottom: -15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: 1090px;
+  margin: 0 auto;
+}
+
+.sd-ribbon-dots-right {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  bottom: 15px;
+  width: 90px;
+  opacity: 0.25;
+  background-image: radial-gradient(#3c4d4b 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+  pointer-events: none;
+}
+
+
+.sd-ribbon-title {
+  font-size: 40px;
+  font-weight: 500;
+  color: #3C4D4B;
+}
+
+.sd-ribbon-icon-circle img {
+  width: 56px;
+}
+
+.sd-ribbon-subtext {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #000;
+  max-width: 70%;
+}
+
+/* Form Search Input Controls Styling */
+.sd-custom-search-input {
+  height: 44px !important;
+  border-radius: 6px !important;
+  border: 1px solid #ffffff !important;
+  font-size: 13.5px !important;
+}
+
+.sd-custom-select-topic {
+  width: 150px !important;
+  height: 44px !important;
+}
+
+.sd-custom-select-topic .ant-select-selector {
+  border-radius: 6px !important;
+  height: 44px !important;
+  align-items: center !important;
+  border: 1px solid #ffffff !important;
+  font-size: 13.5px !important;
+}
+
+.sd-btn-search-trigger {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #1c2b29 !important;
+  font-weight: 500 !important;
+  height: 44px !important;
+  padding: 0 22px !important;
+  border-radius: 6px !important;
+  font-size: 13.5px !important;
+  transition: opacity 0.2s;
+}
+
+.sd-btn-search-trigger:hover {
+  opacity: 0.9;
+}
+
+
+/* ==========================================
+   3. MIDDLE GRID CONTENT LINKS
+   ========================================== */
+.sd-footer-links-grid {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+.sd-brand-name-text {
+
+  font-size: 25px;
+  font-weight: 500;
+  color: #cfb28d;
+  /* Golden main title accent */
+}
+
+
+.sd-brand-description-para {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #FFFFFF;
+  max-width: 90%;
+}
+
+.sd-social-title {
+  font-size: 25px;
+  color: #ffffff;
+  font-family: 'Afacad-Bold' !important;
+}
+
+.sd-social-icon-circle {
+  width: 55px;
+  height: 55px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.sd-social-icon-circle:hover {
+  background-color: #cfb28d;
+  color: #3c4d4b !important;
+}
+
+/* NAVIGATION LINKS COLUMNS */
+.sd-footer-col-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-family: 'Afacad-SemiBold' !important;
+}
+
+.sd-footer-ul-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sd-footer-ul-links li a {
+  font-size: 16px;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-family: 'Afacad-Regular' !important;
+}
+
+.sd-footer-ul-links li a:hover {
+  color: #cfb28d;
+}
+
+.sd-contact-highlight-li {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* ==========================================
+   4. BASE FOOTER RIGHTS BAR
+   ========================================== */
+.sd-footer-bottom-basebar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 30px;
+  padding-right: 90px;
+}
+
+.sd-copyright-text {
+  font-size: 14px;
+  color: #fff;
+}
+
+.sd-basebar-links-row a {
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+
+.sd-basebar-links-row a:hover {
+  color: #cfb28d;
+}
+
+
+/* ==========================================
+   5. RESPONSIVE UTILITIES
+   ========================================== */
+@media (max-width: 1199px) {
+  .sd-footer-search-ribbon {
+    top: 0;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  .sd-main-footer-section {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .sd-search-inputs-row {
+    flex-direction: column;
+  }
+
+  .sd-custom-select-topic {
+    width: 100% !important;
+  }
+}
+
+.sd-search-inputs-row input {
+  padding-left: 14px !important;
+  font-family: 'Afacad-Medium' !important;
+  font-size: 16px !important;
+
+}
+
+.sd-search-inputs-row input::-webkit-input-placeholder {
+  color: #3C4D4B;
+}
+
+/* Firefox 19+ */
+.sd-search-inputs-row input::-moz-placeholder {
+  color: #3C4D4B;
+  opacity: 1;
+}
+
+/* IE 10-11 & Edge */
+.sd-search-inputs-row input:-ms-input-placeholder {
+  color: #3C4D4B;
+}
+
+
+/* Jounal page  */
+.journal-sec .sd-search-panel {
+  margin: 0;
+}
+
+.stat-sec {
+  margin: 100px 0 40px 0;
+}
+
+/* ==========================================
+   1. MAIN ROOT LAYOUT & FONTS
+   ========================================== */
+.sd-jl-container {
+  background-color: #ffffff;
+
+}
+
+/* LEFT ACCENT CARD HEADER PROMPT RIBBON */
+.sd-jl-call-papers-box {
+  background-color: #3C4D4B;
+  /* Precise layout dark tone match */
+  border-radius: 6px;
+  color: #ffffff;
+}
+
+.sd-jl-call-body {
+  padding: 24px 20px;
+}
+
+.sd-jl-circle-search-badge {
+  background-color: #CFB28D;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.sd-jl-banner-prompt-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold' !important;
+}
+
+.text-muted-white {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.sd-jl-banner-action-link {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: underline !important;
+  text-align: center;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.sd-jl-footer {
+  text-align: center;
+  border-top: 0.5px solid #FFFFFF;
+  padding: 0 0 20px;
+}
+
+/* ==========================================
+   2. FILTER CONTROL PANEL SIDEBAR
+   ========================================== */
+
+.select-area {
+  border: 1px solid #ebf1f0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px 20px;
+}
+
+.sd-jl-filter-group {
+  border: 1px solid #ebf1f0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  /* padding: 24px 20px; */
+}
+
+.sd-jl-filter-group .ant-checkbox-group>div {
+  border-bottom: 1px solid #ebf1f0;
+  padding: 10px 15px;
+}
+
+.sd-jl-filter-main-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #223333;
+}
+
+.sd-jl-select-lbl {
+  font-size: 14px;
+  color: #3C4D4B;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.select-area .ant-select {
+  color: #64748B;
+  color: #64748B;
+  padding: 8px 11px;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.sd-jl-antd-select .ant-select-selector {
+  height: 38px !important;
+  border-radius: 6px !important;
+  font-size: 12.5px !important;
+  display: flex;
+  align-items: center;
+  border-color: #dbe3e2 !important;
+}
+
+.sd-jl-group-sub-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #223333;
+  padding: 20px 0 0 20px;
+}
+
+.sd-jl-filter-group>div {
+  border-bottom: 1px solid #ebf1f0;
+  padding: 10px 15px;
+}
+
+/* Checkbox customizations overriding style layers */
+.ant-checkbox-wrapper {
+  font-size: 12.5px !important;
+  color: #445555 !important;
+}
+
+.sd-count-lbl {
+  font-size: 11.5px;
+  color: #8fa0a0;
+}
+
+/* Badge pills filters exact matching color parameters */
+.sd-filter-badge-pill {
+  display: inline-block;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 500;
+  width: fit-content;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.pill-light-blue {
+  background-color: #E3EEF8;
+  color: #3C4D4B;
+}
+
+.pill-gold-tan {
+  background-color: #E4DBD1;
+  color: #3C4D4B;
+}
+
+.pill-muted-grey {
+  background-color: #CDDDDB;
+  color: #3C4D4B;
+}
+
+
+/* ==========================================
+   3. RIGHT SIDE LIST AND TYPOGRAPHY
+   ========================================== */
+.journal-sec .sd-hero-bg {
+  padding: 70px 0;
+}
+
+.sd-jl-all-titles-head {
+  font-size: 40px;
+  font-weight: 500;
+  color: #223333;
+}
+
+
+.sd-jl-sort-label {
+  font-size: 12.5px;
+}
+
+.sd-jl-sort-dropdown .ant-select-selector {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #223333 !important;
+}
+
+.sd-jl-alphabet-divider {
+  position: relative;
+  font-size: 26px;
+  color: #cfb28d;
+  font-style: italic;
+}
+
+.sd-jl-alphabet-divider::after {
+  content: '';
+  position: absolute;
+  width: 97%;
+  height: 1px;
+  background-color: #cfb28d;
+  top: 44%;
+  right: 0;
+}
+
+/* Individual Row items structure formatting */
+.sd-jl-publication-row-item {
+  border-color: #f0f4f3 !important;
+}
+
+.sd-jl-pub-item-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #223333;
+}
+
+.sd-jl-pub-item-path {
+  font-size: 16px;
+  color: #64748B;
+  font-weight: 400 !important;
+}
+
+/* Badges elements matrix inside list items */
+.sd-item-type-badge {
+  background-color: #E4DBD1;
+  color: #3C4D4B;
+  font-size: 13px;
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.sd-item-year-text {
+  font-size: 12px;
+  color: #8fa0a0;
+}
+
+.sd-item-oa-badge-pill {
+  background-color: #E3EEF8;
+  color: #3C4D4B;
+  font-size: 13px;
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Action view handlers terminals formatting */
+.sd-jl-btn-solid-view {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: #223333 !important;
+  height: 36px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.sd-jl-btn-solid-view:hover {
+  background-color: #3c4d4b !important;
+  border-color: #3c4d4b !important;
+  color: #ffffff !important;
+  height: 36px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+}
+
+.sd-jl-link-arrow-view {
+  color: #223333 !important;
+  font-weight: 500;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+
+/* ==========================================
+   4. STEPPING PAGINATION BLOCK MECHANISM (EXACT MATCH)
+   ========================================== */
+.sd-jl-pagination-bar-wrapper {
+  gap: 4px;
+}
+
+.sd-jl-items-stack {
+  min-height: 1009px;
+}
+
+.sd-jl-pag-btn-step {
+  width: 36px;
+  height: 36px;
+  background-color: #3c4d4b;
+  /* Base dark color button styling left */
+  color: #ffffff;
+  border: 1px solid #3c4d4b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sd-jl-pag-btn-step:disabled {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.sd-jl-pag-btn-num {
+  width: 36px;
+  height: 36px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Exact layout matching gold active pagination box */
+.sd-jl-pag-btn-num.active-gold {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #4a3b2c !important;
+}
+
+.sd-jl-pag-btn-num:hover:not(.active-gold) {
+  background-color: #f8fafc;
+}
+
+.sd-jl-pag-ellipse {
+  padding: 0 4px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.arrow-left {
+  border-radius: 4px 0 0 4px;
+}
+
+.arrow-right {
+  border-radius: 0 4px 4px 0;
+}
+
+/* latest Issues */
+/* ==========================================
+   1. MAIN HERO BANNER WRAPPER FRAME
+   ========================================== */
+.sd-jb-hero-wrapper {
+  background-color: #3C4D4B;
+  /* Exact matching deep slate teal tone */
+  position: relative;
+  min-height: 480px;
+  padding: 60px 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Replicating the background workspace watermark texture layer */
+.sd-jb-hero-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1200&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  /* Kept very soft to match dark overlay */
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* Background matrix layout dot accent pattern left */
+.sd-jb-dots-left {
+  position: absolute;
+  left: 20px;
+  top: 25%;
+  width: 50px;
+  height: 160px;
+  opacity: 0.2;
+  background-image: radial-gradient(#ffffff 2px, transparent 2px);
+  background-size: 10px 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   2. LEFT SIDE: BOOK COVER 3D DEPTH CONTAINER
+   ========================================== */
+.sd-jb-book-cover-shadow-box {
+  position: relative;
+  height: 550px;
+  box-shadow: 15px 20px 40px rgba(0, 0, 0, 0.45), 5px 5px 15px rgba(0, 0, 0, 0.3);
+  background-color: #262421;
+}
+
+/* Realistic vertical book spine crease shadow simulation overlay */
+.sd-jb-book-spine-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right,
+      rgba(0, 0, 0, 0.35) 0%,
+      rgba(255, 255, 255, 0.08) 60%,
+      rgba(0, 0, 0, 0.2) 100%);
+  z-index: 10;
+}
+
+.sd-jb-main-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+}
+
+/* Precise Text Overlay to replicate the title graphic asset dynamically */
+.sd-jb-internal-text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  color: #ffffff;
+  text-align: center;
+}
+
+.sd-jb-inner-main-title {
+  font-size: 58px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-top: 15px;
+  color: #ffffff;
+}
+
+.sd-jb-inner-sub-title {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  margin-top: -5px;
+  color: #ffffff;
+}
+
+.sd-jb-inner-summary-tag {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0 10px;
+}
+
+.sd-jb-inner-author {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+}
+
+
+/* ==========================================
+   3. RIGHT SIDE: METADATA & METRIC LAYERS
+   ========================================== */
+.sd-jb-meta-content {
+  position: relative;
+  z-index: 10;
+  max-width: 499px;
+}
+
+.sd-jb-oa-indicator-pill {
+  font-size: 13px;
+  font-weight: 500;
+  color: #cfb28d;
+  /* Gold indicator color */
+  letter-spacing: 0.5px;
+}
+
+.sd-jb-dash-line {
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+.sd-jb-main-heading-serif {
+  font-size: 50px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.sd-jb-italic-gold-brand {
+  color: #cfb28d;
+  font-weight: 400;
+}
+
+.sd-jb-body-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255);
+  max-width: 620px;
+}
+
+/* Metric Display System Blocks */
+.sd-jb-metric-stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.sd-jb-metric-huge-num {
+  font-size: 42px;
+  font-weight: 600;
+  color: #cfb28d;
+  /* High clarity gold numeric display value */
+  line-height: 1;
+}
+
+.sd-jb-metric-label {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 8px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+
+/* ==========================================
+   4. RESPONSIVE ADJUSTMENTS
+   ========================================== */
+@media (max-width: 767px) {
+  .sd-jb-hero-wrapper {
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .sd-jb-book-cover-shadow-box {
+    max-width: 240px;
+    height: 320px;
+    margin-bottom: 20px;
+  }
+
+  .sd-jb-main-heading-serif {
+    font-size: 32px;
+  }
+
+  .sd-jb-meta-content .d-flex {
+    justify-content: center;
+    gap: 40px !important;
+  }
+}
+
+/* ==========================================
+   1. GLOBAL SYSTEM RESETS & NAVIGATION 
+   ========================================== */
+.sd-ae-dashboard-wrapper {
+  background-color: #fcfdfd;
+}
+
+.sd-ae-nav-brand-item {
+  font-size: 14px;
+  color: #556666;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sd-ae-author-guide-link {
+  font-size: 13px;
+  color: #1c2b29 !important;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.sd-ae-nav-chevron {
+  font-size: 10px;
+  color: #889999;
+  margin-left: 2px;
+}
+
+/* Base Primary Button Tokens overrides */
+.sd-ae-btn-dark-teal {
+  background-color: #3C4D4B !important;
+  border-color: #3C4D4B !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+.sd-ae-btn-khaki-gold {
+  background-color: #ffffff !important;
+  border-color: #cfb28d !important;
+  color: #cfb28d !important;
+  font-weight: 500 !important;
+}
+
+.sd-ae-btn-khaki-gold-solid {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #3C4D4B !important;
+  font-weight: 600 !important;
+  width: 70% !important;
+  margin: 20px auto 0 auto;
+}
+
+
+/* ==========================================
+   2. LEFT SIDEBAR ASSETS ARCHITECTURE
+   ========================================== */
+.sd-ae-btn-light {
+  font-family: 'Afacad-Medium' !important;
+  font-weight: 500;
+  background: #F3F3F3;
+  border: 1px solid #E2E8F0;
+  padding: 18px !important;
+  color: #1E293B;
+}
+
+.sd-ae-panel-label-title+p {
+  font-size: 14px;
+  color: #64748B !important;
+  margin-bottom: 10px;
+}
+
+.sd-ae-volume-status-card {
+  background-color: #3C4D4B;
+  /* Core signature brand dark tone */
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(60, 77, 75, 0.15);
+}
+
+.sd-ae-search-circle-badge {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cfb28d;
+  /* Khaki Gold accent tracking marker */
+  font-size: 16px;
+}
+
+.sd-ae-volume-date {
+  font-size: 14px;
+  color: rgba(255, 255, 255);
+}
+
+.sd-jl-title {
+  color: #CFB28D;
+}
+
+.sd-ae-panel-label-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3C4D4B;
+}
+
+/* Links List Stack */
+.sd-ae-contents-index-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sd-ae-contents-index-links li a {
+  font-family: 'Afacad-Medium' !important;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #3C4D4B;
+  padding: 8px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.sd-ae-contents-index-links li a:hover,
+.sd-ae-contents-index-links li a.active-item {
+  color: #CFB28D;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+
+/* ==========================================
+   3. MAIN WORKSPACE: ALERTS & MAIN SHEET 
+   ========================================== */
+.sd-ae-updates-alert-ribbon {
+  background-image: url("../../../public/assets/img/updated-bg.png");
+  background-position: right;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* Light khaki background canvas wrapper tint */
+  border: 1px solid rgba(207, 178, 141, 0.3);
+  padding: 22px 20px;
+  border-radius: 8px;
+}
+
+.sd-ae-bell-alert-badge {
+  background-color: #3C4D4B;
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.sd-ae-btn-volume-switch {
+  border: 1px solid #E2E8F0 !important;
+  color: #3C4D4B !important;
+  background: #ffffff !important;
+  font-weight: 500 !important;
+  padding: 20px !important;
+}
+
+.sd-ae-section-category-title {
+  font-size: 32px;
+  color: #1c2b29;
+  border-color: #ebf1f0 !important;
+  position: relative;
+}
+
+.sd-ae-section-category-title::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 66%;
+  height: 1px;
+  background-color: #3C4D4B;
+  top: 48%;
+}
+
+
+/* ==========================================
+   4. ARTICLE DETAIL ELEMENT & SUB TABS 
+   ========================================== */
+.sd-ae-main-article-card-box {
+  border-color: #ebf1f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+}
+
+.sd-ae-badge-type {
+  font-size: 11px;
+  color: #556666;
+  font-weight: 500;
+}
+
+.sd-ae-badge-oa {
+  background-color: #e5eff0;
+  color: #356a60;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.sd-ae-action-pill-btn {
+  font-family: 'Afacad-Medium' !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  border: 1px solid transparent !important;
+  padding: 16px 15px !important;
+}
+
+.sd-ae-action-pill-btn.beige {
+  color: #3C4D4B !important;
+  background-color: #E4DBD1 !important;
+}
+
+.sd-ae-action-pill-btn.transparent {
+  color: #3C4D4B !important;
+  background-color: transparent !important;
+  border: 1px solid #3C4D4B !important;
+
+}
+
+.sd-ae-article-main-headline {
+  font-size: 20px;
+  color: #3C4D4B;
+  font-weight: 600;
+  line-height: 1.4;
+  max-width: 500px;
+}
+
+.sd-ae-article-authors-text {
+  color: #64748B !important;
+  font-size: 13px;
+}
+
+.sd-ae-article-pages-range {
+  font-size: 12px;
+}
+
+/* Tab controls layout inside article core body block */
+.ant-tabs-nav .ant-tabs-tab .ant-tabs-tab-btn {
+  font-family: 'Afacad-Medium' !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  color: #3C4D4B !important;
+}
+
+.ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  font-size: 18px !important;
+  color: #3C4D4B !important;
+}
+
+:where(.css-dev-only-do-not-override-1pi45l5).ant-tabs .ant-tabs-ink-bar {
+  position: absolute;
+  background: #3C4D4B !important;
+  pointer-events: none;
+}
+
+.sd-ae-interactive-tabs-header-strip {
+  border-color: #ebf1f0 !important;
+}
+
+.sd-ae-interactive-tab-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #667777;
+  padding: 10px 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.sd-ae-interactive-tab-btn.active {
+  color: #1c2b29;
+  font-weight: 600;
+}
+
+.sd-ae-interactive-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3C4D4B;
+}
+
+/* Inner Typographic Abstract Content Streams */
+.sd-ae-body-sub-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3C4D4B;
+}
+
+.sd-ae-body-paragraph-text {
+  font-size: 12.5px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.text-khaki-gold {
+  font-family: 'Afacad-Medium' !important;
+  color: #cfb28d !important;
+  font-size: 22px;
+  font-weight: 500 !important;
+}
+
+.sd-ae-abstract-icon-frame {
+  background-color: #CFB28D;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+
+}
+
+/* Editorial board list entry (non-tabbed, sits above the article cards) */
+.sd-ae-editorial-board-row {
+  border-color: #ebf1f0 !important;
+}
+
+/* Graphical abstract framed image inside the article tab */
+.sd-ae-graphical-abstract-frame {
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+}
+
+.sd-ae-graphical-abstract-frame img {
+  max-height: 260px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.sd-ae-updates-alert-ribbon h6 {
+  font-size: 20px;
+  color: #3C4D4B;
+}
+
+.sd-ae-updates-alert-ribbon .sd-ae-btn-dark-teal {
+  padding: 24px 36px !important;
+}
+
+.sd-ae-updates-alert-ribbon h6+p {
+  font-size: 14px;
+  color: #000000 !important;
+  max-width: 400px;
+}
+
+/* ==========================================
+   5. FOOTER MULTI-ROW PAGINATION ELEMENT 
+   ========================================== */
+.sd-ae-global-footer-pagination {
+  padding-top: 24px;
+}
+
+.sd-ae-pag-nav-square-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dbe3e2;
+  background-color: #ffffff;
+  color: #556666;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sd-ae-pag-nav-square-btn:hover {
+  border-color: #3C4D4B;
+  color: #3C4D4B;
+}
+
+.sd-ae-pag-nav-square-btn.active {
+  background-color: #cfb28d !important;
+  /* Exact targeted khaki pagination accent */
+  border-color: #cfb28d !important;
+  color: #1c2b29 !important;
+  font-weight: 600;
+}
+
+.sd-ae-pag-nav-square-btn.context-next {
+  background-color: #3C4D4B;
+  color: #ffffff;
+  border-color: #3C4D4B;
+}
+
+.sd-ae-pag-nav-square-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.sd-ae-pag-ellipse-spacer {
+  color: #889999;
+  font-size: 10px;
+}
+
+/* Animations token configuration */
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =======================================================
+   ANT DESIGN PAGINATION CUSTOM MATCH OVERRIDES (SQUARE)
+   ======================================================= */
+.sd-ae-custom-antd-pagination .ant-pagination-item {
+  border-radius: 4px !important;
+  border: 1px solid #dbe3e2 !important;
+  background-color: #ffffff !important;
+  width: 32px;
+  height: 32px;
+  line-height: 30px;
+}
+
+.sd-ae-custom-antd-pagination .ant-pagination-item a {
+  color: #556666 !important;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sd-ae-custom-antd-pagination .ant-pagination-item-active {
+  background-color: #cfb28d !important;
+  /* Khaki Gold background */
+  border-color: #cfb28d !important;
+}
+
+.sd-ae-custom-antd-pagination .ant-pagination-item-active a {
+  color: #1c2b29 !important;
+  font-weight: 600;
+}
+
+.sd-ae-custom-antd-pagination .ant-pagination-prev .ant-pagination-item-link,
+.sd-ae-custom-antd-pagination .ant-pagination-next .ant-pagination-item-link {
+  border-radius: 4px !important;
+  border: 1px solid #dbe3e2 !important;
+  background-color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sd-ae-custom-antd-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: #3C4D4B !important;
+  /* Teal Dark theme on next arrow */
+  color: #ffffff !important;
+}
+
+
+.sd-ae-articles-dashboard-content {
+  position: relative;
+
+}
+
+.sd-ae-articles-dashboard-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -15px;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 2px;
+  background-color: #3C4D4B;
+}
+
+.sd-ae-abstract-section {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* ============================================================
+   ALL ISSUES DASHBOARD — scoped styles (prefix: sd-ai-)
+   Palette is namespaced to the root so it never leaks globally.
+   ============================================================ */
+.sd-ai-allissues-root {
+  --sd-ai-charcoal: #3C4D4B;
+  --sd-ai-khaki: #c8a27c;
+  --sd-ai-tint: #ebdcc9;
+  --sd-ai-border: #e4e4e4;
+  --sd-ai-text-muted: #64748B;
+
+  padding: 40px 12px 64px;
+  font-family: inherit;
+  color: var(--sd-ai-charcoal);
+}
+
+/* ---------- Shared card shell ---------- */
+.sd-ai-card {
+  background: #fff;
+  border: 1px solid var(--sd-ai-border);
+  border-radius: 6px;
+}
+
+.sd-ai-card-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sd-ai-charcoal);
+}
+
+
+/* ============================================================
+   LEFT SIDEBAR — WIDGET 1: charcoal status tracker box
+   ============================================================ */
+.sd-ai-volume-box {
+  background: var(--sd-ai-charcoal);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(52, 67, 66, 0.15);
+}
+
+.sd-ai-search-badge {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--sd-ai-khaki);
+  font-size: 16px;
+}
+
+.sd-ai-volume-heading {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sd-ai-volume-range {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.sd-ai-volume-box-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sd-ai-btn-download-all,
+.sd-ai-btn-download-all:hover,
+.sd-ai-btn-download-all:focus {
+  background: var(--sd-ai-khaki) !important;
+  border-color: var(--sd-ai-khaki) !important;
+  color: var(--sd-ai-charcoal) !important;
+  font-weight: 600 !important;
+  height: 42px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   LEFT SIDEBAR — WIDGET 2: jump-to-volume grid
+   ============================================================ */
+.sd-ai-volume-grid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sd-ai-volume-chip {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #1E293B33;
+  border-radius: 6px;
+  background: #CFB28D33;
+  color: var(--sd-ai-charcoal);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  padding: 10px 17px;
+  height: 40px;
+  width: 70px;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.sd-ai-volume-chip:hover {
+  border-color: var(--sd-ai-khaki);
+  color: var(--sd-ai-khaki);
+}
+
+.sd-ai-volume-chip.is-active {
+  background: var(--sd-ai-khaki);
+  border-color: var(--sd-ai-khaki);
+  color: #000;
+}
+
+/* ============================================================
+   LEFT SIDEBAR — WIDGET 3: issue alerts (bell + outline button)
+   ============================================================ */
+.sd-ai-alert-bell {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--sd-ai-tint);
+  color: var(--sd-ai-khaki);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sd-ai-alert-desc {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--sd-ai-text-muted);
+}
+
+/* Outline alert button — khaki border + text on a clean white fill. */
+.sd-ai-btn-setup-alert,
+.sd-ai-btn-setup-alert:hover,
+.sd-ai-btn-setup-alert:focus {
+  background: #fff !important;
+  border: 1px solid var(--sd-ai-khaki) !important;
+  color: var(--sd-ai-khaki) !important;
+  font-weight: 600 !important;
+  height: 40px;
+  border-radius: 6px;
+}
+
+.sd-ai-btn-setup-alert:hover {
+  background: var(--sd-ai-khaki) !important;
+  color: #fff !important;
+}
+
+/* ============================================================
+   RIGHT FEED — top title banner bar
+   ============================================================ */
+.sd-ai-feed-topbar {
+  border-bottom: 1px solid var(--sd-ai-border);
+  padding-bottom: 16px;
+}
+
+.sd-ai-feed-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--sd-ai-charcoal);
+}
+
+.sd-ai-btn-find-volume,
+.sd-ai-btn-find-volume:hover,
+.sd-ai-btn-find-volume:focus {
+  background: #fff !important;
+  border: 1px solid var(--sd-ai-border) !important;
+  color: var(--sd-ai-charcoal) !important;
+  border-radius: 999px !important;
+  height: 40px;
+  padding: 0 18px !important;
+  font-weight: 500 !important;
+}
+
+.sd-ai-btn-find-volume:hover {
+  border-color: var(--sd-ai-khaki) !important;
+  color: var(--sd-ai-khaki) !important;
+}
+
+/* ============================================================
+   RIGHT FEED — archive accordions (antd Collapse overrides)
+   ============================================================ */
+.sd-ai-archive-accordion.ant-collapse {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sd-ai-archive-accordion .ant-collapse-item {
+  background: #fff;
+  border: 1px solid var(--sd-ai-border) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+.sd-ai-archive-accordion .ant-collapse-header {
+  align-items: center !important;
+  padding: 20px 24px !important;
+}
+
+.sd-ai-accordion-year {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sd-ai-charcoal);
+}
+
+.sd-ai-accordion-range {
+  font-size: 13px;
+  color: var(--sd-ai-text-muted);
+}
+
+/* Circular chevron indicator */
+.sd-ai-accordion-chevron {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--sd-ai-khaki);
+  color: var(--sd-ai-khaki) !important;
+  font-size: 11px;
+}
+
+.sd-ai-accordion-chevron .anticon,
+.sd-ai-accordion-chevron svg {
+  color: var(--sd-ai-khaki) !important;
+}
+
+.sd-ai-archive-accordion .ant-collapse-content {
+  border-top: 1px solid var(--sd-ai-border);
+}
+
+.sd-ai-archive-accordion .ant-collapse-content-box {
+  padding: 0 !important;
+}
+
+/* ---------- Individual issue rows ---------- */
+.sd-ai-issue-row {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--sd-ai-border);
+}
+
+.sd-ai-issue-stack .sd-ai-issue-row:last-child {
+  border-bottom: none;
+}
+
+/* Strict 4px slate charcoal vertical accent strip. */
+.sd-ai-issue-accent-bar {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--sd-ai-charcoal);
+  flex-shrink: 0;
+}
+
+.sd-ai-issue-title {
+  font-family: 'Afacad-Medium' !important;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--sd-ai-charcoal);
+}
+
+.sd-ai-issue-subtext {
+  font-size: 13px;
+  color: var(--sd-ai-text-muted);
+}
+
+/* Light-tinted "Open Access" pill */
+.sd-ai-access-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #E3EEF8;
+  color: #3C4D4B;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.sd-ai-access-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3C4D4B;
+}
+
+/* Right-aligned "Download PDF" anchor link */
+.sd-ai-download-link {
+  color: var(--sd-ai-charcoal);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.sd-ai-download-link:hover {
+  color: var(--sd-ai-khaki);
+  text-decoration: underline;
+}
+
+.ant-collapse-body {
+  padding: 0 !important;
+}
+
+/* ============================================================
+   RIGHT FEED — end feed action row
+   ============================================================ */
+.sd-ai-btn-load-earlier,
+.sd-ai-btn-load-earlier:hover,
+.sd-ai-btn-load-earlier:focus {
+  background: var(--sd-ai-charcoal) !important;
+  border-color: var(--sd-ai-charcoal) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  height: 56px;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.sd-ai-btn-load-earlier:hover {
+  opacity: 0.94;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+@media (max-width: 767.98px) {
+  .sd-ai-sidebar-sticky {
+    position: static;
+  }
+
+  .sd-ai-issue-row {
+    padding: 16px;
+  }
+
+  .sd-ai-archive-accordion .ant-collapse-header {
+    padding: 16px !important;
+  }
+
+  .sd-ai-feed-title {
+    font-size: 20px;
+  }
+}
+
+.sd-card-issue-body {
+  padding: 24px 18px 10px 18px;
+}
+
+.sd-card-issue-footer {
+  padding: 20px 24px;
+  border-top: 0.5px solid #C5C5C5;
+}
+
+.sd-card-issue-footer button {
+  background-color: #CFB28D !important;
+  border-color: #CFB28D !important;
+  color: #ffffff !important;
+  padding: 24px 30px;
+  width: 70% !important;
+  margin: 0 auto;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.sd-ae-body-paragraph-text {
+  color: #646b73;
+  font-size: 16px;
+}
+
+.sd-ae-body-paragraph-text span {
+  color: #000;
+  font-size: 16px;
+}
+
+/* ==========================================
+   ABOUT PAGES: PEER REVIEW / PEER CARDS / ACCEPTANCE PANEL
+   (merged in from the former talha.css — font-faces above already cover it)
+   ========================================== */
+
+/* ==================================
+================ PEER REVIEW SECTION STYLING */
+
+/* Main Container */
+.peer-review {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  /* Adjust the space between the image and the text */
+  max-width: 1100px;
+  /* Constrain overall width */
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Image Container */
+.girl-img {
+  flex: 0 0 350px;
+  /* Keeps the image column at a fixed width */
+}
+
+.girl-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  /* Adds a slight curve to the image corners */
+  object-fit: cover;
+  /* border: 2px solid #007bff; Uncomment if the blue border was intentional */
+}
+
+/* Text Container */
+.peer-review>div>p {
+  flex: 1;
+  /* Takes up the remaining space */
+  margin-bottom: 15px;
+}
+
+/* Heading Styling */
+.peer-review h2 {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 32px;
+  line-height: 1.4;
+  color: #2b3036;
+  /* Dark slate/charcoal color */
+  margin-top: 0;
+  margin-bottom: 20px;
+  max-width: 600px;
+  /* Matches the ~598px width shown in your design tool */
+}
+
+/* Paragraph Styling */
+.peer-review p {
+  font-family: 'Afacad-SemiBold', serif;
+  /* Clean modern font */
+  font-size: 16px;
+  line-height: 1.8;
+  color: #646b73;
+  /* Muted gray for readability */
+  margin: 0;
+}
+
+.peer-review2-para p {
+  font-family: 'Afacad-Medium';
+}
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 768px) {
+  .peer-review {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .girl-img {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .peer-review h2 {
+    font-size: 28px;
+    max-width: 100%;
+  }
+}
+
+
+/* ==================================
+================ PEER CARD STYLING */
+
+/* Card Container */
+.peer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  background-color: #ffffff;
+  border: 1px solid #eff0f1;
+  /* Light gray border matching the image */
+  border-radius: 8px;
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 280px;
+  height: 100%;
+  min-height: 260px;
+  box-sizing: border-box;
+}
+
+/* Container to hold the icon and the overlapping badge */
+.peer-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Large beige circle for the main icon */
+.peer-icon-circle {
+  width: 90px;
+  height: 90px;
+  background-color: #e5dfd6;
+  /* Light beige color */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Constrain the image size inside the circle */
+.peer-icon-circle img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+/* Small brown circle for the number */
+.peer-number-badge {
+  width: 24px;
+  height: 24px;
+  background-color: #bf9b75;
+  /* Tan/brown color */
+  color: black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-family: 'Afacad-Medium', serif;
+  margin-top: -12px;
+  /* Pulls the badge up to overlap the main circle */
+  z-index: 2;
+}
+
+/* Text styling */
+.peer-description {
+  font-family: 'Afacad-Medium', serif;
+  font-size: 14px;
+  color: #333333;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Small horizontal line below the text */
+.peer-divider {
+  width: 24px;
+  height: 1px;
+  background-color: #4a4a4a;
+  /* Dark gray line */
+  margin-top: 16px;
+}
+
+/* ==================================
+================ PEER CARD PARENT STYLING */
+
+/* Parent Grid Container */
+.peer-cards-grid {
+  display: grid;
+  /* Creates exactly 4 columns of equal width */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  /* Space between the cards */
+  max-width: 1200px;
+  /* Constrains the grid width on ultra-wide screens */
+  margin: 0 auto;
+  /* Centers the grid on the page */
+  padding: 40px 20px;
+  justify-items: center;
+  /* Ensures the cards stay centered within their grid cells */
+}
+
+/* Responsive Design for Tablets */
+@media (max-width: 1024px) {
+  .peer-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* Drops to 2 columns */
+    gap: 20px;
+  }
+}
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 640px) {
+  .peer-cards-grid {
+    grid-template-columns: 1fr;
+    /* Stacks to 1 single column */
+    gap: 16px;
+  }
+}
+
+/* ==================================
+================ ACCEPTANCE PANEL STYLING */
+
+/* Main Tan Banner */
+.acceptance-panel {
+  display: flex;
+  align-items: center;
+  background-color: #d2b795;
+  /* Tan/sand background color */
+  border-radius: 8px;
+  /* Slightly rounded corners */
+  padding: 20px 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Badge Wrapper (keeps it from shrinking) */
+.badge-wrapper {
+  width: 500px;
+  padding-right: 40px;
+  border-right: 2px solid #ffffff;
+  /* The vertical white divider line */
+}
+
+/* Text block on the right with the vertical line */
+.acceptance-content {
+  margin-left: 40px;
+  /* Space between badge and the vertical line */
+}
+
+.acceptance-content p {
+  font-family: 'Afacad-Medium', 'serif';
+  font-size: 14px;
+  line-height: 1.8;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .acceptance-panel {
+    flex-direction: column;
+    padding: 30px 20px;
+    text-align: center;
+  }
+
+  .acceptance-content {
+    margin-left: 0;
+    margin-top: 30px;
+    padding-left: 0;
+    border-left: none;
+    /* Remove vertical line on mobile */
+    border-top: 2px solid #ffffff;
+    /* Make it a horizontal line instead */
+    padding-top: 30px;
+  }
+}
+
+/* ==========================================
+   SPECIAL ISSUE / ARTICLE COLLECTION PAGE
+   ========================================== */
+.sd-sic-title-heading {
+  font-size: 16px;
+  line-height: 1.4;
+
+}
+
+.sd-jl-call-body p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 5px;
+}
+
+.sd-sic-btn-propose {
+  background-color: #cfb28d !important;
+  border-color: #cfb28d !important;
+  color: #3C4D4B !important;
+  font-weight: 600 !important;
+  width: 70% !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: 20px !important;
+  padding: 20px 20px !important;
+}
+
+.sd-sic-filter-card {
+  padding: 20px 20px;
+  border-radius: 8px;
+  border: 1px solid #dbe3e2;
+}
+
+/* Filter-by-type list */
+.sd-sic-filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sd-sic-filter-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F3F3F3;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3C4D4B;
+  cursor: pointer;
+  transition: all 0.2s;
+
+}
+
+.sd-sic-filter-item span {
+  font-family: "Afacad-Medium" !important;
+  font-size: 16px;
+  font-weight: 500 !important;
+}
+
+.font-change {
+  font-family: "Afacad-regular" !important;
+  font-size: 18px;
+  font-weight: 500 !important;
+}
+
+.sd-sic-filter-item:hover {
+  border-color: #cfb28d;
+}
+
+.sd-sic-filter-item.is-active {
+  background-color: #cfb28d;
+  border-color: #cfb28d;
+  color: #3C4D4B;
+}
+
+.sd-sic-filter-count {
+  background-color: #3C4D4B;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+.sd-sic-filter-item.is-active .sd-sic-filter-count {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.sd-sic-filter-clear-icon {
+  color: #889999;
+  font-size: 12px;
+}
+
+/* Main content: page title + search + collection cards */
+.sd-sic-page-title {
+
+  font-size: 24px;
+  color: #1c2b29;
+}
+
+.sd-sic-search-input.ant-input-affix-wrapper input::placeholder {
+  font-family: "Afacad-Medium" !important;
+  color: #3C4D4B;
+  opacity: 1;
+  /* Ensures full opacity across different browsers */
+}
+
+/* Vendor prefix fallback for older browser support if needed */
+.sd-sic-search-input.ant-input-affix-wrapper input::-webkit-input-placeholder {
+  color: #3C4D4B;
+}
+
+.sd-sic-search-input.ant-input-affix-wrapper input::-moz-placeholder {
+  color: #3C4D4B;
+  opacity: 1;
+}
+
+.sd-sic-search-input.ant-input-affix-wrapper input:-ms-input-placeholder {
+  color: #3C4D4B;
+}
+
+
+
+.sd-sic-search-input.ant-input-affix-wrapper {
+  border-radius: 999px !important;
+  padding: 11px 10px;
+  padding-left: 13px;
+  background-color: #F5F5F5;
+  border: 0.5px solid #3C4D4B66 !important;
+}
+
+.sd-sic-type-badge {
+  display: inline-block;
+  background-color: transparent;
+  color: #3C4D4B;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 54px;
+  font-family: "Afacad-Medium" !important;
+}
+
+.border-top-pt-3 {
+  border-top: 0.5px solid #3C4D4B;
+  padding-top: 20px;
+  margin-top: 20px !important;
+}
+
+.bg-color-1 {
+  background-color: #E4DBD1;
+  color: #3C4D4B;
+}
+
+.bg-color-2 {
+  background-color: #E3EEF8;
+}
+
+.bg-color-3 {
+  background-color: #CDDDDB;
+}
+
+.sd-sic-card-title {
+
+  font-size: 20px;
+  font-weight: 600;
+  color: #1c2b29;
+  line-height: 1.4;
+}
+
+.sd-sic-card-subtitle {
+  font-size: 13px;
+  color: #556666;
+}
+
+.sd-sic-editors-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.sd-sic-editors-label {
+  font-size: 12px;
+  color: #889999;
+  margin-right: 4px;
+}
+
+.sd-sic-editor-pill {
+  background-color: #f4f7f6;
+  color: #3C4D4B;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.sd-sic-update-text {
+  font-size: 16px;
+  color: #cfb28d;
+  font-weight: 500;
+}
+
+
+
+/* About this publication banner */
+.sd-sic-about-publication {
+  margin-top: 40px !important;
+  background-color: #CFB28D;
+  border: 1px solid rgba(207, 178, 141, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.sd-sic-about-publication h5 {
+  font-size: 30px;
+  color: #3C4D4B;
+  font-weight: 700;
+}
+
+.sd-sic-about-publication p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #000;
+}
+
+.sd-sic-about-icon img {
+  width: 130px;
+
+}
+
+.sd-sic-collection-card {
+  border: 1px solid #E2E8F0;
+  margin-bottom: 20px;
+  padding: 20px 20px 20px 25px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.sd-sic-collection-card::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10px;
+  width: 3px;
+  height: 80%;
+  background-color: #3C4D4B;
+  border-radius: 999px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sd-sic-about-icon {
+  flex: 0 0 60px;
+}
+
+/* .sd-sic-arrow-link:hover {
+  background-color: #cfb28d;
+  color: #1c2b29;
+} */
+
+.sd-sic-arrow-link .arrow-active {
+  display: none;
+}
+
+.sd-sic-arrow-link:hover .arrow-inactive {
+  display: none;
+}
+
+.sd-sic-arrow-link:hover .arrow-active {
+  display: block;
+}
+
+/* ==========================================================================
+   SCIENCEDIRECT NAV ENGINE EXACT PIXEL SPECIFICATIONS
+   ========================================================================== */
+
+.sd-topbar-wrapper {
+  border-bottom: 1px solid #f1ebd9;
+}
+
+/* Nav Hover Anchors Layout */
+.sd-nav-item {
+  font-size: 18px;
+  font-family: "Afacad-Medium";
+  font-weight: 500;
+  color: #3C4D4B;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+  user-select: none;
+}
+
+.sd-nav-item:hover {
+  color: #344342;
+  /* Soft deep charcoal state hover interaction */
+}
+
+.sd-chevron-icon {
+  font-size: 11px;
+  color: #333333;
+  font-weight: bold;
+}
+
+/* Dropdown Menu Item Global Overrides */
+.sd-drop-link {
+  font-size: 14px;
+  color: #444444 !important;
+  text-decoration: none;
+  display: block;
+  padding: 2px 8px;
+}
+
+.sd-drop-link:hover {
+  color: #344342 !important;
+}
+
+/* ==========================================================================
+   RIGHT COMPOSITE COMPONENT PARTS: PILL SEARCH, BEIGE BTN
+   ========================================================================== */
+
+.max-width-800 {
+  max-width: 800px;
+}
+
+/* Rounded Pill Shape Search Block */
+.sd-search-composite-pill {
+  border: 0.5px solid #3C4D4B66;
+  border-radius: 50px;
+  background-color: #F5F5F5;
+  overflow: hidden;
+  height: 50px;
+  width: 100%;
+  max-width: 350px;
+  transition: border-color 0.2s ease;
+}
+
+.sd-search-composite-pill:focus-within {
+  border-color: #344342;
+}
+
+.sd-search-pill-input {
+  background-color: transparent !important;
+  font-size: 13.5px;
+  color: #333333;
+  padding-left: 16px !important;
+  height: 100%;
+}
+
+.sd-search-pill-input::placeholder {
+  color: #555555;
+  opacity: 1;
+}
+
+/* Search Trigger Button Frame Right Attached */
+.sd-search-pill-btn {
+  background-color: #344342;
+  border: 0.5px solid #3C4D4B66;
+  /* Direct Slate Charcoal Tone match */
+  color: #ffffff;
+  border: none;
+  height: 100%;
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: 0 50px 50px 0;
+  /* Pill dynamic right clip layout */
+  transition: background-color 0.2s ease;
+}
+
+.sd-search-composite-pill input::placeholder {
+  color: #3C4D4B !important;
+  /* Replace with your desired color */
+  opacity: 1;
+  /* Ensures consistent opacity across Firefox and Safari */
+}
+
+/* Fallback if .sd-search-composite-pill IS the input element itself */
+.sd-search-composite-pill::placeholder {
+  color: #3C4D4B !important;
+  opacity: 1;
+}
+
+.sd-search-pill-btn:hover {
+  background-color: #273231;
+}
+
+/* Exact Khaki Muted Gold Action Trigger */
+.sd-btn-submit-article {
+  background-color: #c8a27c !important;
+  /* Premium muted gold value texture */
+  border: none !important;
+  color: #222222 !important;
+  /* Soft dark contrast label tracking */
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  border-radius: 4px !important;
+  height: 38px !important;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: none !important;
+}
+
+.sd-btn-submit-article:hover {
+  background-color: #ba936b !important;
+  color: #000000 !important;
+}
+
+/* Underline link element for authors index */
+.sd-author-guide-link {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #344342;
+  transition: color 0.2s ease;
+}
+
+.sd-author-guide-link:hover {
+  color: #c8a27c;
+}
+
+/* ==========================================
+   EDITORIAL BOARD PAGE (merged in from the former talha.css)
+   Unique selectors — previously loaded via a per-page import.
+   ========================================== */
+
+/* Layout Container */
+.editorial-main-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.editorial-sidebar {
+  flex: 0 0 320px;
+  /* Fixed width sidebar */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editorial-main-content {
+  flex: 1;
+  /* Takes remaining space */
+  border-left: 2px solid #CDCFD0;
+  padding-left: 40px;
+}
+
+/* ------------------------------------- */
+/* Dark Sidebar Card */
+/* ------------------------------------- */
+.editorial-board-card-dark {
+  background-color: #404c4d;
+  /* Dark slate */
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.editorial-board-card-dark h3 {
+  font-family: 'Philosopher-Bold', serif;
+  color: #c4a27d;
+  /* Tan/Gold */
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.editorial-board-card-dark p {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ------------------------------------- */
+/* Contents List Box */
+/* ------------------------------------- */
+.editorial-contents-box {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.contents-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.contents-header h3 {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 18px;
+  color: #333333;
+  margin: 0;
+}
+
+.contents-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.contents-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contents-no {
+  background-color: #f0eadd;
+  /* Light beige circle */
+  color: #8c7356;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.contents-country {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 500;
+}
+
+.active-country {
+  color: #b58253;
+  /* Brown/Tan color for Egypt */
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contents-count {
+  font-size: 13px;
+  color: #888888;
+}
+
+.contents-footer {
+  padding: 16px 20px;
+}
+
+.contents-footer p {
+  font-size: 14px;
+  color: #333333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ------------------------------------- */
+/* Staff Cards Content Area */
+/* ------------------------------------- */
+.staff-section {
+  margin-bottom: 16px;
+}
+
+.staff-role-heading {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 24px;
+  color: #404c4d;
+  margin-bottom: 16px;
+  margin-top: 32px;
+}
+
+.staff-section:first-child .staff-role-heading {
+  margin-top: 0;
+}
+
+.staff-card {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+  /* Ensures image respects rounded corners */
+}
+
+.staff-img-box {
+  flex: 0 0 160px;
+  /* Fixed width for the image */
+  background-color: #1c1f26;
+  /* Dark background behind headshots */
+}
+
+.staff-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.staff-info-box {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.staff-designation {
+  font-size: 13px;
+  color: #b58253;
+  /* Tan */
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.staff-name {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 22px;
+  color: #333333;
+  margin: 0 0 8px 0;
+}
+
+.staff-expertise {
+  font-size: 13px;
+  color: #777777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .editorial-main-section {
+    flex-direction: column;
+  }
+
+  .editorial-sidebar {
+    width: 100%;
+    flex: none;
+  }
+
+  .staff-card {
+    flex-direction: column;
+  }
+
+  .staff-img-box {
+    flex: none;
+    height: 200px;
+  }
+}
+
+
+/* ==================================
+================ AssociateEditors STYLING */
+
+/* Container */
+.associate-editors-container {
+  width: 100%;
+  max-width: 900px;
+  /* Adjust based on your parent container width */
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+/* Headings */
+.main-heading {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 26px;
+  color: #333333;
+  /* Dark slate gray */
+  margin-bottom: 24px;
+}
+
+.editor-category-group {
+  margin-bottom: 40px;
+}
+
+.category-heading {
+  font-family: 'Philosopher-Bold', serif;
+  font-size: 18px;
+  color: #b58253;
+  /* Tan / Gold color */
+  margin-bottom: 20px;
+}
+
+/* 2-Column Grid */
+.editors-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 32px;
+  column-gap: 40px;
+}
+
+/* Individual Card Styling */
+.associate-card {
+  display: flex;
+  align-items: center;
+  /* Aligns image and text vertically in the middle */
+  gap: 16px;
+}
+
+/* Circular Image Wrapper */
+.associate-img-wrapper {
+  width: 65px;
+  height: 65px;
+  flex-shrink: 0;
+  /* Prevents the circle from squishing */
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  /* Placeholder color while image loads */
+  overflow: hidden;
+}
+
+.associate-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Text Formatting Inside the Card */
+.associate-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.associate-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333333;
+  margin: 0 0 4px 0;
+}
+
+.associate-university {
+  font-size: 11px;
+  color: #d4a373;
+  /* Light tan color */
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.associate-expertise {
+  font-size: 10px;
+  color: #8a949e;
+  /* Light bluish-gray */
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ================================== */
+/* Pagination Styling */
+/* ================================== */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 60px;
+  padding-bottom: 40px;
+}
+
+.page-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  color: #555555;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+  background-color: #f5f5f5;
+}
+
+/* Active Page (1) */
+.active-page {
+  background-color: #c4a27d;
+  /* Tan background */
+  color: #ffffff;
+  border-color: #c4a27d;
+}
+
+.active-page:hover {
+  background-color: #b58253;
+  /* Slightly darker on hover */
+}
+
+/* Left Nav Arrow (Dark) */
+.prev-btn {
+  background-color: #404c4d;
+  /* Dark slate */
+  color: #ffffff;
+  border-color: #404c4d;
+}
+
+.prev-btn:hover {
+  background-color: #2b3a3a;
+}
+
+/* Pagination Dots */
+.page-dots {
+  color: #777777;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .editors-grid {
+    grid-template-columns: 1fr;
+    /* Stacks to 1 column on mobile */
+  }
+}
+
+/* ==========================================================================
+   JOURNAL INSIGHTS EXACT UI DESIGN BRAND CONFIGURATION
+   ========================================================================== */
+
+.sd-insights-main-title {
+  font-size: 28px;
+  color: #344342;
+  /* Direct Slate Charcoal Tone match */
+  font-weight: 600;
+}
+
+/* Master Panel Setup */
+.sd-insight-card {
+  border: 1px solid #f5f5f5;
+  border-radius: 12px;
+  /* Smooth rounded block radius */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015);
+  min-height: 140px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sd-insight-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Left Grid Section Panel Box */
+.sd-card-left-col {
+  width: 350px;
+  min-width: 355px;
+  background-color: #ffffff;
+  padding: 80px 15px;
+}
+
+.sd-insight-icon-circle {
+  background-color: #ebdcc9;
+  /* Soft Khaki light tint fill */
+  color: #344342;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* AntD glyph sizing inside the khaki highlight circle */
+.sd-insight-icon-circle .anticon {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.sd-insight-label {
+  font-family: 'Philosopher-Bold';
+  font-size: 24px;
+  font-weight: 500;
+  color: #333333;
+}
+
+/* Vertical Divider Accent */
+.sd-card-divider-line {
+  width: 1px;
+  background-color: #BFBFBF;
+  margin: 35px 0;
+}
+
+/* Right Content Workspace Layout Blocks */
+.sd-card-right-col {
+  flex-grow: 1;
+  background-color: #ffffff;
+  max-width: 800px;
+  padding: 20px 20px 20px 60px;
+}
+
+.sd-right-heading {
+  font-size: 26px;
+  font-weight: 600;
+  color: #3C4D4B;
+}
+
+.sd-right-desc {
+  font-family: 'Afacad-Medium' !important;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #64748B !important;
+  font-weight: 500 !important;
+}
+
+.sd-right-desc span {
+  color: #000000;
+}
+
+.sd-text-highlight-gold {
+  color: #c8a27c;
+  font-weight: 500;
+}
+
+.sd-insight-text-link {
+  font-family: 'Afacad-Medium' !important;
+  font-size: 14px;
+  color: #c8a27c !important;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* ISSN Typography Framework */
+.sd-issn-block {
+  font-family: "Afacd-bold" !important;
+  font-size: 26px;
+  color: #3C4D4B;
+  font-weight: 700;
+}
+
+.sd-issn-label {
+
+  color: #555555;
+}
+
+
+/* Subject Framework Node */
+.sd-card-font-style h6 {
+  color: #3C4D4B;
+  font-size: 26px;
+}
+
+
+.sd-card-font-style p {
+  font-family: 'Afacad-Medium' !important;
+  color: #64748B;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   MORE JOURNAL INSIGHTS PIXEL-PERFECT STYLING
+   ========================================================================== */
+
+
+
+
+
+
+
+
+/* Big Statistics Number (Georgia Font for elegance) */
+.sd-stat-number {
+  font-size: 26px;
+  font-weight: 600;
+  color: #344342;
+  /* Slate Charcoal theme color */
+}
+
+.sd-stat-desc {
+  font-size: 16px;
+  color: #64748B;
+}
+
+/* Bullet List Styling for Abstracting & Indexing */
+.sd-indexing-list {
+  list-style-type: disc;
+  color: #64748B;
+}
+
+.sd-indexing-list li {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #64748B;
+  padding-left: 5px;
+}
+
+/* Responsive adjustment layer for tablet/mobile views */
+@media (max-width: 768px) {
+  .sd-insight-card {
+    flex-direction: column !important;
+  }
+
+  .sd-card-left-col {
+    width: 100% !important;
+    padding: 20px 10px 10px 10px !important;
+  }
+
+  .sd-card-divider-line {
+    width: 80% !important;
+    height: 1px !important;
+    margin: 5px auto !important;
+  }
+
+  .sd-card-right-col {
+    padding: 15px !important;
+    align-items: center !important;
+    text-align: center;
+    flex-direction: column !important;
+  }
+
+  .sd-indexing-list {
+    text-align: left;
+    display: inline-block;
+  }
+}
+
+/* ==========================================================================
+   LANGUAGE EDITING SERVICES PAGE — scoped styles (prefix: le-)
+   Palette namespaced to the root so it never leaks globally.
+   ========================================================================== */
+.le-root {
+  --le-charcoal: #3C4D4B;
+  --le-khaki: #c8a27c;
+  --le-tint: #ebdcc9;
+  --le-tint-soft: #CFB28D33;
+  --le-border: #ececec;
+  --le-muted: #64748B;
+  color: var(--le-charcoal);
+}
+
+/* ---------------- Section 1: banner ---------------- */
+.le-banner {
+  background-image: url("../../../public/assets/img/le-bg.png");
+  border-radius: 14px;
+  padding: 34px 50px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.le-banner-title {
+
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 700;
+  color: var(--le-charcoal);
+  line-height: 1.15;
+}
+
+.le-banner-desc {
+  font-family: 'Afacad-Medium';
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--le-muted);
+  max-width: 620px;
+}
+
+.le-banner-illustration svg {
+  width: 220px;
+  height: 180px;
+  max-width: 100%;
+}
+
+/* ---------------- Section 2: nav tabs ---------------- */
+.le-tabs {
+  border-bottom: 1px solid var(--le-border);
+}
+
+.le-tabs-list {
+  gap: 12px 40px;
+}
+
+.le-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 2px 16px;
+  color: var(--le-muted);
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.le-tab:hover {
+  color: var(--le-charcoal);
+}
+
+.le-tab-active {
+  color: var(--le-charcoal);
+  font-weight: 600;
+  border-bottom-color: var(--le-charcoal);
+}
+
+.le-tab-icon {
+  color: var(--le-khaki);
+  font-size: 17px;
+  display: inline-flex;
+}
+
+.le-intro-text {
+  font-family: 'Afacad-Medium';
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--le-muted);
+  max-width: 860px;
+}
+
+/* ---------------- Section 3: pricing cards ---------------- */
+.le-plan-card {
+  background: #fff;
+  border: 1px solid var(--le-border);
+  border-top: 4px solid #3C4D4B;
+  border-radius: 12px;
+  box-shadow: 0 6px 22px rgba(52, 67, 66, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+
+.le-plan-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(52, 67, 66, 0.1);
+}
+
+.le-plan-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--le-tint);
+  color: var(--le-charcoal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.le-plan-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--le-charcoal);
+}
+
+.le-plan-subtitle {
+  font-family: 'Afacad-Medium';
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--le-muted);
+}
+
+.le-plan-tagline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--le-charcoal);
+}
+
+.le-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--le-khaki);
+  display: inline-block;
+}
+
+.le-plan-badge {
+  font-family: "Afacad-Medium" !important;
+  background: var(--le-tint-soft);
+  color: var(--le-charcoal);
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+}
+
+.le-plan-calc {
+  border-top: 1px solid #CFB28D;
+  padding-top: 16px;
+}
+
+.le-plan-calc-label {
+  font-size: 16px;
+  color: #3C4D4B;
+}
+
+.le-plan-card .ant-select {
+  background: #F5F0E8;
+  border: 1px solid #F5F0E8;
+  padding: 15px 15px;
+  border-radius: 10px !important;
+}
+
+.le-plan-starting {
+  font-size: 13px;
+  color: var(--le-muted);
+}
+
+.le-plan-price {
+
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--le-charcoal);
+  line-height: 1.2;
+}
+
+.le-plan-cta {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-family: 'Afacad-SemiBold';
+}
+
+.le-plan-cta-outline {
+  background: #fff;
+  border: 1px solid #3C4D4B;
+  color: #3C4D4B !important;
+  color: var(--le-charcoal);
+}
+
+.le-plan-cta-outline:hover {
+  border-color: var(--le-charcoal);
+}
+
+.le-plan-cta-solid {
+  background: var(--le-charcoal);
+  border: 1px solid var(--le-charcoal);
+  color: #fff;
+}
+
+.le-plan-cta-solid:hover {
+  background: #2f3f3d;
+}
+
+/* Ant Design Select cosmetic alignment */
+.le-select .ant-select-selector {
+  height: 48px !important;
+  border-radius: 8px !important;
+  background: var(--le-tint-soft) !important;
+  border-color: transparent !important;
+  padding: 6px 14px !important;
+}
+
+.le-select .ant-select-selection-item {
+  line-height: 34px !important;
+  color: var(--le-charcoal);
+  font-weight: 600;
+}
+
+/* ---------------- Section 4: trust badges ---------------- */
+.le-trust-banner {
+  background: var(--le-tint-soft);
+  border-radius: 14px;
+}
+
+.le-trust-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  background: #CFB28D;
+  color: var(--le-charcoal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.le-trust-icon img {
+  width: 38px;
+}
+
+.le-trust-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--le-charcoal);
+}
+
+.le-trust-desc {
+  font-family: 'Afacad-Medium';
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--le-muted);
+}
+
+/* ---------------- Section 5: comparison table ---------------- */
+.le-compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 760px;
+}
+
+.le-compare-table th,
+.le-compare-table td {
+  border: 1px solid var(--le-border);
+  vertical-align: middle;
+}
+
+.le-tab-icon img {
+  width: 18px;
+}
+
+.le-compare-corner {
+  background: transparent;
+  width: 34%;
+}
+
+.le-compare-head {
+  background: var(--le-tint-soft);
+  padding: 20px 16px;
+  width: 22%;
+}
+
+.le-compare-head:first-of-type {
+  border-top-left-radius: 10px;
+}
+
+.le-compare-head:last-of-type {
+  border-top-right-radius: 10px;
+}
+
+.le-compare-head-title {
+
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--le-charcoal);
+}
+
+.le-compare-head-badge {
+  display: inline-block;
+  background: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--le-charcoal);
+  padding: 4px 12px;
+  margin: 8px 0 6px;
+}
+
+.le-compare-head-starting {
+  font-size: 12px;
+  color: var(--le-muted);
+}
+
+.le-compare-head-price {
+
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--le-charcoal);
+}
+
+.le-compare-feature {
+  font-family: 'Afacad-Medium';
+  font-size: 14px;
+  color: var(--le-charcoal);
+  padding: 16px 18px;
+}
+
+.le-compare-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.le-compare-table tbody tr:hover {
+  background: #faf8f4;
+}
+
+.le-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+}
+
+.le-mark-yes {
+  background: #2fae5f;
+}
+
+.le-mark-no {
+  background: #e5484d;
+}
+
+.le-plan-cta-footer {
+  width: auto;
+  min-width: 190px;
+  background: var(--le-khaki);
+  border: 1px solid var(--le-khaki);
+  color: #fff;
+}
+
+.le-plan-cta-footer:hover {
+  background: #b78f68;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .le-banner {
+    text-align: center;
+  }
+
+  .le-tabs-list {
+    gap: 10px 22px;
+  }
+
+  .le-tab {
+    font-size: 14px;
+  }
+
+  .le-plan-cta-footer {
+    min-width: 150px;
+  }
+}
+
+/* ---------------- Section 6: quality guarantee banner ---------------- */
+.le-guarantee-banner {
+  background: var(--le-khaki);
+  border-radius: 12px;
+}
+
+.le-guarantee-seal {
+  width: 180px;
+  height: 150px;
+  border-radius: 50%;
+
+}
+
+.le-guarantee-seal-text {
+
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--le-charcoal);
+}
+
+.le-laurel {
+  width: 92px;
+  height: auto;
+  margin-top: 6px;
+}
+
+.le-guarantee-divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.55);
+  margin: 6px 0;
+}
+
+.le-guarantee-text {
+  font-family: 'Afacad-Medium';
+  font-size: 16px;
+  line-height: 1.7;
+  color: #5f5340;
+  max-width: 720px;
+}
+
+/* ---------------- Section 7: why Elsevier editing services ---------------- */
+.le-why-title {
+
+  font-size: clamp(24px, 2.4vw, 30px);
+  font-weight: 700;
+  color: var(--le-charcoal);
+}
+
+.le-why-text {
+  font-family: 'Afacad-Medium', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--le-muted);
+  margin-bottom: 14px;
+}
+
+.le-why-source {
+  font-family: 'Afacad-Medium', sans-serif;
+  font-size: 12px;
+  color: var(--le-muted);
+}
+
+.le-why-img {
+  border-radius: 10px;
+  object-fit: cover;
+  aspect-ratio: 16 / 11;
+  box-shadow: 0 10px 30px rgba(52, 67, 66, 0.12);
+}
+
+/* ---------------- Section 8: need something different (dark full-bleed) ---------------- */
+
+
+.le-need-title {
+
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 700;
+  color: #fff;
+}
+
+.le-need-col {
+  padding: 8px 60px;
+}
+
+.le-need-col-right {
+  border-left: 1px solid rgba(255, 255, 255);
+}
+
+.le-need-band {
+  background: var(--le-charcoal);
+  padding: 40px 0 25px 0;
+  margin-bottom: 160px !important;
+}
+
+.le-need-heading {
+
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--le-khaki);
+}
+
+.le-need-desc {
+  font-family: 'Afacad-Medium', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 420px;
+}
+
+.le-need-link {
+  font-family: 'Afacad-Medium', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--le-khaki);
+  text-decoration: underline;
+}
+
+.le-need-link:hover {
+  color: #ddb98f;
+}
+
+@media (max-width: 767px) {
+  .le-guarantee-divider {
+    width: 60%;
+    height: 1px;
+    align-self: center;
+  }
+
+  .le-guarantee-text {
+    text-align: center;
+  }
+
+  .le-need-col {
+    padding: 8px 12px;
+    text-align: center;
+  }
+
+  .le-need-col-right {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 24px;
+    margin-top: 8px;
+  }
+
+  .le-need-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.on-hover-top {
+  background-color: #CFB28D;
+}
+
+.on-hover-top h3 {
+  font-size: 34px;
+  color: #3C4D4B;
+}
+
+.on-hover-top h3 span {
+  font-family: 'Afacad-Regular';
+  font-size: 16px;
+}
+
+.submit-your-artical {
+  padding: 40px 90px;
+  background-color: #3C4D4B;
+  color: #fff;
+  border: none !important;
+  border-radius: 0;
+  font-size: 18px;
+
+}
+
+.submit-your-artical:hover {
+  background-color: #3C4D4B;
+  color: #fff;
+}
+
+/* Marker placed just above the sticky header. The IntersectionObserver watches it;
+   when it scrolls off the top of the viewport, the header is stuck.
+   It needs a real (non-zero) height or IntersectionObserver won't report a
+   zero-area target — the 1px is cancelled by margin-bottom:-1px, so the header's
+   position in flow is unchanged (no layout shift). */
+.sd-sticky-sentinel {
+  height: 1px;
+  margin: 0 0 -1px 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+}
+
+/* Container jo scrolling behave control karega.
+   position: sticky reserves the header's space in normal flow, so the content
+   below never jumps when it sticks (no layout shift, no placeholder required). */
+.sd-sticky-header-wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  width: 100%;
+}
+
+/* Dropdown toggles ke liye pointer hand icon */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------
+   TopBar `.on-hover-top` reveal
+   Collapsed by default AND while NOT sticky — hidden and non-interactable,
+   never revealed on hover. Only after the header becomes sticky does a
+   hover over the header smoothly slide it open.
+
+   Uses grid-template-rows 0fr -> 1fr so the panel animates to its natural
+   height (no magic pixel value, no per-frame layout jank like height did).
+   ------------------------------------------------------------------ */
+.on-hover-top {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  /* visibility:hidden makes the collapsed bar truly non-interactable;
+     it is delayed on collapse so it only flips once the slide-up finishes. */
+  visibility: hidden;
+  border-bottom: 0 solid transparent;
+  will-change: grid-template-rows, opacity;
+  transition:
+    grid-template-rows 0.35s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0.35s;
+}
+
+/* Grid child must clip its own overflow so the row can collapse to 0. */
+.on-hover-top__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Sticky hone ke baad, SIRF hover par: smoothly slide open.
+   The :hover gate is critical — without it the panel expands the instant the
+   header sticks, causing an 80px layout jump (scroll jerk). Gated on hover, the
+   sticky transition is layout-neutral, so becoming sticky never shifts content. */
+.sd-sticky-header-wrapper.is-sticky .on-hover-top {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  border-bottom: 1px solid #f0f0f0;
+  transition:
+    grid-template-rows 0.35s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0s;
+}
+
+
+.journal-sec .sd-hero-bg {
+  flex-direction: column;
+  height: 80vh;
+}
+
+.user-avatar-img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+
+}
+
+.user-avatar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.sd-search-panel {
+  color: #3C4D4B;
+}
+
+.journal-sec .sd-search-panel {
+  background-color: #CFB28D !important;
+  padding: 50px 40px;
+  border-radius: 8px;
+}
+
+.search-panale-sec {
+  background-color: #CFB28D !important;
+  padding: 30px 0;
+}
+
+
+
+.sd-search-panel {
+
+  /* Exact light brown color */
+  border-radius: 4px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+}
+
+
+
+.search-panale-sec h3 span {
+  font-family: 'Afacad-Regular';
+  font-size: 16px;
+  text-decoration: underline;
+
+}
+
+.search-panale-sec h3 span.bar {
+  text-decoration: none;
+}
+
+.aside {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.about-journal {
+  background-color: #fbfbfb;
+  padding: 90px 0;
+  color: #000;
+
+}
+
+section.journal-sec {}
+
+.about-journal h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.about-journal p {
+  font-size: 16px;
+}
+
+.text-bold {
+  font-weight: 600;
+  font-style: italic;
+}
+
+.txt-dec {
+  color: #CFB28D;
+  text-decoration: underline;
+  margin-top: 10px;
+}
+
+.para-f {
+  color: #3C4D4B;
+}
+
+
+.about-artical-card {}
