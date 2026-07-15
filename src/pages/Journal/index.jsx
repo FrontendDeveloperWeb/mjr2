@@ -5,7 +5,7 @@ import FiltersSidebar from '../../components/partials/journal/FiltersSidebar.jsx
 import PublicationsList from '../../components/partials/journal/PublicationsList.jsx';
 import DashboardTopBar from '../../components/layout/DashboardTopBar.jsx';
 import ExploreResearchSection from '../../components/partials/home/ExploreResearchSection.jsx';
-import TopBar from '../../components/shared/topbar/index.jsx';
+import TopBar from '../../components/shared/TopBar/index.jsx';
 
 const ITEMS_PER_PAGE = 7;
 

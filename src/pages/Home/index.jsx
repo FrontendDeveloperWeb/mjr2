@@ -5,7 +5,7 @@ import ExploreResearchSection from '../../components/partials/home/ExploreResear
 import ArticlesCarouselSection from '../../components/partials/home/ArticlesCarouselSection.jsx';
 import OpenAccessSection from '../../components/partials/home/OpenAccessSection.jsx';
 import DashboardTopBar from '../../components/layout/DashboardTopBar.jsx';
-import TopBar from '../../components/shared/topbar/index.jsx';
+import TopBar from '../../components/shared/TopBar/index.jsx';
 import StatsBar from '../../components/layout/StatsBar.jsx';
 import SearchPanel from '../../components/shared/SearchPanel/index.jsx';
 

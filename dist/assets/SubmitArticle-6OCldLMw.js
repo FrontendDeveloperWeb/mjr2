@@ -1,1 +1,0 @@
-import{F as e}from"./index-CfX745ZG.js";var t=e(),n=()=>(0,t.jsx)(`section`,{className:`le-root`,children:(0,t.jsx)(`h1`,{children:`Submit Your Article`})});export{n as default};

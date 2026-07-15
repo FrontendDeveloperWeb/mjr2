@@ -1,0 +1,1 @@
+import{F as e}from"./index-I2sqQW00.js";var t=e(),n=()=>(0,t.jsx)(`section`,{className:`le-root`,children:(0,t.jsx)(`h1`,{children:`Submit Your Article`})});export{n as default};
