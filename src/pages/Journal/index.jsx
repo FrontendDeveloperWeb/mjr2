@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
-import StatsBar from '../../components/layout/StatsBar.jsx';
-import HeroSection from '../../components/partials/journal/HeroSection.jsx';
-import FiltersSidebar from '../../components/partials/journal/FiltersSidebar.jsx';
-import PublicationsList from '../../components/partials/journal/PublicationsList.jsx';
-import DashboardTopBar from '../../components/layout/DashboardTopBar.jsx';
-import ExploreResearchSection from '../../components/partials/home/ExploreResearchSection.jsx';
+import HeroSection from '../../components/partials/Journal/HeroSection.jsx';
+import FiltersSidebar from '../../components/partials/Journal/FiltersSidebar.jsx';
+import PublicationsList from '../../components/partials/Journal/PublicationsList.jsx';
+import ExploreResearchSection from '../../components/partials/Journal/ExploreResearchSection.jsx';
 import TopBar from '../../components/shared/TopBar/index.jsx';
+import Layout from '../../components/layout/Layout.jsx';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -110,7 +109,7 @@ export default function Journal() {
 
 
   return (
-    <>
+    <Layout>
       <HeroSection />
       <TopBar />
       <ExploreResearchSection
@@ -137,6 +136,6 @@ export default function Journal() {
           </div>
         </div>
       </section>
-    </>
+    </Layout>
   );
 }

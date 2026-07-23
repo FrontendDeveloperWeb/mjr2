@@ -13,14 +13,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Layout>
-        <Routes>
-          {routes.map(({ path, element: Element }) => (
-            <Route key={path} path={path} element={<Element />} />
-          ))}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        {routes.map(({ path, element: Element }) => (
+          <Route key={path} path={path} element={<Element />} />
+        ))}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
   );
 }

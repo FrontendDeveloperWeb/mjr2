@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { FileTextOutlined } from '@ant-design/icons';
-import DashboardTopBar from '../../components/layout/DashboardTopBar.jsx';
-import CollectionsSidebar from '../../components/partials/special-issues/CollectionsSidebar.jsx';
-import CollectionsList from '../../components/partials/special-issues/CollectionsList.jsx';
+import CollectionsSidebar from '../../components/partials/SpecialIssues/CollectionsSidebar.jsx';
+import CollectionsList from '../../components/partials/SpecialIssues/CollectionsList.jsx';
+import Layout from '../../components/layout/Layout.jsx';
+import TopBar from '../../components/shared/TopBar/index.jsx';
 
 const FILTER_TYPES = [
-  { id: 'all', label: 'All collections' },
+  { id: 'all', label: 'All collections', count: 30 },
   { id: 'Special issue', label: 'Special issues', count: 11 },
   { id: 'Conference proceedings', label: 'Conference proceedings', count: 6 },
   { id: 'Supplements', label: 'Supplements', count: 3 },
@@ -48,41 +49,43 @@ export default function SpecialIssueArticleCollection() {
   }, [activeFilter]);
 
   return (
-    <>
-      <section>
-        <div className="container py-4">
 
-          <DashboardTopBar />
+    <Layout>
+      <TopBar />
+      <div className="container py-4">
 
-          <div className="row g-4">
-            <CollectionsSidebar
-              filterTypes={FILTER_TYPES}
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-            />
-            <CollectionsList collections={filteredCollections} />
-          </div>
 
-          <div className="sd-sic-about-publication d-flex align-items-start gap-3 mt-4">
-            <div className="sd-sic-about-icon">
-              <img src="/assets/img/about-doc.png" alt="Elsevier logo" className="img-fluid" />
-            </div>
-            <div>
-              <h5 className="mb-2">About this publication</h5>
-              <p className="m-0">
-                This journal is published on behalf of Cairo University by Elsevier B.V., a leading global academic
-                publisher committed to advancing scientific knowledge. All content published within this journal—including
-                research articles, reviews, figures, tables, supplementary materials, and editorial content—is protected
-                under international copyright laws. All rights reserved. No part of this publication may be reproduced,
-                distributed, stored in a retrieval system, transmitted, or adapted in any form or by any means without
-                prior written permission from the copyright holder, except where permitted by applicable licensing
-                agreements or statutory regulations.
-              </p>
-            </div>
-          </div>
 
+        <div className="row g-4">
+          <CollectionsSidebar
+            filterTypes={FILTER_TYPES}
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+          <CollectionsList collections={filteredCollections} />
         </div>
-      </section>
-    </>
+
+        <div className="sd-sic-about-publication d-flex align-items-start gap-3 mt-4">
+          <div className="sd-sic-about-icon">
+            <img src="/assets/img/about-doc.png" alt="Elsevier logo" className="img-fluid" />
+          </div>
+          <div>
+            <h5 className="mb-2">About this publication</h5>
+            <p className="m-0">
+              This journal is published on behalf of Cairo University by Elsevier B.V., a leading global academic
+              publisher committed to advancing scientific knowledge. All content published within this journal—including
+              research articles, reviews, figures, tables, supplementary materials, and editorial content—is protected
+              under international copyright laws. All rights reserved. No part of this publication may be reproduced,
+              distributed, stored in a retrieval system, transmitted, or adapted in any form or by any means without
+              prior written permission from the copyright holder, except where permitted by applicable licensing
+              agreements or statutory regulations.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </Layout>
+
   );
 }

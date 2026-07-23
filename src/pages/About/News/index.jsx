@@ -1,4 +1,6 @@
-import ArticlesCarouselSection from "../../../components/partials/home/ArticlesCarouselSection";
+import ArticlesCarouselSection from "../../../components/partials/News/ArticlesCarouselSection";
+import Layout from "../../../components/layout/Layout";
+import TopBar from "../../../components/shared/TopBar";
 
 const CAROUSEL_ARTICLES = [
     {
@@ -42,11 +44,15 @@ const CAROUSEL_ARTICLES = [
 const News = () => {
     return (
 
-        <>
+
+        <Layout>
+            <TopBar />
             <section>
                 <ArticlesCarouselSection title="Newz" articles={CAROUSEL_ARTICLES} />
             </section>
-        </>
+        </Layout>
+
+
 
     );
 };

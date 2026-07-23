@@ -1,4 +1,6 @@
-import ArticlesDashboardSection from '../../components/partials/articles-dashboard/ArticlesDashboardSection.jsx';
+import Layout from '../../components/layout/Layout.jsx';
+import ArticlesDashboardSection from '../../components/partials/ArticlesDashboard/ArticlesDashboardSection.jsx';
+import TopBar from '../../components/shared/TopBar/index.jsx';
 import { useArticlesDashboard } from '../../hooks/useArticlesDashboard.js';
 
 const PAGE_SIZE = 2; // Cards shown per page/tab
@@ -88,19 +90,22 @@ export default function ArticlesPress() {
     } = useArticlesDashboard(ALL_ARTICLES, PAGE_SIZE);
 
     return (
-        <ArticlesDashboardSection
-            volume="Volume 85"
-            pageRange="Pages 1–1222 (July 2026)"
-            sectionTitle="Agricultural Sciences"
-            editorialBoard={EDITORIAL_BOARD}
-            articles={ALL_ARTICLES}
-            articlesForPage={articlesForPage}
-            pageSize={PAGE_SIZE}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            showPreviews={showPreviews}
-            onTogglePreviews={setShowPreviews}
-            showContentsIndex={false}
-        />
+        <Layout>
+            <TopBar />
+            <ArticlesDashboardSection
+                volume="Volume 85"
+                pageRange="Pages 1–1222 (July 2026)"
+                sectionTitle="Articles in press"
+                editorialBoard={EDITORIAL_BOARD}
+                articles={ALL_ARTICLES}
+                articlesForPage={articlesForPage}
+                pageSize={PAGE_SIZE}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                showPreviews={showPreviews}
+                onTogglePreviews={setShowPreviews}
+                showContentsIndex={false}
+            />
+        </Layout>
     );
 }

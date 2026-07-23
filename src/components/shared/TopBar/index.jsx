@@ -3,30 +3,26 @@ import { Link } from 'react-router-dom';
 import { Dropdown, Button, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
-// const articlesItems = [
-// 	{ key: 'latest', label: <Link to="/latest-issues" className="sd-drop-link">Latest Issue</Link> },
-// 	{ key: 'all-issues', label: <Link to="/all-issues" className="sd-drop-link">All Issues</Link> },
-// 	{ key: 'articles-press', label: <Link to="/articles-press" className="sd-drop-link">Articles in Press</Link> },
-// 	{ key: 'special-issues', label: <Link to="/special-issue-article-collection" className="sd-drop-link">Special issues and article collections</Link> },
-// ];
+
 const articlesItems = [
-	{ key: 'latest', label: <Link to="#" className="sd-drop-link">Latest Issue</Link> },
-	{ key: 'all-issues', label: <Link to="#" className="sd-drop-link">All Issues</Link> },
-	{ key: 'articles-press', label: <Link to="#" className="sd-drop-link">Articles in Press</Link> },
-	{ key: 'special-issues', label: <Link to="#" className="sd-drop-link">Special issues and article collections</Link> },
+	{ key: 'latest', label: <Link to="/latest-issues" className="sd-drop-link">Latest Issue</Link> },
+	{ key: 'all-issues', label: <Link to="/all-issues" className="sd-drop-link">All Issues</Link> },
+	{ key: 'articles-press', label: <Link to="/articles-press" className="sd-drop-link">Articles in Press</Link> },
+	{ key: 'special-issues', label: <Link to="/special-issue-article-collection" className="sd-drop-link">Special issues and article collections</Link> },
 ];
 const aboutItems = [
-	{ key: 'journal', label: <Link to="#" className="sd-drop-link">About the Journal</Link> },
-	{ key: 'editorial', label: <Link to="#" className="sd-drop-link">Editorial Board</Link> },
+	{ key: 'aims', label: <Link to="/about/aims-and-scope" className="sd-drop-link">Aims and Scope </Link> },
+	{ key: 'editorial', label: <Link to="/about/editorial-board" className="sd-drop-link">Editorial Board</Link> },
+	{ key: 'journal', label: <Link to="/about/journal-insights" className="sd-drop-link">Journal Insights</Link> },
+	{ key: 'news', label: <Link to="/news" className="sd-drop-link">News</Link> },
 ];
-// const aboutItems = [
-// 	{ key: 'journal', label: <Link to="/about/journal" className="sd-drop-link">About the Journal</Link> },
-// 	{ key: 'editorial', label: <Link to="/about/editorial-board" className="sd-drop-link">Editorial Board</Link> },
-// ];
+
 
 const publishItems = [
-	{ key: 'author-guide', label: <Link to="/publish/guide" className="sd-drop-link">Author Information Pack</Link> },
-	{ key: 'submit-info', label: <Link to="/publish/submit" className="sd-drop-link">Open Access Details</Link> },
+	{ key: 'article', label: <Link to="/submit-article" className="sd-drop-link">Submit Your Article</Link> },
+	{ key: 'author', label: <Link to="/guide-for-author" className="sd-drop-link">Guide For authors </Link> },
+	{ key: 'access', label: <Link to="/open-access-Option" className="sd-drop-link">Open Access Details</Link> },
+	{ key: 'language', label: <Link to="/language-editing" className="sd-drop-link">Language Editing service</Link> },
 ];
 
 export default function TopBar() {

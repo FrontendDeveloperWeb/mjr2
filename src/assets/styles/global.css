@@ -91,6 +91,14 @@ p {
   margin: 0;
 }
 
+.font-600 {
+  font-weight: 600;
+}
+
+.font-500 {
+  font-weight: 500 !important;
+}
+
 .container {
   max-width: 1450px;
 }
@@ -3084,9 +3092,7 @@ p {
   display: flex;
   align-items: flex-start;
   gap: 40px;
-  /* Adjust the space between the image and the text */
-  max-width: 1100px;
-  /* Constrain overall width */
+  max-width: 1300px;
   margin: 0 auto;
   padding: 40px 20px;
 }
@@ -3178,7 +3184,6 @@ p {
   border-radius: 8px;
   padding: 40px 20px;
   width: 100%;
-  max-width: 280px;
   height: 100%;
   min-height: 260px;
   box-sizing: border-box;
@@ -3258,7 +3263,7 @@ p {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   /* Space between the cards */
-  max-width: 1200px;
+  max-width: 1400px;
   /* Constrains the grid width on ultra-wide screens */
   margin: 0 auto;
   /* Centers the grid on the page */
@@ -3405,10 +3410,16 @@ p {
 
 }
 
+.is-active span {
+  color: #3C4D4B;
+
+}
+
 .sd-sic-filter-item span {
   font-family: "Afacad-Medium" !important;
   font-size: 16px;
   font-weight: 500 !important;
+
 }
 
 .font-change {
@@ -3781,9 +3792,8 @@ p {
   display: flex;
   align-items: flex-start;
   gap: 40px;
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+
+
 }
 
 .editorial-sidebar {
@@ -4010,7 +4020,7 @@ p {
 /* Container */
 .associate-editors-container {
   width: 100%;
-  max-width: 900px;
+
   /* Adjust based on your parent container width */
   margin: 0 auto;
   padding: 20px 0;
@@ -4959,11 +4969,6 @@ p {
   color: #fff;
 }
 
-/* Marker placed just above the sticky header. The IntersectionObserver watches it;
-   when it scrolls off the top of the viewport, the header is stuck.
-   It needs a real (non-zero) height or IntersectionObserver won't report a
-   zero-area target — the 1px is cancelled by margin-bottom:-1px, so the header's
-   position in flow is unchanged (no layout shift). */
 .sd-sticky-sentinel {
   height: 1px;
   margin: 0 0 -1px 0;
@@ -4972,14 +4977,11 @@ p {
   pointer-events: none;
 }
 
-/* Container jo scrolling behave control karega.
-   position: sticky reserves the header's space in normal flow, so the content
-   below never jumps when it sticks (no layout shift, no placeholder required). */
 .sd-sticky-header-wrapper {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 1020;
+  z-index: 999;
   width: 100%;
 }
 
@@ -4988,21 +4990,10 @@ p {
   cursor: pointer;
 }
 
-/* ------------------------------------------------------------------
-   TopBar `.on-hover-top` reveal
-   Collapsed by default AND while NOT sticky — hidden and non-interactable,
-   never revealed on hover. Only after the header becomes sticky does a
-   hover over the header smoothly slide it open.
-
-   Uses grid-template-rows 0fr -> 1fr so the panel animates to its natural
-   height (no magic pixel value, no per-frame layout jank like height did).
-   ------------------------------------------------------------------ */
 .on-hover-top {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
-  /* visibility:hidden makes the collapsed bar truly non-interactable;
-     it is delayed on collapse so it only flips once the slide-up finishes. */
   visibility: hidden;
   border-bottom: 0 solid transparent;
   will-change: grid-template-rows, opacity;
@@ -5012,16 +5003,12 @@ p {
     visibility 0s linear 0.35s;
 }
 
-/* Grid child must clip its own overflow so the row can collapse to 0. */
+
 .on-hover-top__inner {
   min-height: 0;
   overflow: hidden;
 }
 
-/* Sticky hone ke baad, SIRF hover par: smoothly slide open.
-   The :hover gate is critical — without it the panel expands the instant the
-   header sticks, causing an 80px layout jump (scroll jerk). Gated on hover, the
-   sticky transition is layout-neutral, so becoming sticky never shifts content. */
 .sd-sticky-header-wrapper.is-sticky .on-hover-top {
   grid-template-rows: 1fr;
   opacity: 1;
@@ -5134,4 +5121,648 @@ section.journal-sec {}
 }
 
 
-.about-artical-card {}
+
+.aim-drawer p {
+  margin-bottom: 15px;
+}
+
+.aim-drawer h5 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+
+.ant-drawer-close {
+  order: 2;
+}
+
+.ant-drawer-title {
+  font-size: 20px !important;
+}
+
+.journal-table td.ant-table-cell {
+  background-color: #CFB28D33 !important;
+  border-bottom: 1px solid #fff !important;
+}
+
+.journal-table td.ant-table-cell .italic {
+  font-style: italic;
+  font-size: 12px;
+}
+
+.first-para {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.apc-info-container {
+  color: #333333;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 900px;
+}
+
+.apc-text {
+  margin-bottom: 1.2rem;
+}
+
+.apc-list {
+  padding-left: 1.5rem;
+}
+
+ul.apc-list {
+  list-style: disc !important;
+}
+
+.apc-list li {
+  margin-bottom: 0.4rem;
+}
+
+.apc-link {
+  color: #0073e6;
+  text-decoration: none;
+}
+
+.apc-link:hover {
+  text-decoration: underline;
+}
+
+.fs-7 {
+  font-size: 0.75rem;
+}
+
+
+
+.drawer-collapse {
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  margin-top: 59px;
+  background: transparent;
+}
+
+.drawer-collapse .ant-collapse-header {
+  border-bottom: 1px solid transparent;
+  padding: 10px 0 !important;
+}
+
+.drawer-collapse .ant-collapse-item {
+  border-bottom: 1px solid gray !important;
+  border-radius: 0 !important;
+}
+
+.drawer-collapse .ant-collapse-panel {
+  border-top: 0;
+}
+
+/* ==========================================================================
+   OPEN ACCESS OPTIONS — fully scoped page styles (prefix: oao-)
+   Everything is namespaced under .oao-root and uses local tokens, so it
+   never reads from or writes to the project's global CSS variables.
+   ========================================================================== */
+.oao-root {
+  --oao-charcoal: #3a4d4f;
+  --oao-slate-text: #33413f;
+  --oao-gold: #c8b195;
+  --oao-gold-bullet: #c8a27c;
+  --oao-link: #e09f67;
+  --oao-beige: #f3ece6;
+  --oao-icon-bg: #efe6da;
+  --oao-border: #C5C5C5;
+  --oao-muted: #6b7674;
+
+  color: var(--oao-slate-text);
+
+}
+
+/* ------------------------------- Sidebar ------------------------------- */
+.oao-sidebar {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.oao-side-card {
+  border: 1px solid var(--oao-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.oao-side-card-head {
+  border-bottom: 1px solid var(--oao-border);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--oao-slate-text);
+  padding: 14px 18px;
+}
+
+/* Active card: dark slate header + highlighted active item */
+.oao-side-card-active .oao-side-card-head {
+  background: var(--oao-charcoal);
+  color: #fff;
+}
+
+.oao-side-list {
+  padding: 6px 0 10px;
+}
+
+.oao-side-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 18px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--oao-slate-text);
+}
+
+.oao-side-card-active .oao-side-list {
+  padding: 0;
+}
+
+.oao-side-item-active {
+  background: var(--oao-gold);
+  color: #33413f;
+  font-weight: 600;
+  align-items: center;
+  padding: 14px 18px;
+}
+
+.oao-bullet {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--oao-gold-bullet);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.oao-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background:
+    radial-gradient(circle at center, #33413f 0 3px, transparent 4px);
+  box-shadow: inset 0 0 0 2px var(--oao-gold);
+  flex-shrink: 0;
+}
+
+.oao-side-item-label {
+  display: inline-block;
+}
+
+/* ------------------------------- Content ------------------------------- */
+
+
+
+
+.oao-h1 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 600;
+  color: var(--oao-slate-text);
+  white-space: nowrap;
+}
+
+.oao-title-rule {
+  height: 1px;
+  background: var(--oao-border);
+}
+
+.oao-section-heading {
+  margin-top: 34px;
+}
+
+.oao-heading-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--oao-icon-bg);
+  color: var(--oao-slate-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.oao-h2 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--oao-slate-text);
+}
+
+.oao-h2-plain {
+  font-size: 22px;
+}
+
+.oao-h3 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--oao-slate-text);
+  margin: 20px 0 8px;
+}
+
+.oao-p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--oao-muted);
+  margin-bottom: 12px;
+}
+
+.oao-p strong {
+  color: var(--oao-slate-text);
+  font-weight: 600;
+}
+
+.oao-muted {
+  font-size: 13px;
+  color: var(--oao-muted);
+}
+
+.oao-link {
+  color: var(--oao-link);
+  text-decoration: none;
+}
+
+.oao-link:hover {
+  text-decoration: underline;
+  color: #cf8f57;
+}
+
+/* Highlighted note box (Introduction) */
+.oao-note-box {
+  background: var(--oao-beige);
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--oao-slate-text);
+}
+
+/* ------------------------------- Table ------------------------------- */
+.oao-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 520px;
+}
+
+.oao-table thead th {
+  background: var(--oao-beige);
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-weight: 600;
+  color: var(--oao-slate-text);
+  padding: 16px 20px;
+}
+
+.oao-table thead th:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.oao-table thead th:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  text-align: center;
+}
+
+.oao-table tbody td {
+  padding: 14px 20px;
+  color: var(--oao-muted);
+  border-bottom: 1px solid var(--oao-border);
+}
+
+.oao-table tbody td:last-child {
+  text-align: center;
+}
+
+/* -------------------------- Resource cards -------------------------- */
+.oao-resource-card {
+  border: 1px solid var(--oao-border);
+  border-radius: 10px;
+  padding: 28px 20px 22px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.oao-resource-card:hover {
+  box-shadow: 0 8px 22px rgba(58, 77, 79, 0.08);
+  transform: translateY(-2px);
+}
+
+.oao-resource-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--oao-icon-bg);
+  color: var(--oao-slate-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.oao-resource-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--oao-slate-text);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.oao-resource-rule {
+  width: 46px;
+  height: 2px;
+  background: var(--oao-gold-bullet);
+  border-radius: 2px;
+  margin-top: auto;
+}
+
+/* ------------------------------ Responsive ------------------------------ */
+@media (max-width: 991.98px) {
+  .oao-sidebar {
+    position: static;
+  }
+
+  .oao-content {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   GUIDE FOR AUTHORS PAGE (.ga-*)
+   ========================================================================== */
+.ga-root {
+  --ga-charcoal: #3C4D4B;
+  --ga-khaki: #c8a27c;
+  --ga-tint: #efe6da;
+  --ga-border: #e6e6e6;
+  --ga-heading: #2f3e3c;
+  --ga-muted: #64748B;
+
+  color: var(--ga-muted);
+}
+
+/* ------------------------------- Sidebar ------------------------------- */
+.ga-sidebar {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  border: 1px solid #D9D9D9;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+/* Dark title card */
+.ga-side-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ga-charcoal);
+  color: #fff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 20px;
+  padding: 18px 20px;
+  border-radius: 10px;
+}
+
+.ga-side-title-icon {
+  display: inline-flex;
+  font-size: 22px;
+  color: var(--ga-khaki);
+}
+
+/* Grouped navigation */
+.ga-side-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #CFB28D;
+  padding-bottom: 10px;
+}
+
+.ga-side-group-icon {
+  color: var(--ga-khaki);
+  font-size: 15px;
+}
+
+.ga-side-group-active .ga-side-group-head,
+.ga-side-group-active {
+  color: var(--ga-khaki);
+}
+
+.ga-side-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ga-side-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #3C4D4B;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ga-side-item:hover {
+  color: var(--ga-khaki);
+}
+
+.ga-side-item-active {
+  color: var(--ga-khaki);
+  font-weight: 600;
+}
+
+.ga-bullet {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ga-khaki);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.ga-side-item-label {
+  display: inline-block;
+}
+
+/* ------------------------------- Content ------------------------------- */
+.ga-content {
+  border: 1px solid #E2E8F0;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.ga-section-heading {
+  margin: 34px 0 16px;
+}
+
+.ga-content>.ga-section-heading:first-child {
+  margin-top: 0;
+}
+
+.ga-heading-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--ga-tint);
+  color: var(--ga-heading);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.ga-h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ga-heading);
+}
+
+.ga-h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ga-heading);
+  margin: 22px 0 8px;
+}
+
+.ga-p {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ga-muted);
+  margin-bottom: 14px;
+}
+
+.ga-p-lead {
+  font-weight: 600;
+  color: var(--ga-heading);
+}
+
+.ga-p-link-row {
+  margin-bottom: 6px;
+}
+
+.ga-link {
+  color: var(--ga-khaki);
+  text-decoration: none;
+}
+
+.ga-link:hover {
+  text-decoration: underline;
+}
+
+.ga-ol {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--ga-muted);
+}
+
+.ga-ol li {
+  margin-bottom: 8px;
+  padding-left: 6px;
+}
+
+.ga-ol strong {
+  color: var(--ga-heading);
+  font-weight: 600;
+}
+
+.ga-ol-alpha {
+  list-style: lower-alpha;
+}
+
+/* ------------------------------- Pagination ------------------------------- */
+.ga-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.ga-page,
+.ga-page-arrow {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ga-heading);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ga-page:hover {
+  background: var(--ga-tint);
+}
+
+.ga-page-active {
+  background: var(--ga-tint);
+  color: var(--ga-heading);
+  font-weight: 600;
+}
+
+.ga-page-arrow {
+  background: var(--ga-charcoal);
+  color: #fff;
+  font-size: 18px;
+}
+
+.ga-page-arrow:hover {
+  background: #2f3e3c;
+}
+
+.ga-page-ellipsis {
+  min-width: 30px;
+  text-align: center;
+  color: var(--ga-muted);
+  letter-spacing: 1px;
+}
+
+/* ------------------------------ Responsive ------------------------------ */
+@media (max-width: 991.98px) {
+  .ga-sidebar {
+    position: static;
+  }
+
+  .ga-content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ga-side-title {
+    font-size: 18px;
+  }
+
+  .ga-h2 {
+    font-size: 20px;
+  }
+
+  .ga-h3 {
+    font-size: 16px;
+  }
+}

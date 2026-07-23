@@ -14,6 +14,7 @@ const News = lazy(() => import('../pages/About/News/index.jsx'));
 const LanguageEditing = lazy(() => import('../pages/LanguageEditing/index.jsx'));
 const SubmitArticle = lazy(() => import('../pages/SubmitArticle/index.jsx'));
 const OpenAccessOption = lazy(() => import('../pages/OpenAccessOption/index.jsx'));
+const GuideAuthors = lazy(() => import('../pages/GuideAuthors/index.jsx'));
 
 /**
  * Route table. `meta` drives the shared page chrome that <Layout> renders
@@ -26,8 +27,8 @@ const OpenAccessOption = lazy(() => import('../pages/OpenAccessOption/index.jsx'
  *             Issues) keep it in-page and leave this false.
  */
 export const routes = [
-  { path: '/', element: Home, meta: { hero: null, stats: false, topbar: false } },
-  { path: '/journals-and-books', element: Journal, meta: { hero: null, stats: false, topbar: false } },
+  { path: '/', element: Home, },
+  { path: '/journals-and-books', element: Journal, },
   { path: '/latest-issues', element: LatestIssues, meta: { hero: 'standard', stats: true, topbar: false } },
   { path: '/all-issues', element: AllIssues, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/articles-press', element: ArticlesPress, meta: { hero: 'standard', stats: true, topbar: false } },
@@ -39,7 +40,9 @@ export const routes = [
   { path: '/language-editing', element: LanguageEditing, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/submit-article', element: SubmitArticle, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/open-access-Option', element: OpenAccessOption, meta: { hero: 'standard', stats: true, topbar: true } },
+  { path: '/guide-for-author', element: GuideAuthors, meta: { hero: 'standard', stats: true, topbar: true } },
 ];
+
 
 
 const DEFAULT_META = { hero: null, stats: false, topbar: false };
