@@ -19,11 +19,17 @@ const aboutItems = [
 
 
 const publishItems = [
-	{ key: 'article', label: <Link to="/submit-article" className="sd-drop-link">Submit Your Article</Link> },
-	{ key: 'author', label: <Link to="/guide-for-author" className="sd-drop-link">Guide For authors </Link> },
-	{ key: 'access', label: <Link to="/open-access-Option" className="sd-drop-link">Open Access Details</Link> },
-	{ key: 'language', label: <Link to="/language-editing" className="sd-drop-link">Language Editing service</Link> },
+	{ key: 'article', label: <Link to="" className="sd-drop-link">Submit Your Article</Link> },
+	{ key: 'author', label: <Link to="" className="sd-drop-link">Guide For authors </Link> },
+	{ key: 'access', label: <Link to="" className="sd-drop-link">Open Access Details</Link> },
+	{ key: 'language', label: <Link to="" className="sd-drop-link">Language Editing service</Link> },
 ];
+// const publishItems = [
+// 	{ key: 'article', label: <Link to="/submit-article" className="sd-drop-link">Submit Your Article</Link> },
+// 	{ key: 'author', label: <Link to="/guide-for-author" className="sd-drop-link">Guide For authors </Link> },
+// 	{ key: 'access', label: <Link to="/open-access-Option" className="sd-drop-link">Open Access Details</Link> },
+// 	{ key: 'language', label: <Link to="/language-editing" className="sd-drop-link">Language Editing service</Link> },
+// ];
 
 export default function TopBar() {
 	const [isSticky, setIsSticky] = useState(false);
