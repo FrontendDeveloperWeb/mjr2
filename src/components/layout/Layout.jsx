@@ -18,18 +18,6 @@ export default function Layout({ children }) {
       <main id="content">
         <Suspense fallback={<PageLoader />}>
           {hero === 'standard' && <PageHero />}
-          {/* {stats && (
-            <section className="stat-sec">
-              <StatsBar />
-            </section>
-          )} */}
-          {/* {topbar && (
-            <section>
-              <div className="container">
-                <DashboardTopBar />
-              </div>
-            </section>
-          )} */}
           {children}
         </Suspense>
       </main>

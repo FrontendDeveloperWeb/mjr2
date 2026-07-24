@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
 export default function Header() {
+  const naviagate = useNavigate();
 
 
   return (
@@ -41,10 +42,10 @@ export default function Header() {
                   <img src="/assets/img/h-back-icon.png" alt="" />
                 </a></li>
                 <li>
-                  <button className='custom-btn transparent-btn'>Register</button>
+                  <button className='custom-btn transparent-btn' onClick={() => naviagate("/register")}>Register</button>
                 </li>
                 <li>
-                  <button className='custom-btn yellow-btn'>Sign In</button>
+                  <button className='custom-btn yellow-btn' onClick={() => naviagate("/login")}>Sign In</button>
                 </li>
               </ul>
             </div>

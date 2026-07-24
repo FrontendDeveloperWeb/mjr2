@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, Button, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -19,9 +19,9 @@ const aboutItems = [
 
 
 const publishItems = [
-	{ key: 'article', label: <Link to="" className="sd-drop-link">Submit Your Article</Link> },
+	{ key: 'article', label: <Link to="/login" className="sd-drop-link">Submit Your Article</Link> },
 	{ key: 'author', label: <Link to="" className="sd-drop-link">Guide For authors </Link> },
-	{ key: 'access', label: <Link to="" className="sd-drop-link">Open Access Details</Link> },
+	{ key: 'access', label: <Link to="/open-access-Option" className="sd-drop-link">Open Access Details</Link> },
 	{ key: 'language', label: <Link to="" className="sd-drop-link">Language Editing service</Link> },
 ];
 // const publishItems = [
@@ -34,7 +34,7 @@ const publishItems = [
 export default function TopBar() {
 	const [isSticky, setIsSticky] = useState(false);
 	const sentinelRef = useRef(null);
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
 		if (!sentinel) return;
@@ -135,7 +135,7 @@ export default function TopBar() {
 											</div>
 
 											{/* Submit Button */}
-											<Button className="sd-btn-submit-article px-3 h-100">
+											<Button className="sd-btn-submit-article px-3 h-100" onClick={() => navigate("/login")}>
 												Submit your article
 											</Button>
 

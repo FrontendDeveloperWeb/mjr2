@@ -15,6 +15,10 @@ const LanguageEditing = lazy(() => import('../pages/LanguageEditing/index.jsx'))
 const SubmitArticle = lazy(() => import('../pages/SubmitArticle/index.jsx'));
 const OpenAccessOption = lazy(() => import('../pages/OpenAccessOption/index.jsx'));
 const GuideAuthors = lazy(() => import('../pages/GuideAuthors/index.jsx'));
+const Login = lazy(() => import('../pages/Auth/Login/index.jsx'));
+const Register = lazy(() => import('../pages/Auth/Register/index.jsx'));
+const ForgotPassword = lazy(() => import('../pages/Auth/ForgotPassword/index.jsx'));
+const LoginHelp = lazy(() => import('../pages/Auth/loginHelp/index.jsx'));
 
 /**
  * Route table. `meta` drives the shared page chrome that <Layout> renders
@@ -41,6 +45,13 @@ export const routes = [
   { path: '/submit-article', element: SubmitArticle, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/open-access-Option', element: OpenAccessOption, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/guide-for-author', element: GuideAuthors, meta: { hero: 'standard', stats: true, topbar: true } },
+  // Auth Route
+  { path: '/login', element: Login, },
+  { path: '/register', element: Register, },
+  { path: '/forgot-password', element: ForgotPassword, },
+  { path: '/login-help', element: LoginHelp, },
+
+
 ];
 
 

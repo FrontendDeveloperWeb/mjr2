@@ -1,1 +1,0 @@
-import{An as e}from"./index-2taWmeOv.js";var t=e(),n=()=>(0,t.jsx)(`section`,{className:`le-root`,children:(0,t.jsx)(`h1`,{children:`Submit Your Article`})});export{n as default};

@@ -86,9 +86,9 @@ export default function OpenAccessSection({ indexingLogos, indexingLogos2 }) {
                       <li><EyeOutlined className="me-2" /> Open access for global research</li>
                     </ul>
 
-                    <Button className="sd-oa-float-btn-more w-100 d-flex align-items-center justify-content-center">
+                    {/* <Button className="sd-oa-float-btn-more w-100 d-flex align-items-center justify-content-center">
                       Learn More <ArrowRightOutlined className="ms-2" />
-                    </Button>
+                    </Button> */}
                   </div>
 
                 </div>
