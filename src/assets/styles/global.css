@@ -6288,3 +6288,285 @@ ul.apc-list {
     width: 100%;
   }
 }
+
+/* ==========================================
+   AUTH — REGISTER STEP 2 (profile form)
+   ========================================== */
+
+/* --- Stepper indicator --- */
+.reg-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px !important;
+}
+
+.reg-stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 0;
+  color: #9aa3a2;
+  font-family: 'Afacad-Medium' !important;
+  font-size: 14px;
+}
+
+.reg-stepper-item:not(:last-child)::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background-color: #e6e9e9;
+  border-radius: 2px;
+}
+
+.reg-stepper-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #d9dede;
+  background-color: #ffffff;
+  color: #7c8686;
+  font-family: 'Afacad-Bold' !important;
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+
+.reg-stepper-item.is-active .reg-stepper-num {
+  background-color: #CFB28D;
+  border-color: #CFB28D;
+  color: #4a3b2c;
+}
+
+.reg-stepper-item.is-active {
+  color: #3C4D4B;
+}
+
+.reg-stepper-item.is-done .reg-stepper-num {
+  background-color: #3C4D4B;
+  border-color: #3C4D4B;
+  color: #ffffff;
+}
+
+.reg-stepper-item.is-done {
+  color: #3C4D4B;
+}
+
+/* --- Step 2 form sections --- */
+.reg-section {
+  border: 1px solid #e6e9e9;
+  border-radius: 10px;
+  padding: 20px 20px 6px;
+  margin-bottom: 20px;
+  background-color: #fbfbfa;
+}
+
+.reg-section-title {
+  color: #3C4D4B;
+  font-family: 'Afacad-SemiBold' !important;
+  font-size: 16px;
+  margin: 0 0 16px !important;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e9e9;
+}
+
+.reg-step2-form .ant-form-item {
+  margin-bottom: 14px;
+}
+
+.reg-step2-form .ant-select .ant-select-selector,
+.reg-step2-form .ant-input,
+.reg-step2-form .ant-input-affix-wrapper {
+  border-radius: 6px;
+  border: 1px solid #d9dede;
+}
+
+.reg-step2-form .ant-select-single {
+  height: 42px;
+}
+
+.reg-step2-form .ant-select-single .ant-select-selector {
+  height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.reg-step2-form .ant-radio-wrapper {
+  color: #3C4D4B;
+  font-family: 'Afacad-Medium' !important;
+}
+
+.reg-step2-form .ant-radio-checked .ant-radio-inner {
+  background-color: #CFB28D;
+  border-color: #CFB28D;
+}
+
+.reg-step2-form .ant-radio:hover .ant-radio-inner {
+  border-color: #CFB28D;
+}
+
+/* --- Selector rows (Classifications / Keywords) --- */
+.reg-selector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0;
+}
+
+.reg-selector-summary {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.reg-selector-empty {
+  color: #9aa3a2;
+  font-size: 14px;
+}
+
+.reg-selector-btn.ant-btn {
+  height: 40px;
+  border-radius: 6px;
+  font-family: 'Afacad-Medium' !important;
+  box-shadow: none;
+}
+
+.reg-tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reg-keyword-tag.ant-tag {
+  border: 1px solid #e2d7c4;
+  background-color: #faf6f0;
+  color: #4a3b2c;
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.reg-keyword-tag.ant-tag .ant-tag-close-icon {
+  color: #b09166;
+}
+
+.reg-step2-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.reg-step2-actions .ant-btn {
+  height: 44px;
+  min-width: 150px;
+  border-radius: 8px;
+  font-family: 'Afacad-Medium' !important;
+  box-shadow: none;
+}
+
+/* --- Register modals (Classifications / Keywords) --- */
+.reg-modal .ant-modal-title {
+  color: #3C4D4B;
+  font-family: 'Afacad-SemiBold' !important;
+  font-size: 18px;
+}
+
+.reg-modal-hint {
+  color: #556666;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin-bottom: 14px !important;
+}
+
+.reg-modal-search {
+  margin-bottom: 12px;
+}
+
+.reg-tree-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e6e9e9;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #fbfbfa;
+}
+
+.reg-modal .ant-tree .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
+  background-color: #CFB28D;
+  border-color: #CFB28D;
+}
+
+.reg-modal .ant-tree .ant-tree-checkbox:hover .ant-tree-checkbox-inner {
+  border-color: #CFB28D;
+}
+
+.reg-modal-selected {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e6e9e9;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+}
+
+.reg-modal-selected-label {
+  color: #3C4D4B;
+  font-family: 'Afacad-Medium' !important;
+  font-size: 13.5px;
+}
+
+.reg-modal-selected-list {
+  color: #7c8686;
+  font-size: 13px;
+}
+
+.reg-keyword-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.reg-keyword-add.ant-btn {
+  height: 42px;
+  border-radius: 6px;
+  min-width: 84px;
+  box-shadow: none;
+}
+
+.reg-keyword-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  align-items: flex-start;
+}
+
+/* --- Responsive --- */
+@media (max-width: 575.98px) {
+  .reg-stepper-label {
+    display: none;
+  }
+
+  .reg-section {
+    padding: 16px 14px 4px;
+  }
+
+  .reg-step2-actions {
+    flex-direction: column-reverse;
+  }
+
+  .reg-step2-actions .ant-btn {
+    width: 100%;
+  }
+
+  .reg-selector-btn.ant-btn {
+    width: 100%;
+  }
+}
