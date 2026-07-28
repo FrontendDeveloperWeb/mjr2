@@ -20,7 +20,7 @@ const aboutItems = [
 
 const publishItems = [
 	{ key: 'article', label: <Link to="/login" className="sd-drop-link">Submit Your Article</Link> },
-	{ key: 'author', label: <Link to="" className="sd-drop-link">Guide For authors </Link> },
+	{ key: 'author', label: <Link to="/guide-for-author" className="sd-drop-link">Guide For authors </Link> },
 	{ key: 'access', label: <Link to="/open-access-Option" className="sd-drop-link">Open Access Details</Link> },
 	{ key: 'language', label: <Link to="" className="sd-drop-link">Language Editing service</Link> },
 ];
@@ -39,10 +39,7 @@ export default function TopBar() {
 		const sentinel = sentinelRef.current;
 		if (!sentinel) return;
 
-		// IntersectionObserver instead of a scroll listener: it never reads layout
-		// synchronously (no `offsetTop` per scroll tick => no scroll jank/stutter),
-		// and observing a sentinel ABOVE the header makes it loop-immune.
-		// When the sentinel scrolls off the top of the viewport, the header is stuck.
+	
 		const observer = new IntersectionObserver(
 			([entry]) => setIsSticky(!entry.isIntersecting),
 			{ root: null, threshold: 0 }

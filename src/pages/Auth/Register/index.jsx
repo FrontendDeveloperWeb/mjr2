@@ -34,7 +34,7 @@ export default function Register() {
   // shared name/email fields (it's the authoritative, detailed capture).
   const handleFinalSubmit = (step2Values) => {
     const payload = {
-      ...step1Data,
+      ...step1Data, 
       ...step2Values,
     };
     // Drop the confirmation field — it's a UI-only check, not API data.
