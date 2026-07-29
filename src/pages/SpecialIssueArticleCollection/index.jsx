@@ -4,6 +4,7 @@ import CollectionsSidebar from '../../components/partials/SpecialIssues/Collecti
 import CollectionsList from '../../components/partials/SpecialIssues/CollectionsList.jsx';
 import Layout from '../../components/layout/Layout.jsx';
 import TopBar from '../../components/shared/TopBar/index.jsx';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll.js';
 
 const FILTER_TYPES = [
   { id: 'all', label: 'All collections', count: 30 },
@@ -48,6 +49,9 @@ export default function SpecialIssueArticleCollection() {
     return ALL_COLLECTIONS.filter((collection) => collection.type === activeFilter);
   }, [activeFilter]);
 
+  // Load-on-scroll window; resets automatically when the active filter changes.
+  const { visibleItems, hasMore, loading, sentinelRef } = useInfiniteScroll(filteredCollections);
+
   return (
 
     <Layout>
@@ -62,7 +66,12 @@ export default function SpecialIssueArticleCollection() {
             activeFilter={activeFilter}
             onFilterChange={setActiveFilter}
           />
-          <CollectionsList collections={filteredCollections} />
+          <CollectionsList
+            collections={visibleItems}
+            hasMore={hasMore}
+            loading={loading}
+            sentinelRef={sentinelRef}
+          />
         </div>
 
         <div className="sd-sic-about-publication d-flex align-items-start gap-3 mt-4">

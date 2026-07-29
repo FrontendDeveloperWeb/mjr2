@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
+import { login } from '../../../auth/session.js';
 
 // Roles wired to the four login buttons. Kept as data so the submit
 // handler stays generic and API integration only touches one place.
@@ -12,6 +13,7 @@ const LOGIN_ROLES = [
 ];
 
 export default function Login() {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   // Single, role-aware submit path. Validates the shared username/password
@@ -23,6 +25,9 @@ export default function Login() {
         const payload = { ...values, role };
         // TODO: integrate auth API — POST payload to /services/api.js helper.
         console.log('login submit', payload);
+        // Establish the (mock) session and enter the author area.
+        login({ role, username: values.username });
+        navigate('/author/main-menu');
       })
       .catch(() => {
         /* validation errors are surfaced inline by antd */
@@ -117,7 +122,7 @@ export default function Login() {
                 </div>
 
                 <div className="auth-inline-links">
-                  <Link to="/forget-password" className="auth-link">Send Login Details</Link>
+                  <Link to="/forgot-password" className="auth-link">Send Login Details</Link>
                   <span className="auth-sep" />
                   <Link to="/register" className="auth-link">Register Now</Link>
                   <span className="auth-sep" />
@@ -129,7 +134,7 @@ export default function Login() {
                 <p className="auth-new-text">New: Login with your Elsevier account</p>
 
                 <div className="auth-new-btns">
-                  <Button block className="auth-register-btn">
+                  <Button block className="auth-register-btn" onClick={() => navigate("/register")}>
                     <span className="auth-btn-user"><img src="/assets/img/user-icon.png" alt="" /></span> Register
                   </Button>
                   <Button block className="auth-primary-btn">
@@ -139,10 +144,10 @@ export default function Login() {
 
                 <div className="auth-copyright-row">
                   <span className="auth-muted">
-                    Software Copyright &copy; 2026 Aries Systems Corporation.
+                    Software Copyright &copy; 2026 xyz.
                   </span>
                   <span className="auth-copyright-links">
-                    <Link to="" className="auth-link">Aries Privacy Policy</Link>
+                    <Link to="" className="auth-link"> Privacy Policy</Link>
                     <span className="auth-sep-thin">|</span>
                     <Link to="" className="auth-link">Data Privacy Policy</Link>
                   </span>

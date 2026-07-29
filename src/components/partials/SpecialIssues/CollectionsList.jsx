@@ -1,8 +1,8 @@
 import { Input } from 'antd';
 import { SearchOutlined, CalendarOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { PaginationShell, PageButton, PaginationEllipsis } from '../../shared/PaginationBar/PaginationBar.jsx';
+import InfiniteScrollLoader from '../../shared/InfiniteScroll/InfiniteScrollLoader.jsx';
 
-export default function CollectionsList({ collections }) {
+export default function CollectionsList({ collections, hasMore, loading, sentinelRef }) {
   return (
     <div className="col-12 col-md-8 col-lg-9">
 
@@ -53,14 +53,8 @@ export default function CollectionsList({ collections }) {
         )}
       </div>
 
-      {/* Decorative pagination — reuses the shared Journal pagination primitives */}
-      <PaginationShell className="mt-4" prevDisabled>
-        <PageButton active>1</PageButton>
-        <PageButton>2</PageButton>
-        <PageButton>3</PageButton>
-        <PaginationEllipsis />
-        <PageButton>42</PageButton>
-      </PaginationShell>
+      {/* Load-on-scroll sentinel + spinner (replaces the former pagination bar) */}
+      <InfiniteScrollLoader sentinelRef={sentinelRef} loading={loading} hasMore={hasMore} className="mt-4" />
 
     </div >
   );

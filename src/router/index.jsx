@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 
+
 const Home = lazy(() => import('../pages/Home/index.jsx'));
 const Journal = lazy(() => import('../pages/Journal/index.jsx'));
 const LatestIssues = lazy(() => import('../pages/LatestIssues/index.jsx'));
@@ -19,6 +20,11 @@ const Login = lazy(() => import('../pages/Auth/Login/index.jsx'));
 const Register = lazy(() => import('../pages/Auth/Register/index.jsx'));
 const ForgotPassword = lazy(() => import('../pages/Auth/ForgotPassword/index.jsx'));
 const LoginHelp = lazy(() => import('../pages/Auth/loginHelp/index.jsx'));
+const Policies = lazy(() => import('../pages/Policies/index.jsx'));
+const PolicyView = lazy(() => import('../pages/Policies/PolicyView/index.jsx'));
+// Author area (protected)
+const AuthorMainMenu = lazy(() => import('../pages/author/MainMenu/index.jsx'));
+const SubmitManuscript = lazy(() => import('../pages/author/SubmitManuscript/index.jsx'));
 
 /**
  * Route table. `meta` drives the shared page chrome that <Layout> renders
@@ -50,6 +56,15 @@ export const routes = [
   { path: '/register', element: Register, },
   { path: '/forgot-password', element: ForgotPassword, },
   { path: '/login-help', element: LoginHelp, },
+  // Author area — gated by <ProtectedRoute> (see App.jsx)
+  { path: '/author/main-menu', element: AuthorMainMenu, requiresAuth: true },
+  { path: '/author/submit-manuscript', element: SubmitManuscript, requiresAuth: true },
+  { path: '/policies', element: Policies, },
+  // Single dynamic viewer: slug picks the document (privacy-policy /
+  // terms-and-conditions); optional ?source=publisher|aries adds context.
+  { path: '/policies/:slug', element: PolicyView, },
+
+
 
 
 ];

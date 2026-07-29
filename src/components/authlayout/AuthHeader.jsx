@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, Button, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -7,7 +7,7 @@ import { DownOutlined } from '@ant-design/icons';
 
 const aboutItems = [
     { key: 'journal', label: <Link to="/journals-and-books" className="sd-drop-link">Journal Overview </Link> },
-    { key: 'instructions', label: <Link to="" className="sd-drop-link">Instructions For Auther</Link> },
+    { key: 'instructions', label: <Link to="/guide-for-author   " className="sd-drop-link">Instructions For Auther</Link> },
     { key: 'contact', label: <Link to="" className="sd-drop-link">Contact</Link> },
     { key: 'polices', label: <Link to="" className="sd-drop-link">Polices</Link> },
 ];
@@ -20,7 +20,7 @@ const helpItems = [
 ];
 
 export default function AdminHeader() {
-
+    const navigate = useNavigate();
 
     return (
         <div className='auth-header'>
@@ -38,10 +38,10 @@ export default function AdminHeader() {
                             <div>
                                 <ul className='list-area d-flex align-items-center justify-content-between'>
                                     <li>
-                                        <button className='custom-btn transparent-btn'>Register</button>
+                                        <button className='custom-btn transparent-btn' onClick={() => navigate("/register")}>Register</button>
                                     </li>
                                     <li>
-                                        <button className='custom-btn yellow-btn'>Sign In</button>
+                                        <button className='custom-btn yellow-btn' onClick={() => navigate("/login")}>Sign In</button>
                                     </li>
                                 </ul>
                             </div>

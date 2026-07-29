@@ -5,8 +5,7 @@ import PublicationsList from '../../components/partials/Journal/PublicationsList
 import ExploreResearchSection from '../../components/partials/Journal/ExploreResearchSection.jsx';
 import TopBar from '../../components/shared/TopBar/index.jsx';
 import Layout from '../../components/layout/Layout.jsx';
-
-const ITEMS_PER_PAGE = 7;
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll.js';
 
 // Raw mock database mapping image values precisely
 const ALL_PUBLICATIONS = [
@@ -76,7 +75,6 @@ const RECENT_PUBLICATIONS = [
 ];
 
 export default function Journal() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [sortBy, setSortBy] = useState('A-Z');
 
@@ -93,18 +91,13 @@ export default function Journal() {
     return result;
   }, [selectedTypes, sortBy]);
 
-  // Pagination Window Slice calculation
+  // Load-on-scroll window over the filtered set. The hook resets its window
+  // automatically when `filteredPublications` changes (filter / sort).
   const totalItems = filteredPublications.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  const currentDataSlice = useMemo(() => {
-    const startOffset = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredPublications.slice(startOffset, startOffset + ITEMS_PER_PAGE);
-  }, [filteredPublications, currentPage]);
+  const { visibleItems, hasMore, loading, sentinelRef } = useInfiniteScroll(filteredPublications);
 
   const handleFilterChange = (checkedValues) => {
     setSelectedTypes(checkedValues);
-    setCurrentPage(1); // Reset index frame window
   };
 
 
@@ -124,13 +117,13 @@ export default function Journal() {
             <div className="row g-4">
               <FiltersSidebar onFilterChange={handleFilterChange} />
               <PublicationsList
-                publications={currentDataSlice}
+                publications={visibleItems}
                 totalItems={totalItems}
                 sortBy={sortBy}
                 onSortChange={setSortBy}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                hasMore={hasMore}
+                loading={loading}
+                sentinelRef={sentinelRef}
               />
             </div>
           </div>

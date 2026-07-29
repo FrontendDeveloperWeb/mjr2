@@ -1,27 +1,25 @@
-import { Button, Pagination } from 'antd';
+import { Button } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import DashboardTopBar from '../../layout/DashboardTopBar.jsx';
 import VolumeSidebar from './VolumeSidebar.jsx';
 import UpdatesAlertBanner from './UpdatesAlertBanner.jsx';
 import EditorialBoardRow from './EditorialBoardRow.jsx';
 import ArticleCard from './LatestCard.jsx';
+import InfiniteScrollLoader from '../../shared/InfiniteScroll/InfiniteScrollLoader.jsx';
 
 export default function LatestDashboardSection({
   volume,
   pageRange,
   sectionTitle,
   editorialBoard,
-  articles,
   articlesForPage,
-  pageSize,
-  currentPage,
-  onPageChange,
+  hasMore,
+  loading,
+  sentinelRef,
   showPreviews,
   onTogglePreviews,
   showContentsIndex = true,
 }) {
-  const totalPages = Math.ceil(articles.length / pageSize);
-
   return (
     <section>
       <div className="sd-ae-dashboard-wrapper py-4">
@@ -43,19 +41,13 @@ export default function LatestDashboardSection({
             {/* ================= RIGHT CONTENT AREA ================= */}
             <div className="col-12 col-md-8 col-lg-9">
               <UpdatesAlertBanner />
+              {/* Volume/issue navigation — kept for layout parity; wire to a
+                  real volume switch when the backend exposes sibling issues. */}
               <div className="d-flex justify-content-end mb-4 gap-2">
-                <Button
-                  className="sd-ae-btn-volume-switch btn-sm"
-                  disabled={currentPage === 1}
-                  onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-                >
+                <Button className="sd-ae-btn-volume-switch btn-sm" disabled>
                   <LeftOutlined /> Previous vol/issue
                 </Button>
-                <Button
-                  className="sd-ae-btn-volume-switch btn-sm"
-                  disabled={currentPage === totalPages}
-                  onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
-                >
+                <Button className="sd-ae-btn-volume-switch btn-sm">
                   Next vol/issue <RightOutlined />
                 </Button>
               </div>
@@ -70,17 +62,8 @@ export default function LatestDashboardSection({
                   <ArticleCard key={article.id} article={article} />
                 ))}
 
-                {/* ================= MATCHED STYLED ANTD PAGINATION CONTROLLER ================= */}
-                <div className="sd-ae-global-footer-pagination d-flex justify-content-center align-items-center mt-5">
-                  <Pagination
-                    current={currentPage}
-                    onChange={onPageChange}
-                    total={articles.length}
-                    pageSize={pageSize}
-                    showSizeChanger={false}
-                    className="sd-ae-custom-antd-pagination"
-                  />
-                </div>
+                {/* ================= LOAD-ON-SCROLL SENTINEL + SPINNER ================= */}
+                <InfiniteScrollLoader sentinelRef={sentinelRef} loading={loading} hasMore={hasMore} />
               </div>
 
             </div>

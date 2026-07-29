@@ -87,7 +87,7 @@ export default function ForgotPassword() {
 
                                 <div className="auth-copyright-row">
                                     <span className="auth-muted">
-                                        Software Copyright &copy; 2026 Aries Systems Corporation.
+                                        Software Copyright &copy; 2026 xyz.
                                     </span>
                                     <span className="auth-copyright-links">
                                         <Link to="" className="auth-link">Aries Privacy Policy</Link>

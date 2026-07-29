@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import PublicationListItem from './PublicationListItem.jsx';
-import PaginationBar from '../../shared/PaginationBar/PaginationBar.jsx';
+import InfiniteScrollLoader from '../../shared/InfiniteScroll/InfiniteScrollLoader.jsx';
 
 const { Option } = Select;
 
@@ -9,9 +9,9 @@ export default function PublicationsList({
   totalItems,
   sortBy,
   onSortChange,
-  currentPage,
-  totalPages,
-  onPageChange,
+  hasMore,
+  loading,
+  sentinelRef,
 }) {
   return (
     <div className="col-12 col-md-8 col-lg-9 ps-lg-4">
@@ -42,7 +42,7 @@ export default function PublicationsList({
         )}
       </div>
 
-      <PaginationBar currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+      <InfiniteScrollLoader sentinelRef={sentinelRef} loading={loading} hasMore={hasMore} />
 
     </div>
   );

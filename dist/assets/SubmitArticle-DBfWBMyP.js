@@ -1,0 +1,1 @@
+import{hr as e}from"./index-koqP3Z4s.js";var t=e(),n=()=>(0,t.jsx)(`section`,{className:`le-root`,children:(0,t.jsx)(`h1`,{children:`Submit Your Article`})});export{n as default};

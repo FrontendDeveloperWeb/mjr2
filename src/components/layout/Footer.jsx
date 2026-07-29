@@ -145,8 +145,8 @@ export default function Footer() {
             Copyright © 2025 . All rights reserved.
           </div>
           <div className="sd-basebar-links-row d-flex gap-4 mt-3 mt-md-0">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms & Condition</a>
+            <Link to="/policies/privacy-policy">Privacy Policy</Link>
+            <Link to="/policies/terms-and-conditions">Terms & Condition</Link>
             <a href="#legal">Legal</a>
           </div>
         </div>

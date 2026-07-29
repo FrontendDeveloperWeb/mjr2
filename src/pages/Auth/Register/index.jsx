@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
 import RegisterStepOne from '../../../components/partials/Register/RegisterStepOne.jsx';
 import RegisterStepTwo from '../../../components/partials/Register/RegisterStepTwo.jsx';
+import { login } from '../../../auth/session.js';
 
 const STEPS = [
   { key: 1, label: 'Account Details' },
@@ -16,6 +18,7 @@ const STEPS = [
  * payload ready for the registration API.
  */
 export default function Register() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [step1Data, setStep1Data] = useState(null);
 
@@ -43,6 +46,9 @@ export default function Register() {
     // eslint-disable-next-line no-console
     console.log('Register — final payload:', JSON.stringify(payload, null, 2));
     // TODO: integrate registration API — POST payload via /services/api.js helper.
+    // Establish the (mock) session and enter the author area.
+    login({ username: payload.username || payload.email });
+    navigate('/author/main-menu');
   };
 
   return (

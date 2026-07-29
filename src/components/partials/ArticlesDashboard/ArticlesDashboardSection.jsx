@@ -1,27 +1,23 @@
-import { Button, Pagination } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import DashboardTopBar from '../../layout/DashboardTopBar.jsx';
 import VolumeSidebar from './VolumeSidebar.jsx';
 import UpdatesAlertBanner from './UpdatesAlertBanner.jsx';
 import EditorialBoardRow from './EditorialBoardRow.jsx';
 import ArticleCard from './ArticleCard.jsx';
+import InfiniteScrollLoader from '../../shared/InfiniteScroll/InfiniteScrollLoader.jsx';
 
 export default function ArticlesDashboardSection({
   volume,
   pageRange,
   sectionTitle,
   editorialBoard,
-  articles,
   articlesForPage,
-  pageSize,
-  currentPage,
-  onPageChange,
+  hasMore,
+  loading,
+  sentinelRef,
   showPreviews,
   onTogglePreviews,
   showContentsIndex = true,
 }) {
-  const totalPages = Math.ceil(articles.length / pageSize);
-
   return (
     <section>
       <div className="sd-ae-dashboard-wrapper py-4">
@@ -55,17 +51,8 @@ export default function ArticlesDashboardSection({
                   <ArticleCard key={article.id} article={article} />
                 ))}
 
-                {/* ================= MATCHED STYLED ANTD PAGINATION CONTROLLER ================= */}
-                <div className="sd-ae-global-footer-pagination d-flex justify-content-center align-items-center mt-5">
-                  <Pagination
-                    current={currentPage}
-                    onChange={onPageChange}
-                    total={articles.length}
-                    pageSize={pageSize}
-                    showSizeChanger={false}
-                    className="sd-ae-custom-antd-pagination"
-                  />
-                </div>
+                {/* ================= LOAD-ON-SCROLL SENTINEL + SPINNER ================= */}
+                <InfiniteScrollLoader sentinelRef={sentinelRef} loading={loading} hasMore={hasMore} />
               </div>
 
             </div>

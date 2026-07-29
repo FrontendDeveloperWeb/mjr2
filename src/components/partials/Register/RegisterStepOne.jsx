@@ -113,10 +113,10 @@ export default function RegisterStepOne({ defaultValues, onNext }) {
 
       <div className="auth-copyright-row">
         <span className="auth-muted">
-          Software Copyright &copy; 2026 Aries Systems Corporation.
+          Software Copyright &copy; 2026 xyz.
         </span>
         <span className="auth-copyright-links">
-          <Link to="" className="auth-link">Aries Privacy Policy</Link>
+          <Link to="" className="auth-link"> Privacy Policy</Link>
           <span className="auth-sep-thin">|</span>
           <Link to="" className="auth-link">Data Privacy Policy</Link>
         </span>
