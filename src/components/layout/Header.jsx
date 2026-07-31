@@ -28,8 +28,8 @@ export default function Header() {
           <div className="d-flex align-items-center justify-content-between">
             <Link to="/">
               <div className='web-logo'>
-                {/* <img src="/assets/img/logo.png" alt="" /> */}
-                <h2>XYZ Logo</h2>
+                <img src="/assets/img/logo.png" alt="" />
+                {/* <h2>XYZ Logo</h2> */}
               </div>
             </Link>
             <div>

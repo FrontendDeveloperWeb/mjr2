@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../../../components/layout/Layout';
 import TopBar from '../../../components/shared/TopBar';
+import { listDrafts } from '../submit-manuscript/draftStorage.js';
 
 /* ---------------- Center column data ---------------- */
-const NEW_SUBMISSIONS = [
+const NEW_SUBMISSIONS_BASE = [
   { label: 'Submissions Sent Back to Author', count: 0 },
-  { label: 'Incomplete Submissions', count: 1 },
   { label: "Submissions Waiting for Author's Approval", count: 0 },
   { label: 'Submissions Being Processed', count: 0 },
 ];
@@ -52,6 +52,12 @@ function MenuRow({ label, count }) {
 export default function AuthorMainMenu() {
   const navigate = useNavigate();
 
+  const newSubmissions = [
+    NEW_SUBMISSIONS_BASE[0],
+    { label: 'Incomplete Submissions', count: listDrafts().length },
+    ...NEW_SUBMISSIONS_BASE.slice(1),
+  ];
+
   return (
     <Layout>
       <TopBar />
@@ -84,12 +90,12 @@ export default function AuthorMainMenu() {
                     <button
                       type="button"
                       className="am-menu-link am-menu-action"
-                      onClick={() => navigate('/author/submit-manuscript')}
+                      onClick={() => navigate('/author/submit-manuscript/step-1')}
                     >
                       Submit New Manuscript
                     </button>
                   </li>
-                  {NEW_SUBMISSIONS.map((item) => (
+                  {newSubmissions.map((item) => (
                     <MenuRow key={item.label} {...item} />
                   ))}
                 </ul>

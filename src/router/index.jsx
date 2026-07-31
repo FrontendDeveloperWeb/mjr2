@@ -24,7 +24,12 @@ const Policies = lazy(() => import('../pages/Policies/index.jsx'));
 const PolicyView = lazy(() => import('../pages/Policies/PolicyView/index.jsx'));
 // Author area (protected)
 const AuthorMainMenu = lazy(() => import('../pages/author/MainMenu/index.jsx'));
-const SubmitManuscript = lazy(() => import('../pages/author/SubmitManuscript/index.jsx'));
+const SubmitManuscriptStep1 = lazy(() => import('../pages/author/submit-manuscript/step-1/index.jsx'));
+const SubmitManuscriptStep2 = lazy(() => import('../pages/author/submit-manuscript/step-2/index.jsx'));
+const SubmitManuscriptStep3 = lazy(() => import('../pages/author/submit-manuscript/step-3/index.jsx'));
+const SubmitManuscriptStep4 = lazy(() => import('../pages/author/submit-manuscript/step-4/index.jsx'));
+const SubmitManuscriptStep5 = lazy(() => import('../pages/author/submit-manuscript/step-5/index.jsx'));
+const SubmitManuscriptStep6 = lazy(() => import('../pages/author/submit-manuscript/step-6/index.jsx'));
 
 /**
  * Route table. `meta` drives the shared page chrome that <Layout> renders
@@ -58,7 +63,13 @@ export const routes = [
   { path: '/login-help', element: LoginHelp, },
   // Author area — gated by <ProtectedRoute> (see App.jsx)
   { path: '/author/main-menu', element: AuthorMainMenu, requiresAuth: true },
-  { path: '/author/submit-manuscript', element: SubmitManuscript, requiresAuth: true },
+  // Multi-page submission flow — each step is its own route.
+  { path: '/author/submit-manuscript/step-1', element: SubmitManuscriptStep1, requiresAuth: true },
+  { path: '/author/submit-manuscript/step-2', element: SubmitManuscriptStep2, requiresAuth: true },
+  { path: '/author/submit-manuscript/step-3', element: SubmitManuscriptStep3, requiresAuth: true },
+  { path: '/author/submit-manuscript/step-4', element: SubmitManuscriptStep4, requiresAuth: true },
+  { path: '/author/submit-manuscript/step-5', element: SubmitManuscriptStep5, requiresAuth: true },
+  { path: '/author/submit-manuscript/step-6', element: SubmitManuscriptStep6, requiresAuth: true },
   { path: '/policies', element: Policies, },
   // Single dynamic viewer: slug picks the document (privacy-policy /
   // terms-and-conditions); optional ?source=publisher|aries adds context.

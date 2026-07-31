@@ -5767,22 +5767,25 @@ ul.apc-list {
   }
 }
 
-.editorial-drawer .p-1{
+.editorial-drawer .p-1 {
   font-size: 18px;
 }
 
-.auth-header{
+.auth-header {
   background-color: #3c4d4b;
 }
-.auth-header h2{
+
+.auth-header h2 {
   color: #fff;
 }
-.auth-header .transparent-btn{
+
+.auth-header .transparent-btn {
   border: 1px solid #fff;
   color: #fff;
 }
+
 .auth-header .sd-nav-section {
-    background: #DFE3E6  !important;
+  background: #DFE3E6 !important;
 }
 
 /* ==========================================
@@ -5903,7 +5906,7 @@ ul.apc-list {
   margin-bottom: 16px;
 }
 
-.auth-login-form .ant-form-item-label > label {
+.auth-login-form .ant-form-item-label>label {
   color: #3C4D4B;
   font-family: 'Afacad-Medium' !important;
   font-size: 14px;
@@ -6197,9 +6200,9 @@ ul.apc-list {
 }
 
 .auth-btn-user img {
-    width: 13px;
-    margin-left: -1px;
-    margin-right: 4px;
+  width: 13px;
+  margin-left: -1px;
+  margin-right: 4px;
 }
 
 /* ==========================================
@@ -7052,11 +7055,11 @@ ul.apc-list {
   border-color: #3c4d4b;
 }
 
-.am-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+.am-steps .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon {
   color: #3c4d4b;
 }
 
-.am-steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+.am-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
   background-color: #3c4d4b;
 }
 
@@ -7208,7 +7211,7 @@ ul.apc-list {
   line-height: 1.6;
 }
 
-.am-orcid-block > p {
+.am-orcid-block>p {
   margin-bottom: 12px;
 }
 
@@ -7244,7 +7247,35 @@ ul.apc-list {
   min-width: 220px;
 }
 
-/* ---------- Step 2: Attach files ---------- */
+/* ---------- Step 1: heading & validation ---------- */
+.am-step-heading {
+  color: #223333;
+  font-size: 20px;
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #ebf1f0;
+}
+
+.am-error-text {
+  color: #d0021b;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+@media (max-width: 575.98px) {
+  .am-actions {
+    flex-direction: column-reverse;
+  }
+
+  .am-actions .ant-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Step 2: Attach Files
+   ========================================== */
 .am-attach-topbar {
   display: flex;
   justify-content: flex-end;
@@ -7255,57 +7286,101 @@ ul.apc-list {
   font-size: 13px;
 }
 
-.am-drop .ant-upload-drag {
-  background: #e9eef2;
-  border: 1px dashed #b9c6cf;
+/* ---- Upload bar (light band that holds the drop zone + item fields) ---- */
+.am-attach-bar {
+  background: #e6edf2;
+  border: 1px solid #dbe3ea;
   border-radius: 10px;
+  padding: 22px;
 }
 
-.am-drop .am-drop-icon {
-  font-size: 34px;
-  color: #3c4d4b;
-  margin-bottom: 8px;
+.am-attach-bar-initial {
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.am-drop .am-drop-text {
-  color: #3c4d4b;
-  font-size: 15px;
+.am-attach-bar-loaded {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.am-attach-fields {
+  flex: 1 1 320px;
+  max-width: 440px;
+}
+
+/* antd Dragger blends into the band — no inner border/background of its own. */
+.am-drop .ant-upload.ant-upload-drag {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.am-drop .ant-upload-btn {
+  padding: 0;
+}
+
+.am-drop-initial {
+  width: 100%;
+}
+
+.am-drop-compact {
+  flex: 0 0 auto;
+}
+
+.am-drop-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .am-drop-browse {
   background: #3c4d4b;
   color: #ffffff;
-  padding: 6px 16px;
+  padding: 7px 18px;
   border-radius: 6px;
-  margin-right: 8px;
+  font-family: 'Afacad-SemiBold', sans-serif;
   display: inline-block;
 }
 
-.am-attach-controls {
-  margin-bottom: 14px;
+.am-drop-or {
+  color: #556666;
+  font-size: 14px;
 }
 
-.am-attach-field {
-  max-width: 420px;
+.am-drop-dd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #3c4d4b;
+  font-size: 14px;
+}
+
+.am-drop-icon {
+  font-size: 22px;
+  color: #3c4d4b;
 }
 
 .am-field-label {
   display: block;
-  color: #344342;
+  color: #3c4d4b;
   font-size: 13px;
   font-family: 'Afacad-SemiBold', sans-serif;
   margin-bottom: 4px;
 }
 
-.am-required::after {
-  content: ' *';
-  color: #d0021b;
-}
-
+/* ---- Left rail: checklist + note cards ---- */
 .am-checklist {
   list-style: none;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   padding: 0;
 }
 
@@ -7335,17 +7410,25 @@ ul.apc-list {
 }
 
 .am-notes {
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.am-note {
+.am-note-card {
+  background: #f5f8f7;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #cfb28d;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0;
   color: #4a3b2c;
   font-style: italic;
   font-size: 12.5px;
   line-height: 1.55;
-  margin-bottom: 10px;
 }
 
+/* ---- Files table ---- */
 .am-file-panel {
   margin-top: 18px;
 }
@@ -7366,17 +7449,37 @@ ul.apc-list {
   margin-bottom: 12px;
 }
 
-.am-bulk-links {
-  margin-left: auto;
-  display: flex;
-  gap: 14px;
-}
-
 .am-file-name {
   color: #3c4d4b;
+  word-break: break-all;
 }
 
-.am-file-table .ant-table-thead > tr > th {
+.am-order-input {
+  width: 60px;
+}
+
+.am-linkbtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.am-select-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.am-check-links {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.am-file-table .ant-table-thead>tr>th {
   background: #f0f4f4;
   color: #223333;
   font-family: 'Afacad-SemiBold', sans-serif;
@@ -7389,7 +7492,59 @@ ul.apc-list {
   margin-top: 12px;
 }
 
-/* ---------- Step 3: General information ---------- */
+.am-action-note {
+  margin-top: 10px;
+  color: #3c4d4b;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Step 3: General Information
+   ========================================== */
+
+/* ---- Collapsible card header (button) ---- */
+.am-panel-toggle {
+  width: 100%;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.am-panel-toggle-icon {
+  display: inline-flex;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.am-panel-toggle-title {
+  flex: 1 1 auto;
+}
+
+.am-panel-warn {
+  color: #ffd23f;
+  font-size: 16px;
+}
+
+/* ---- Required markers ---- */
+.am-req-label {
+  font-style: italic;
+  color: #223333;
+}
+
+.am-req-ok {
+  color: #2e7d32;
+  margin-left: 6px;
+}
+
+.am-req-star {
+  color: #d0021b;
+}
+
+/* ---- Section / Category ---- */
 .am-section-select {
   min-width: 280px;
   max-width: 100%;
@@ -7401,12 +7556,7 @@ ul.apc-list {
   margin-top: 14px;
 }
 
-.am-error-text {
-  color: #d0021b;
-  font-size: 13px;
-  margin-top: 6px;
-}
-
+/* ---- Classifications summary ---- */
 .am-class-summary {
   margin: 8px 0 14px;
 }
@@ -7429,51 +7579,587 @@ ul.apc-list {
   padding: 2px 12px;
 }
 
-/* ---------- Classifications modal ---------- */
-.am-modal-hint {
+/* ---- Classifications modal ---- */
+.am-cls-hint {
   color: #556666;
-  font-size: 14px;
-  margin-bottom: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-bottom: 6px;
 }
 
-.am-modal-search {
-  margin-bottom: 12px;
+.am-cls-note {
+  color: #b23b34;
+  font-size: 12.5px;
+  margin-bottom: 14px;
 }
 
-.am-tree-scroll {
-  max-height: 320px;
-  overflow: auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 10px;
+.am-cls-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
-.am-modal-selected {
-  margin-top: 14px;
-  font-size: 13px;
+.am-cls-search-label {
+  font-family: 'Afacad-SemiBold', sans-serif;
   color: #344342;
 }
 
-.am-modal-selected-label {
+.am-cls-search-input {
+  max-width: 240px;
+}
+
+.am-cls-search-hint {
+  color: #b23b34;
+  font-size: 12px;
+}
+
+.am-cls-panels {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.am-cls-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.am-cls-expand-links {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.am-cls-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  height: 300px;
+  overflow: auto;
+  background: #ffffff;
+}
+
+.am-cls-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.am-cls-move.ant-btn {
+  min-width: 104px;
+}
+
+.am-cls-selected-title {
   font-family: 'Afacad-SemiBold', sans-serif;
-  margin-right: 8px;
+  color: #3c4d4b;
+  font-size: 13.5px;
+  margin-bottom: 6px;
 }
 
-.am-modal-selected-list {
-  color: #556666;
+.am-cls-required {
+  color: #b23b34;
+  font-style: italic;
 }
 
-@media (max-width: 575.98px) {
-  .am-actions {
-    flex-direction: column-reverse;
+.am-cls-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.am-cls-selected-item {
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #344342;
+  font-size: 13.5px;
+}
+
+.am-cls-selected-item:hover {
+  background: #f0f4f4;
+}
+
+.am-cls-selected-item.is-active {
+  background: #e6efee;
+  border-color: #cfe0dd;
+  color: #3c4d4b;
+}
+
+.am-cls-match {
+  color: #d0021b;
+  font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+  .am-cls-panels {
+    flex-direction: column;
   }
 
-  .am-actions .ant-btn {
-    width: 100%;
+  .am-cls-actions {
+    flex-direction: row;
     justify-content: center;
   }
 
-  .am-bulk-links {
-    margin-left: 0;
+  .am-cls-box {
+    height: 220px;
   }
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Step 4: Additional Information
+   ========================================== */
+
+/* ---- Left rail warning callout ---- */
+.am-q-warning {
+  color: #b23b34;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 14px;
+}
+
+/* ---- Questionnaire header bar ---- */
+.am-q-headbar {
+  background: #3c4d4b;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  padding: 12px 18px;
+  border-radius: 10px 10px 0 0;
+}
+
+.am-q-form {
+  border: 1px solid #d9dede;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+/* ---- Question cards ---- */
+.am-q-card {
+  border: 1px solid #e6e9e9;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px -16px rgba(60, 77, 75, 0.4);
+}
+
+.am-q-card:last-child {
+  margin-bottom: 0;
+}
+
+.am-q-statement {
+  color: #344342;
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.am-q-link {
+  font-family: 'Afacad-SemiBold', sans-serif;
+}
+
+.am-q-instructions {
+  display: block;
+  color: #3c6f8f;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+/* ---- Form item: red "Answer Required:" label + inline control ---- */
+.am-q-item {
+  margin-bottom: 0;
+}
+
+.am-q-item .ant-form-item-label>label {
+  color: #b23b34;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-style: italic;
+  height: auto;
+  white-space: normal;
+}
+
+.am-q-item .ant-form-item-explain-error {
+  color: #d0021b;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.am-q-select {
+  max-width: 300px;
+  width: 100%;
+}
+
+/* Stack radio options vertically to match the reference. */
+.am-q-radio.ant-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.am-q-radio .ant-radio-wrapper {
+  align-items: flex-start;
+  white-space: normal;
+  margin-inline-end: 0;
+}
+
+/* ---- Q5: Scopus text input + character count ---- */
+.am-q-charcount-row {
+  padding-left: 120px;
+  margin-bottom: 4px;
+}
+
+.am-q-charcount {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  color: #223333;
+  font-size: 13.5px;
+}
+
+.am-q-scopus-input {
+  max-width: 340px;
+}
+
+.am-q-limit {
+  color: #3c6f8f;
+  font-size: 13px;
+}
+
+@media (max-width: 767.98px) {
+  .am-q-charcount-row {
+    padding-left: 0;
+  }
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Step 5: Comments
+   ========================================== */
+.am-comments-textarea.ant-input {
+  border-radius: 8px;
+  resize: vertical;
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Step 6: Manuscript Data
+   ========================================== */
+.am6-side-note {
+  color: #556666;
+  font-style: italic;
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin-top: 14px;
+}
+
+.am6-muted {
+  color: #889999;
+  font-weight: normal;
+}
+
+.am6-limit {
+  color: #889999;
+  font-style: italic;
+  font-size: 12.5px;
+  margin: 2px 0 8px;
+}
+
+.am6-limit-inline {
+  color: #889999;
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 6px;
+}
+
+.am6-count {
+  color: #556666;
+  font-size: 12.5px;
+  margin: 6px 0 0;
+}
+
+.am6-count.is-over {
+  color: #d0021b;
+  font-family: 'Afacad-SemiBold', sans-serif;
+}
+
+/* ---- Rich text editor ---- */
+.am-rte {
+  border: 1px solid #d4dbdb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.am-rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 8px;
+  background: #eef2f2;
+  border-bottom: 1px solid #dbe3e2;
+}
+
+.am-rte-btn {
+  min-width: 30px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: #3c4d4b;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.am-rte-btn:hover {
+  background: #ffffff;
+  border-color: #cfd6d5;
+}
+
+.am-rte-btn-label {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 12px;
+}
+
+.am-rte-area {
+  padding: 12px 14px;
+  outline: none;
+  font-size: 14px;
+  color: #223333;
+  line-height: 1.6;
+}
+
+.am-rte-area:empty::before {
+  content: attr(data-placeholder);
+  color: #a9b3b3;
+}
+
+/* ---- Callout ---- */
+.am6-callout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.am6-callout-icon {
+  color: #223333;
+  font-size: 16px;
+}
+
+.am6-callout-title {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  color: #223333;
+}
+
+.am6-callout-info {
+  color: #3c6f8f;
+}
+
+.am6-callout-text {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 10px;
+}
+
+.am6-reorder {
+  color: #556666;
+  font-size: 14px;
+  margin: 12px 0 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eef2f2;
+}
+
+/* ---- Author / funding lists ---- */
+.am6-list {
+  border: 1px solid #d9dede;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.am6-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #334342;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13.5px;
+  padding: 9px 14px;
+}
+
+.am6-list-add,
+.am6-list-foot-add {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.am6-list-add:hover,
+.am6-list-foot-add:hover {
+  color: #cfb28d;
+}
+
+.am6-list-foot-add {
+  width: 100%;
+  justify-content: flex-start;
+  background: #3c4d4b;
+  padding: 9px 14px;
+}
+
+.am6-author-row,
+.am6-fund-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eef2f2;
+  background: #ffffff;
+}
+
+.am6-drag-handle {
+  color: #b6c0bf;
+  cursor: grab;
+  letter-spacing: -2px;
+  font-size: 14px;
+}
+
+.am6-author-name {
+  color: #223333;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 14px;
+}
+
+.am6-role {
+  color: #3c4d4b;
+  font-family: 'Afacad-Regular', sans-serif;
+  font-weight: normal;
+  margin-left: 2px;
+}
+
+.am6-row-warn {
+  color: #f0ad4e;
+  margin-left: 6px;
+}
+
+.am6-author-meta {
+  color: #889999;
+  font-style: italic;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.am6-fund-name {
+  color: #223333;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  flex: 1 1 auto;
+}
+
+.am6-fund-cell {
+  color: #556666;
+  font-size: 13px;
+}
+
+.am6-fund-empty {
+  color: #889999;
+  font-style: italic;
+  font-size: 13.5px;
+  padding: 14px;
+  background: #ffffff;
+}
+
+.am6-fund-hints {
+  list-style: disc;
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+
+.am6-fund-hints li {
+  color: #556666;
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-bottom: 4px;
+}
+
+.am6-fund-na.ant-checkbox-wrapper {
+  color: #344342;
+  font-size: 14px;
+}
+
+/* ---- Final actions ---- */
+.am6-final-actions {
+  flex-wrap: wrap;
+}
+
+/* ---- Modals (Add Author / Add Funding) ---- */
+.am6-modal-hint {
+  text-align: right;
+  color: #889999;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+
+.am6-modal-form .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.am6-modal-form .ant-form-item-label>label {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  color: #344342;
+}
+
+.am6-modal-check .ant-form-item-control-input {
+  min-height: auto;
+}
+
+.am6-fetch-link {
+  color: #3c4d4b;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  cursor: pointer;
+}
+
+.am6-fetch-link:hover {
+  color: #cfb28d;
+}
+
+@media (max-width: 575.98px) {
+  .am6-fund-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+
+
+.web-logo {
+  height: 90px;
+}
+
+.web-logo img {
+  height: 100%;
+  object-fit: cover;
+  width: 103px;
 }

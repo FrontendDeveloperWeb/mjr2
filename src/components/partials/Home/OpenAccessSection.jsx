@@ -95,7 +95,7 @@ export default function OpenAccessSection({ indexingLogos, indexingLogos2 }) {
               </div>
 
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-12">
                 <div className="sd-oa-logos-stack d-flex gap-3 mt-4">
                   {indexingLogos2.map((item, index) => (
@@ -115,7 +115,7 @@ export default function OpenAccessSection({ indexingLogos, indexingLogos2 }) {
                 </div>
               </div>
 
-            </div>
+            </div> */}
           </div>
         </div>
 

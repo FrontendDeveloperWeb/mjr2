@@ -52,14 +52,14 @@ const CAROUSEL_ARTICLES = [
 
 const INDEXING_LOGOS = [
   { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
-  { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
+  // { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
 ];
 
-const INDEXING_LOGOS2 = [
-  { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
-  { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
-  { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
-];
+// const INDEXING_LOGOS2 = [
+//   { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
+//   { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
+//   { name: 'Google Scholar', logo: '/assets/img/google-scholer.png', fallback: 'Google Scholar' },
+// ];
 
 const columns = [
   {
@@ -94,28 +94,13 @@ const columns = [
 const data = [
   {
     key: '1',
-    name: <> <span className='font-600'>Journal of Advanced Research </span><p className='italic'>Open Access</p></>,
+    name: <> <span className='font-600'>Multidisciplinary Journal for Research (MJR) </span><p className='italic'>Open Access</p></>,
     publisher: 'Elsevier',
     apc: 'USD 4,400',
     impact: '17.1',
     citescore: '21.7',
   },
-  {
-    key: '2',
-    name: 'Journal of Advanced Research',
-    publisher: 'Elsevier',
-    apc: 'USD 4,400',
-    impact: '17.1',
-    citescore: '21.7',
-  },
-  {
-    key: '3',
-    name: 'Journal of Advanced Research',
-    publisher: 'Elsevier',
-    apc: 'USD 4,400',
-    impact: '17.1',
-    citescore: '21.7',
-  },
+
 ];
 const items = [
   {
@@ -196,7 +181,7 @@ export default function Home() {
             <div className="col-12 col-md-8">
               <h2>About the journal</h2>
               <p>Peer Review under the responsibility of Cairo University.</p>
-              <p><span className='text-bold'>Journal of Advanced Research </span>(abbreviated as J. Adv. Res.) is an official journal of <span> XYZ University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant …</p>
+              <p><span className='text-bold'>Multidisciplinary Journal for Research</span> abbreviated as (MJR) is an official journal of <span> XYZ University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant …</p>
 
               <p className='txt-dec cursor-pointer' onClick={showDrawer}>View full aims & scope</p>
             </div>
@@ -215,7 +200,7 @@ export default function Home() {
 
       <StatsBar />
 
-      <OpenAccessSection indexingLogos={INDEXING_LOGOS} indexingLogos2={INDEXING_LOGOS2} />
+      <OpenAccessSection indexingLogos={INDEXING_LOGOS} />
 
       <section className='search-panale-sec'>
         <div className="container">
@@ -292,7 +277,7 @@ export default function Home() {
           <h5>1)  Basic and Biological Sciences such as: biology, molecular biology, biotechnology, chemistry, physics, biophysics, geology, astronomy, biophysics and environmental science.</h5>
           <h5>1) Mathematics, Engineering, and Computer Sciences</h5>
           <h5>1) Agricultural Science</h5>
-          <p>In addition to original research articles, Journal of Advanced Research publishes reviews, mini-reviews, case reports, letters to the editor, and commentaries, thereby providing a forum for reports and discussions on cutting edge perspectives in science. All submitted papers are subjected to strict single blind peer reviewing process. The Journal is committed to publishing manuscripts via a rapid, impartial, and rigorous review process. Once accepted, manuscripts are granted free online open-access immediately upon publication, which permits its users to read, download, copy, distribute, print, search, or link to the full texts, thus facilitating access to a broad readership.</p>
+          <p>In addition to original research articles, Multidisciplinary Journal for Research (MJR) publishes reviews, mini-reviews, case reports, letters to the editor, and commentaries, thereby providing a forum for reports and discussions on cutting edge perspectives in science. All submitted papers are subjected to strict single blind peer reviewing process. The Journal is committed to publishing manuscripts via a rapid, impartial, and rigorous review process. Once accepted, manuscripts are granted free online open-access immediately upon publication, which permits its users to read, download, copy, distribute, print, search, or link to the full texts, thus facilitating access to a broad readership.</p>
           <p>
             Authors should note that the acceptance rate in this journal is exceptionally low, around 5%; only the most novel, methodologically rigorous, and impactful manuscripts are selected for peer review
           </p>
