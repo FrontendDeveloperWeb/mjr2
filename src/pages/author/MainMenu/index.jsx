@@ -2,24 +2,38 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../../../components/layout/Layout';
 import TopBar from '../../../components/shared/TopBar';
 import { listDrafts } from '../submit-manuscript/draftStorage.js';
+import {
+  SENT_BACK,
+  WAITING_APPROVAL,
+  BEING_PROCESSED,
+  REVISIONS_NEEDING,
+  REVISIONS_SENT_BACK,
+  REVISIONS_INCOMPLETE,
+  REVISIONS_WAITING_APPROVAL,
+  REVISIONS_BEING_PROCESSED,
+  REVISIONS_DECLINED,
+  COMPLETED_DECIDED,
+} from '../submissions/data/dummySubmissions.js';
 
 /* ---------------- Center column data ---------------- */
 const NEW_SUBMISSIONS_BASE = [
-  { label: 'Submissions Sent Back to Author', count: 0 },
-  { label: "Submissions Waiting for Author's Approval", count: 0 },
-  { label: 'Submissions Being Processed', count: 0 },
+  { label: 'Submissions Sent Back to Author', count: SENT_BACK.length, to: '/author/submissions/sent-back' },
+  { label: "Submissions Waiting for Author's Approval", count: WAITING_APPROVAL.length, to: '/author/submissions/waiting-approval' },
+  { label: 'Submissions Being Processed', count: BEING_PROCESSED.length, to: '/author/submissions/being-processed' },
 ];
 
 const REVISIONS = [
-  { label: 'Submissions Needing Revision', count: 0 },
-  { label: 'Revisions Sent Back to Author', count: 0 },
-  { label: 'Incomplete Submissions Being Revised', count: 0 },
-  { label: "Revisions Waiting for Author's Approval", count: 0 },
-  { label: 'Revisions Being Processed', count: 0 },
-  { label: 'Declined Revisions', count: 0 },
+  { label: 'Submissions Needing Revision', count: REVISIONS_NEEDING.length, to: '/author/submissions/revisions-needing' },
+  { label: 'Revisions Sent Back to Author', count: REVISIONS_SENT_BACK.length, to: '/author/submissions/revisions-sent-back' },
+  { label: 'Incomplete Submissions Being Revised', count: REVISIONS_INCOMPLETE.length, to: '/author/submissions/revisions-incomplete' },
+  { label: "Revisions Waiting for Author's Approval", count: REVISIONS_WAITING_APPROVAL.length, to: '/author/submissions/revisions-waiting-approval' },
+  { label: 'Revisions Being Processed', count: REVISIONS_BEING_PROCESSED.length, to: '/author/submissions/revisions-being-processed' },
+  { label: 'Declined Revisions', count: REVISIONS_DECLINED.length, to: '/author/submissions/revisions-declined' },
 ];
 
-const COMPLETED = [{ label: 'Submissions with a Decision', count: 0 }];
+const COMPLETED = [
+  { label: 'Submissions with a Decision', count: COMPLETED_DECIDED.length, to: '/author/submissions/completed-decided' },
+];
 
 /* ---------------- Right column data ---------------- */
 const VIDEO_GUIDES = [
@@ -40,10 +54,10 @@ const POPULAR_GUIDES = [
 ];
 
 /** A single "label (count)" menu row. */
-function MenuRow({ label, count }) {
+function MenuRow({ label, count, to }) {
   return (
     <li className="am-menu-row">
-      <a href="#folder" className="am-menu-link">{label}</a>
+      <Link to={to} className="am-menu-link">{label}</Link>
       <span className="am-menu-count">({count})</span>
     </li>
   );
@@ -54,7 +68,7 @@ export default function AuthorMainMenu() {
 
   const newSubmissions = [
     NEW_SUBMISSIONS_BASE[0],
-    { label: 'Incomplete Submissions', count: listDrafts().length },
+    { label: 'Incomplete Submissions', count: listDrafts().length, to: '/author/submissions/incomplete' },
     ...NEW_SUBMISSIONS_BASE.slice(1),
   ];
 

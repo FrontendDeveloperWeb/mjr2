@@ -30,6 +30,18 @@ const SubmitManuscriptStep3 = lazy(() => import('../pages/author/submit-manuscri
 const SubmitManuscriptStep4 = lazy(() => import('../pages/author/submit-manuscript/step-4/index.jsx'));
 const SubmitManuscriptStep5 = lazy(() => import('../pages/author/submit-manuscript/step-5/index.jsx'));
 const SubmitManuscriptStep6 = lazy(() => import('../pages/author/submit-manuscript/step-6/index.jsx'));
+// Author submissions dashboard — one status-filtered list page per route.
+const SubmissionsIncomplete = lazy(() => import('../pages/author/submissions/Incomplete/index.jsx'));
+const SubmissionsSentBack = lazy(() => import('../pages/author/submissions/SentBack/index.jsx'));
+const SubmissionsWaitingApproval = lazy(() => import('../pages/author/submissions/WaitingApproval/index.jsx'));
+const SubmissionsBeingProcessed = lazy(() => import('../pages/author/submissions/BeingProcessed/index.jsx'));
+const SubmissionsRevisionsNeeding = lazy(() => import('../pages/author/submissions/RevisionsNeeding/index.jsx'));
+const SubmissionsRevisionsSentBack = lazy(() => import('../pages/author/submissions/RevisionsSentBack/index.jsx'));
+const SubmissionsRevisionsIncomplete = lazy(() => import('../pages/author/submissions/RevisionsIncomplete/index.jsx'));
+const SubmissionsRevisionsWaitingApproval = lazy(() => import('../pages/author/submissions/RevisionsWaitingApproval/index.jsx'));
+const SubmissionsRevisionsBeingProcessed = lazy(() => import('../pages/author/submissions/RevisionsBeingProcessed/index.jsx'));
+const SubmissionsRevisionsDeclined = lazy(() => import('../pages/author/submissions/RevisionsDeclined/index.jsx'));
+const SubmissionsCompletedDecided = lazy(() => import('../pages/author/submissions/CompletedDecided/index.jsx'));
 
 /**
  * Route table. `meta` drives the shared page chrome that <Layout> renders
@@ -70,6 +82,18 @@ export const routes = [
   { path: '/author/submit-manuscript/step-4', element: SubmitManuscriptStep4, requiresAuth: true },
   { path: '/author/submit-manuscript/step-5', element: SubmitManuscriptStep5, requiresAuth: true },
   { path: '/author/submit-manuscript/step-6', element: SubmitManuscriptStep6, requiresAuth: true },
+  // Author submissions dashboard
+  { path: '/author/submissions/incomplete', element: SubmissionsIncomplete, requiresAuth: true },
+  { path: '/author/submissions/sent-back', element: SubmissionsSentBack, requiresAuth: true },
+  { path: '/author/submissions/waiting-approval', element: SubmissionsWaitingApproval, requiresAuth: true },
+  { path: '/author/submissions/being-processed', element: SubmissionsBeingProcessed, requiresAuth: true },
+  { path: '/author/submissions/revisions-needing', element: SubmissionsRevisionsNeeding, requiresAuth: true },
+  { path: '/author/submissions/revisions-sent-back', element: SubmissionsRevisionsSentBack, requiresAuth: true },
+  { path: '/author/submissions/revisions-incomplete', element: SubmissionsRevisionsIncomplete, requiresAuth: true },
+  { path: '/author/submissions/revisions-waiting-approval', element: SubmissionsRevisionsWaitingApproval, requiresAuth: true },
+  { path: '/author/submissions/revisions-being-processed', element: SubmissionsRevisionsBeingProcessed, requiresAuth: true },
+  { path: '/author/submissions/revisions-declined', element: SubmissionsRevisionsDeclined, requiresAuth: true },
+  { path: '/author/submissions/completed-decided', element: SubmissionsCompletedDecided, requiresAuth: true },
   { path: '/policies', element: Policies, },
   // Single dynamic viewer: slug picks the document (privacy-policy /
   // terms-and-conditions); optional ?source=publisher|aries adds context.

@@ -1,0 +1,1 @@
+import{kr as e}from"./index-B1uNCoCh.js";var t=e(),n=()=>(0,t.jsx)(`section`,{className:`le-root`,children:(0,t.jsx)(`h1`,{children:`Submit Your Article`})});export{n as default};

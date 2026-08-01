@@ -8163,3 +8163,115 @@ ul.apc-list {
   object-fit: cover;
   width: 103px;
 }
+
+/* ==================== Author Submissions Dashboard ==================== */
+.ast-page {
+  padding: 32px 0 60px;
+}
+
+.ast-header-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.ast-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #eef2f2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #223333;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ast-back-btn:hover {
+  background: #f5f8f7;
+  border-color: #cfb28d;
+}
+
+.ast-title {
+  color: #223333;
+  font-size: clamp(20px, 2.6vw, 26px);
+  margin: 0;
+}
+
+.ast-alert {
+  background: #f5f8f7;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #cfb28d;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: #344342;
+}
+
+.ast-alert .ant-alert-message {
+  color: #344342;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.ast-pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 2px;
+  color: #556666;
+  font-size: 14px;
+}
+
+.ast-pagesize-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #556666;
+}
+
+.ast-pagesize-select {
+  width: 72px;
+}
+
+.ast-table {
+  margin: 4px 0;
+}
+
+.ast-table .ant-table-thead > tr > th {
+  background: #223333;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+}
+
+.ast-action-link {
+  color: #3c4d4b;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ast-action-link:hover {
+  color: #cfb28d;
+}
+
+.ast-action-caret {
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.ast-title-placeholder {
+  color: #889999;
+  font-style: italic;
+}
+
+@media (max-width: 575.98px) {
+  .ast-pagination-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
