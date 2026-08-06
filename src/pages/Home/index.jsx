@@ -10,6 +10,8 @@ import CustomDrawer from '../../components/shared/Drawer/index.jsx';
 import CustomTable from '../../components/shared/Table/index.jsx';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHomeData } from '@/hooks/queries';
+import { useGlobalData } from '@/hooks/queries';
 
 const CAROUSEL_ARTICLES = [
   {
@@ -150,6 +152,11 @@ const items = [
 
 ];
 export default function Home() {
+  const { home } = useHomeData();
+  console.log('home', home);
+  const journalUser = home?.journal_editorial_board?.map(item => item.user)?.[0];
+  console.log('journalUser', journalUser);
+
 
   const [open, setOpen] = useState(false);
   const [openAps, setOpenAps] = useState(false);
@@ -181,15 +188,15 @@ export default function Home() {
             <div className="col-12 col-md-8">
               <h2>About the journal</h2>
               <p>Peer Review under the responsibility of Cairo University.</p>
-              <p><span className='text-bold'>Multidisciplinary Journal for Research</span> abbreviated as (MJR) is an official journal of <span> XYZ University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant …</p>
+              <p><span className='text-bold'>{home?.title}</span> abbreviated as (MJR) is an official journal of <span> XYZ University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant …</p>
 
               <p className='txt-dec cursor-pointer' onClick={showDrawer}>View full aims & scope</p>
             </div>
             <div className="col-12 col-md-4">
               <div className="about-artical-card">
                 <h2>Article publishing option</h2>
-                <p>Open Access</p>
-                <p className='para-f'>Article Publishing Charge (APC): USD 4,400 (excluding taxes).</p>
+                <p>{home?.isOpenAccess === false ? 'Subscription' : 'Open Access'}</p>
+                <p className='para-f'>Article Publishing Charge (APC): {home?.currency} {home?.apc || '4,400'} (excluding taxes).</p>
                 <p className='para-f'>Review <span>this journal’s open access policy.</span></p>
                 <Button className='mt-3 sd-btn-submit-article' onClick={showDrawerAps}>Compare APCs for other journals</Button>
               </div>
@@ -203,6 +210,7 @@ export default function Home() {
       <OpenAccessSection indexingLogos={INDEXING_LOGOS} />
 
       <section className='search-panale-sec'>
+
         <div className="container">
           <div className="sd-search-panel">
             <div className="row">
@@ -210,7 +218,7 @@ export default function Home() {
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
                     <h3 className='d-flex align-items-center m-0 fs-5'>
-                      President of XYZ University
+                      President of XYZ University <p></p>
                       <span className='bar ps-4'>|</span>
                       <span className='d-block ms-3 mt-1 text-muted fs-6 font-weight-normal'>
                         <Link to="/about/editorial-board"> View full editorial board</Link></span>
@@ -219,9 +227,9 @@ export default function Home() {
                 </div>
                 <div className="d-flex align-items-center mt-3">
                   <div className='user-avatar-img'>
-                    <img src="/assets/img/khaled.png" alt="" />
+                    <img src={journalUser?.profile_photo || "/assets/img/khaled.png"} alt="" />
                   </div>
-                  <div><h2 className='ms-4'>ABC XYZ </h2></div>
+                  <div><h2 className='ms-4'>{journalUser?.name || 'ABC XYZ'}</h2></div>
                 </div>
               </div>
             </div>
@@ -264,23 +272,13 @@ export default function Home() {
         size="560px"
       >
         <div className="aim-drawer">
-          <p>Peer Review under the responsibility of Cairo University.</p>
-          <p>
-            <span>  Journal of Advanced Research</span>
-            (abbreviated as J. Adv. Res.) is an official journal of Cairo University. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant contributions to applied research and knowledge across the globe through publication of original, high-quality research articles in the following fields:
-          </p>
-          <h5>1) Medicine</h5>
-          <h5>1)  Pharmaceutical Sciences</h5>
-          <h5>1) Dentistry</h5>
-          <h5>1) Physical Therapy</h5>
-          <h5>1) Veterinary Medicine</h5>
-          <h5>1)  Basic and Biological Sciences such as: biology, molecular biology, biotechnology, chemistry, physics, biophysics, geology, astronomy, biophysics and environmental science.</h5>
-          <h5>1) Mathematics, Engineering, and Computer Sciences</h5>
-          <h5>1) Agricultural Science</h5>
-          <p>In addition to original research articles, Multidisciplinary Journal for Research (MJR) publishes reviews, mini-reviews, case reports, letters to the editor, and commentaries, thereby providing a forum for reports and discussions on cutting edge perspectives in science. All submitted papers are subjected to strict single blind peer reviewing process. The Journal is committed to publishing manuscripts via a rapid, impartial, and rigorous review process. Once accepted, manuscripts are granted free online open-access immediately upon publication, which permits its users to read, download, copy, distribute, print, search, or link to the full texts, thus facilitating access to a broad readership.</p>
-          <p>
-            Authors should note that the acceptance rate in this journal is exceptionally low, around 5%; only the most novel, methodologically rigorous, and impactful manuscripts are selected for peer review
-          </p>
+          {home?.aims_scope ? (
+            <div dangerouslySetInnerHTML={{ __html: home.aims_scope }} />
+          ) : (
+            <>
+              <p>No aims and scope available.</p>
+            </>
+          )}
         </div>
       </CustomDrawer>
       <CustomDrawer

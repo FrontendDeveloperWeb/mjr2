@@ -22,6 +22,7 @@ const ForgotPassword = lazy(() => import('../pages/Auth/ForgotPassword/index.jsx
 const LoginHelp = lazy(() => import('../pages/Auth/loginHelp/index.jsx'));
 const Policies = lazy(() => import('../pages/Policies/index.jsx'));
 const PolicyView = lazy(() => import('../pages/Policies/PolicyView/index.jsx'));
+const HowToSubmitManuscript = lazy(() => import('../pages/Help/HowToSubmitManuscript/index.jsx'));
 // Author area (protected)
 const AuthorMainMenu = lazy(() => import('../pages/author/MainMenu/index.jsx'));
 const SubmitManuscriptStep1 = lazy(() => import('../pages/author/submit-manuscript/step-1/index.jsx'));
@@ -98,6 +99,8 @@ export const routes = [
   // Single dynamic viewer: slug picks the document (privacy-policy /
   // terms-and-conditions); optional ?source=publisher|aries adds context.
   { path: '/policies/:slug', element: PolicyView, },
+  // Standalone help article, linked from Step 1 of the submission wizard (opens in a new tab).
+  // { path: '/help/how-to-submit-manuscript', element: HowToSubmitManuscript, },
 
 
 

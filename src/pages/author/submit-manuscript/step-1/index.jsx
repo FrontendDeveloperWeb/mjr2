@@ -68,7 +68,12 @@ export default function SubmitManuscriptStep1() {
                   <p className="am-help-strong">
                     Choose the Article Type of your submission from the drop-down menu.
                   </p>
-                  <a href="#how-to-submit" className="am-help-link">
+                  <a
+                    href="/help/how-to-submit-manuscript"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="am-help-link"
+                  >
                     How do I submit a manuscript?
                   </a>
                 </aside>

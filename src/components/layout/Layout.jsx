@@ -12,6 +12,8 @@ export default function Layout({ children }) {
   const { pathname } = useLocation();
   const { hero, stats, topbar } = getRouteMeta(pathname);
 
+
+
   return (
     <>
       <Header />

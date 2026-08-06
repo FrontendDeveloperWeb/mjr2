@@ -1340,24 +1340,7 @@ p {
 }
 
 /* Responsive Handling */
-@media (max-width: 991px) {
-  .sd-oa-right-image-container {
-    padding-right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .sd-oa-floating-overlap-card {
-    position: relative;
-    top: 0;
-    transform: translateY(0);
-    width: 100%;
-    max-width: 520px;
-    margin-top: -60px;
-    right: 0;
-  }
-}
 
 /* ==========================================
    1. MAIN FOOTER BACKGROUND WRAPPER
@@ -1576,27 +1559,7 @@ p {
 /* ==========================================
    5. RESPONSIVE UTILITIES
    ========================================== */
-@media (max-width: 1199px) {
-  .sd-footer-search-ribbon {
-    top: 0;
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
 
-  .sd-main-footer-section {
-    margin-top: 0;
-  }
-}
-
-@media (max-width: 576px) {
-  .sd-search-inputs-row {
-    flex-direction: column;
-  }
-
-  .sd-custom-select-topic {
-    width: 100% !important;
-  }
-}
 
 .sd-search-inputs-row input {
   padding-left: 14px !important;
@@ -2171,27 +2134,7 @@ p {
 /* ==========================================
    4. RESPONSIVE ADJUSTMENTS
    ========================================== */
-@media (max-width: 767px) {
-  .sd-jb-hero-wrapper {
-    text-align: center;
-    padding: 40px 0;
-  }
 
-  .sd-jb-book-cover-shadow-box {
-    max-width: 240px;
-    height: 320px;
-    margin-bottom: 20px;
-  }
-
-  .sd-jb-main-heading-serif {
-    font-size: 32px;
-  }
-
-  .sd-jb-meta-content .d-flex {
-    justify-content: center;
-    gap: 40px !important;
-  }
-}
 
 /* ==========================================
    1. GLOBAL SYSTEM RESETS & NAVIGATION 
@@ -3030,23 +2973,6 @@ p {
 /* ============================================================
    RESPONSIVE ADJUSTMENTS
    ============================================================ */
-@media (max-width: 767.98px) {
-  .sd-ai-sidebar-sticky {
-    position: static;
-  }
-
-  .sd-ai-issue-row {
-    padding: 16px;
-  }
-
-  .sd-ai-archive-accordion .ant-collapse-header {
-    padding: 16px !important;
-  }
-
-  .sd-ai-feed-title {
-    font-size: 20px;
-  }
-}
 
 .sd-card-issue-body {
   padding: 24px 18px 10px 18px;
@@ -3148,24 +3074,7 @@ p {
 }
 
 /* Responsive Design for Mobile Devices */
-@media (max-width: 768px) {
-  .peer-review {
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-  }
 
-  .girl-img {
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .peer-review h2 {
-    font-size: 28px;
-    max-width: 100%;
-  }
-}
 
 
 /* ==================================
@@ -3273,22 +3182,7 @@ p {
 }
 
 /* Responsive Design for Tablets */
-@media (max-width: 1024px) {
-  .peer-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    /* Drops to 2 columns */
-    gap: 20px;
-  }
-}
 
-/* Responsive Design for Mobile Devices */
-@media (max-width: 640px) {
-  .peer-cards-grid {
-    grid-template-columns: 1fr;
-    /* Stacks to 1 single column */
-    gap: 16px;
-  }
-}
 
 /* ==================================
 ================ ACCEPTANCE PANEL STYLING */
@@ -3329,24 +3223,7 @@ p {
 }
 
 /* Responsive design for smaller screens */
-@media (max-width: 768px) {
-  .acceptance-panel {
-    flex-direction: column;
-    padding: 30px 20px;
-    text-align: center;
-  }
 
-  .acceptance-content {
-    margin-left: 0;
-    margin-top: 30px;
-    padding-left: 0;
-    border-left: none;
-    /* Remove vertical line on mobile */
-    border-top: 2px solid #ffffff;
-    /* Make it a horizontal line instead */
-    padding-top: 30px;
-  }
-}
 
 /* ==========================================
    SPECIAL ISSUE / ARTICLE COLLECTION PAGE
@@ -3993,25 +3870,6 @@ p {
 }
 
 /* Responsive adjustments */
-@media (max-width: 900px) {
-  .editorial-main-section {
-    flex-direction: column;
-  }
-
-  .editorial-sidebar {
-    width: 100%;
-    flex: none;
-  }
-
-  .staff-card {
-    flex-direction: column;
-  }
-
-  .staff-img-box {
-    flex: none;
-    height: 200px;
-  }
-}
 
 
 /* ==================================
@@ -4175,12 +4033,7 @@ p {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .editors-grid {
-    grid-template-columns: 1fr;
-    /* Stacks to 1 column on mobile */
-  }
-}
+
 
 /* ==========================================================================
    JOURNAL INSIGHTS EXACT UI DESIGN BRAND CONFIGURATION
@@ -4353,34 +4206,7 @@ p {
 }
 
 /* Responsive adjustment layer for tablet/mobile views */
-@media (max-width: 768px) {
-  .sd-insight-card {
-    flex-direction: column !important;
-  }
 
-  .sd-card-left-col {
-    width: 100% !important;
-    padding: 20px 10px 10px 10px !important;
-  }
-
-  .sd-card-divider-line {
-    width: 80% !important;
-    height: 1px !important;
-    margin: 5px auto !important;
-  }
-
-  .sd-card-right-col {
-    padding: 15px !important;
-    align-items: center !important;
-    text-align: center;
-    flex-direction: column !important;
-  }
-
-  .sd-indexing-list {
-    text-align: left;
-    display: inline-block;
-  }
-}
 
 /* ==========================================================================
    LANGUAGE EDITING SERVICES PAGE — scoped styles (prefix: le-)
@@ -4771,23 +4597,7 @@ p {
 }
 
 /* ---------------- Responsive ---------------- */
-@media (max-width: 768px) {
-  .le-banner {
-    text-align: center;
-  }
 
-  .le-tabs-list {
-    gap: 10px 22px;
-  }
-
-  .le-tab {
-    font-size: 14px;
-  }
-
-  .le-plan-cta-footer {
-    min-width: 150px;
-  }
-}
 
 /* ---------------- Section 6: quality guarantee banner ---------------- */
 .le-guarantee-banner {
@@ -4911,34 +4721,7 @@ p {
   color: #ddb98f;
 }
 
-@media (max-width: 767px) {
-  .le-guarantee-divider {
-    width: 60%;
-    height: 1px;
-    align-self: center;
-  }
 
-  .le-guarantee-text {
-    text-align: center;
-  }
-
-  .le-need-col {
-    padding: 8px 12px;
-    text-align: center;
-  }
-
-  .le-need-col-right {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
-    padding-top: 24px;
-    margin-top: 8px;
-  }
-
-  .le-need-desc {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
 
 .on-hover-top {
   background-color: #CFB28D;
@@ -5485,15 +5268,7 @@ ul.apc-list {
 }
 
 /* ------------------------------ Responsive ------------------------------ */
-@media (max-width: 991.98px) {
-  .oao-sidebar {
-    position: static;
-  }
 
-  .oao-content {
-    max-width: 100%;
-  }
-}
 
 /* ==========================================================================
    GUIDE FOR AUTHORS PAGE (.ga-*)
@@ -5743,29 +5518,7 @@ ul.apc-list {
 }
 
 /* ------------------------------ Responsive ------------------------------ */
-@media (max-width: 991.98px) {
-  .ga-sidebar {
-    position: static;
-  }
 
-  .ga-content {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .ga-side-title {
-    font-size: 18px;
-  }
-
-  .ga-h2 {
-    font-size: 20px;
-  }
-
-  .ga-h3 {
-    font-size: 16px;
-  }
-}
 
 .editorial-drawer .p-1 {
   font-size: 18px;
@@ -6145,59 +5898,7 @@ ul.apc-list {
 }
 
 /* --- Responsive --- */
-@media (max-width: 991.98px) {
-  .auth-login-cover {
-    border-right: none;
-    border-bottom: 1px solid #eef1f1;
-    padding: 24px;
-  }
 
-  .auth-login-cover img {
-    max-width: 220px;
-  }
-
-  .auth-login-form-col {
-    padding: 28px 24px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .auth-login-wrapper {
-    padding: 24px 12px 40px;
-  }
-
-  .auth-login-form-col {
-    padding: 22px 18px;
-  }
-
-  .auth-login-title {
-    font-size: 19px;
-  }
-
-  .auth-role-btn.ant-btn {
-    flex: 1 1 45%;
-    min-width: 0;
-  }
-
-  .auth-new-btns {
-    flex-direction: column;
-  }
-
-  .auth-navbar-item {
-    flex: 1 1 100%;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  }
-
-  .auth-navbar-item:last-child {
-    border-bottom: none;
-  }
-
-  .auth-copyright-row {
-    justify-content: center;
-    text-align: center;
-  }
-}
 
 .auth-btn-user img {
   width: 13px;
@@ -6274,23 +5975,6 @@ ul.apc-list {
   justify-content: flex-start;
 }
 
-@media (max-width: 575.98px) {
-  .auth-role-btns--end {
-    justify-content: stretch;
-  }
-
-  .auth-continue-btn.ant-btn {
-    flex: 1 1 100%;
-  }
-
-  .auth-new-btns--center {
-    flex-direction: column;
-  }
-
-  .auth-new-btns--center .ant-btn {
-    width: 100%;
-  }
-}
 
 /* ==========================================
    AUTH — REGISTER STEP 2 (profile form)
@@ -6552,27 +6236,7 @@ ul.apc-list {
 }
 
 /* --- Responsive --- */
-@media (max-width: 575.98px) {
-  .reg-stepper-label {
-    display: none;
-  }
 
-  .reg-section {
-    padding: 16px 14px 4px;
-  }
-
-  .reg-step2-actions {
-    flex-direction: column-reverse;
-  }
-
-  .reg-step2-actions .ant-btn {
-    width: 100%;
-  }
-
-  .reg-selector-btn.ant-btn {
-    width: 100%;
-  }
-}
 
 /* ==========================================
    POLICIES SECTION (Publisher & Aries)
@@ -6827,20 +6491,6 @@ ul.apc-list {
   margin-bottom: 0;
 }
 
-@media (max-width: 575.98px) {
-  .pol-section {
-    padding: 36px 0 48px;
-  }
-
-  .pol-card {
-    padding: 22px 20px 8px;
-  }
-
-  .pol-back-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
 /* ---------- Unified viewer: top bar (dynamic back + breadcrumb) ---------- */
 .pol-doc-topbar {
@@ -6876,12 +6526,7 @@ ul.apc-list {
   transform: translateX(-2px);
 }
 
-@media (max-width: 575.98px) {
-  .pol-doc-topbar {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
-}
+
 
 /* ==========================================
    AUTHOR AREA — Main Menu & Submission Wizard
@@ -7262,16 +6907,7 @@ ul.apc-list {
   margin-top: 6px;
 }
 
-@media (max-width: 575.98px) {
-  .am-actions {
-    flex-direction: column-reverse;
-  }
 
-  .am-actions .ant-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
 /* ==========================================
    AUTHOR SUBMISSION — Step 2: Attach Files
@@ -7700,20 +7336,7 @@ ul.apc-list {
   font-weight: 600;
 }
 
-@media (max-width: 767.98px) {
-  .am-cls-panels {
-    flex-direction: column;
-  }
 
-  .am-cls-actions {
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .am-cls-box {
-    height: 220px;
-  }
-}
 
 /* ==========================================
    AUTHOR SUBMISSION — Step 4: Additional Information
@@ -7840,11 +7463,7 @@ ul.apc-list {
   font-size: 13px;
 }
 
-@media (max-width: 767.98px) {
-  .am-q-charcount-row {
-    padding-left: 0;
-  }
-}
+
 
 /* ==========================================
    AUTHOR SUBMISSION — Step 5: Comments
@@ -8144,13 +7763,7 @@ ul.apc-list {
   color: #cfb28d;
 }
 
-@media (max-width: 575.98px) {
-  .am6-fund-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-}
+
 
 
 
@@ -8269,9 +7882,388 @@ ul.apc-list {
   font-style: italic;
 }
 
-@media (max-width: 575.98px) {
-  .ast-pagination-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+
+
+/* ==========================================
+   HELP ARTICLE — How do I submit a manuscript?
+   ========================================== */
+.hlp-section {
+  padding: 56px 0 72px;
+  background:
+    radial-gradient(1200px 320px at 50% -80px, #ebf1f0 0%, rgba(235, 241, 240, 0) 70%),
+    #ffffff;
 }
+
+.hlp-doc-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hlp-doc-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: clamp(24px, 5vw, 56px);
+  box-shadow: 0 14px 40px -24px rgba(60, 77, 75, 0.4);
+}
+
+.hlp-doc-head {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eef2f2;
+}
+
+.hlp-doc-title {
+  color: #223333;
+  font-size: clamp(24px, 3.5vw, 32px);
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
+.hlp-doc-updated {
+  color: #889999;
+  font-size: 14px;
+  margin: 0;
+}
+
+.hlp-h2 {
+  color: #3c4d4b;
+  font-size: 21px;
+  margin: 32px 0 14px;
+}
+
+.hlp-p {
+  color: #344342;
+  font-size: 16px;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+
+.hlp-p-muted {
+  color: #556666;
+  font-style: italic;
+}
+
+.hlp-link {
+  color: #3c6f8f;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hlp-link:hover {
+  color: #223333;
+}
+
+/* ---- Bulleted lists ---- */
+.hlp-bullets {
+  margin: 0 0 20px;
+  padding-left: 4px;
+}
+
+.hlp-bullets > li {
+  position: relative;
+  padding-left: 20px;
+  color: #344342;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.hlp-bullets > li:last-child {
+  margin-bottom: 0;
+}
+
+.hlp-bullets > li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cfb28d;
+}
+
+/* ---- Info callout (blue) ---- */
+.hlp-info-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #eaf3fb;
+  border: 1px solid #cfe3f2;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin: 0 0 20px;
+}
+
+.hlp-info-icon {
+  flex-shrink: 0;
+  color: #3c6f8f;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.hlp-info-text {
+  color: #2b4a5e;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---- Warning callout (orange/red) ---- */
+.hlp-warn-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fdf3f1;
+  border: 1px solid #f0c9bf;
+  border-left: 4px solid #d9622b;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 0 0 20px;
+}
+
+.hlp-warn-icon {
+  flex-shrink: 0;
+  color: #d9622b;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.hlp-warn-text {
+  color: #7a3a1d;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---- Form flow diagram ---- */
+.hlp-diagram {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 20px 0 12px;
+  padding: 20px 16px;
+  background: #f7f9f9;
+  border: 1px solid #eef2f2;
+  border-radius: 12px;
+}
+
+.hlp-diagram-step {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.hlp-diagram-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 84px;
+  text-align: center;
+}
+
+.hlp-diagram-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.hlp-diagram-icon-done {
+  color: #2f9e5c;
+}
+
+.hlp-diagram-icon-attention {
+  color: #d0021b;
+}
+
+.hlp-diagram-icon-todo {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #a9b3b3;
+  background: #ffffff;
+}
+
+.hlp-diagram-label {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 12.5px;
+  color: #344342;
+  line-height: 1.3;
+}
+
+.hlp-diagram-connector {
+  flex: 0 0 24px;
+  height: 2px;
+  background: #d9dede;
+  margin: 0 4px 26px;
+}
+
+.hlp-diagram-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  color: #556666;
+  font-size: 13px;
+  margin: 0 0 24px;
+}
+
+
+/* ---- Comprehensive steps list ---- */
+.hlp-steps-list {
+  counter-reset: hlp-step;
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+.hlp-steps-item {
+  counter-increment: hlp-step;
+  position: relative;
+  padding: 14px 0 14px 44px;
+  border-bottom: 1px solid #f0f3f3;
+}
+
+.hlp-steps-item:last-child {
+  border-bottom: none;
+}
+
+.hlp-steps-item::before {
+  content: counter(hlp-step);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #3c4d4b;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hlp-steps-title {
+  display: block;
+  color: #223333;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.hlp-steps-body {
+  color: #556666;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---- Video / help resources list ---- */
+.hlp-video-list {
+  margin: 0 0 24px;
+  padding-left: 4px;
+}
+
+.hlp-video-list > li {
+  position: relative;
+  padding: 10px 0 10px 20px;
+  border-bottom: 1px solid #f0f3f3;
+}
+
+.hlp-video-list > li:last-child {
+  border-bottom: none;
+}
+
+.hlp-video-list > li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #cfb28d;
+}
+
+/* ---- Feedback footer ---- */
+.hlp-feedback {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eef2f2;
+  text-align: center;
+}
+
+.hlp-feedback-question {
+  color: #223333;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 16px;
+  margin: 0 0 14px;
+}
+
+.hlp-feedback-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.hlp-feedback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 24px;
+  border: 1px solid #d9dede;
+  border-radius: 50px;
+  background: #ffffff;
+  color: #344342;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.hlp-feedback-btn:hover {
+  border-color: #3c4d4b;
+}
+
+.hlp-feedback-btn.is-active {
+  background: #3c4d4b;
+  border-color: #3c4d4b;
+  color: #ffffff;
+}
+
+.hlp-feedback-thanks {
+  color: #556666;
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 16px auto 0;
+}
+
+/* ---- Back / close ---- */
+.hlp-back-row {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.hlp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 30px;
+  border: 1px solid #3c4d4b;
+  border-radius: 50px;
+  background: #3c4d4b;
+  color: #ffffff;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 15px;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.hlp-back-btn:hover {
+  background: #ffffff;
+  color: #3c4d4b;
+  transform: translateY(-2px);
+}
+
