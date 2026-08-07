@@ -1,50 +1,12 @@
+import { useMemo } from "react";
 import EditorialBoardCard from "../../../components/partials/AboutEditorial/EditorialBoardCard";
 import EditorialBoardContent from "../../../components/partials/AboutEditorial/EditorialBoardContent";
 import Layout from "../../../components/layout/Layout";
 import TopBar from "../../../components/shared/TopBar";
-import EditorialBoardStaffCard from "../../../components/partials/AboutEditorial/EditorialBoardStaffCard";
+import EditorialBoardGroup from "../../../components/partials/AboutEditorial/EditorialBoardGroup";
 import AssociateEditorCard from "../../../components/partials/AboutEditorial/AssociateEditorCard";
+import { useHomeData } from "@/hooks/queries";
 
-
-const editorialBoardData = [
-  {
-    id: 1,
-    head: "Editorial board",
-    img: null,
-    designation: "President of Cairo University",
-    name: "Mohamed Sami Abdelsadek",
-  },
-  {
-    id: 2,
-    head: "",
-    img: null,
-    designation: "Vice President of Cairo University for Graduate Studies and Research",
-    name: "Mahmoud El Said Mahmoud",
-  },
-  {
-    id: 3,
-    head: "Editor-in-Chief",
-    img: null,
-    designation: "Cairo University National Cancer Institute, Giza, Egypt",
-    expertise: "Area of Expertise - Medical Oncology",
-    name: "Hussein M. Khaled, (MD)",
-  },
-  {
-    id: 4,
-    head: "Managing Editor",
-    img: null,
-    designation: "",
-    name: "Mohamed Ali Farag, (PhD)",
-  },
-  {
-    id: 5,
-    head: "Associate Managing Editor",
-    img: "/assets/img/fouad.png",
-    designation: "Cairo University Department of Pharmaceutical Chemistry, Cairo, Egypt",
-    expertise: "Area of Expertise - Medical Oncology",
-    name: "Marwa A. Fouad, PhD",
-  },
-];
 const associateEditorsData = [
   {
     id: "cat-1",
@@ -227,7 +189,73 @@ const associateEditorsData = [
     ],
   },
 ];
+/**
+ * Flattens one API board row into the flat prop shape the cards render.
+ * The API is inconsistent about where the person's details live — sometimes on
+ * the nested `user` object, sometimes denormalised onto the row itself — so both
+ * are read here and the cards stay dumb.
+ */
+const normalizeMember = (item, index) => {
+  const user = item?.user || {};
+
+  return {
+    id: item?.id ?? user?.id ?? `member-${index}`,
+    name: user.name || item?.user_name || "",
+    title: user.title || "",
+    description: item?.description || "",
+    subject: item?.subject_name || "",
+    // A row-level image overrides the user's own photo; null when neither exists
+    // so the card can skip the avatar markup entirely.
+    image: item?.image || user.profile_photo || null,
+  };
+};
+
+/**
+ * Groups board rows by `editorial_role_name` — every row sharing a role name
+ * lands under one section header — and returns them as an array to map over.
+ *
+ * @param {Array} board - Raw `journal_editorial_board` rows.
+ * @returns {Array<{ role: string, members: Array }>}
+ */
+const groupByEditorialRole = (board = []) => {
+  const groups = new Map();
+
+  // The backend controls presentation order via display_order; ties keep the
+  // order the API sent them in.
+  const ordered = [...board]
+    .map((item, index) => ({ item, index }))
+    .sort(
+      (a, b) =>
+        (a.item?.display_order ?? Number.MAX_SAFE_INTEGER) -
+          (b.item?.display_order ?? Number.MAX_SAFE_INTEGER) ||
+        a.index - b.index
+    )
+    .map(({ item }) => item);
+
+  ordered.forEach((item, index) => {
+    const role = (item?.editorial_role_name || "").trim() || "Editorial Board";
+
+    if (!groups.has(role)) {
+      groups.set(role, { role, members: [] });
+    }
+
+    groups.get(role).members.push(normalizeMember(item, index));
+  });
+
+  return Array.from(groups.values());
+};
+
 const EditorialBoard = () => {
+  // Same query the Home page uses — React Query serves it from the one shared
+  // cache entry, so this page adds no extra request.
+  const { home, isLoading, isError } = useHomeData();
+
+  const board = home?.journal_editorial_board;
+  const groups = useMemo(
+    () => groupByEditorialRole(Array.isArray(board) ? board : []),
+    [board]
+  );
+
   return (
     // 2-Column Layout Container
 
@@ -245,11 +273,27 @@ const EditorialBoard = () => {
           <div className="editorial-main-content">
 
             <div className="row">
-              {editorialBoardData.map((staff) => (
-                <div className="col-12" key={staff.id}>
-                  <EditorialBoardStaffCard staffDetails={staff} />
-                </div>
-              ))}
+              <div className="col-12">
+                {isLoading && (
+                  <p className="text-muted mb-3">Loading editorial board…</p>
+                )}
+
+                {!isLoading && isError && (
+                  <p className="text-danger mb-3">
+                    Unable to load the editorial board right now.
+                  </p>
+                )}
+
+                {!isLoading &&
+                  !isError &&
+                  groups.map((group) => (
+                    <EditorialBoardGroup
+                      key={group.role}
+                      role={group.role}
+                      members={group.members}
+                    />
+                  ))}
+              </div>
             </div>
 
             <div className="associate-editors-container">

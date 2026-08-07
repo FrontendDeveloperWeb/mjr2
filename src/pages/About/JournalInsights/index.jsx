@@ -3,8 +3,11 @@ import { AimOutlined, FileTextOutlined, AppstoreOutlined, CalendarOutlined, Perc
 import AcceptancePanel from '../../../components/partials/AboutAims/AcceptancePanel';
 import Layout from "../../../components/layout/Layout";
 import TopBar from '../../../components/shared/TopBar';
+import { useHomeData } from '@/hooks/queries';
 
 const JournalInsights = () => {
+  const { home } = useHomeData();
+  console.log('insight home', home);
   return (
     // 2-Column Layout Container
     <>
@@ -31,11 +34,18 @@ const JournalInsights = () => {
                       </div>
                       <div className="sd-card-divider-line"></div>
                       <div className="sd-card-right-col d-flex flex-column justify-content-center">
-                        <h5 className="sd-right-heading mb-2">Peer Review under the responsibility of Cairo University.</h5>
-                        <p className="sd-right-desc text-muted mb-2">
-                          <span>Journal of Advanced Research</span> (abbreviated as J. Adv. Res.) is an official journal of <span className="sd-text-highlight-gold">Cairo University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant ...
-                        </p>
-                        <a href="/about/aims-scope" className="sd-insight-text-link">View full aims & scope</a>
+                        {home?.aims_scope ? (
+                          <div dangerouslySetInnerHTML={{ __html: home.aims_scope }} />
+                        ) : (
+                          <>
+                            <h5 className="sd-right-heading mb-2">Peer Review under the responsibility of Cairo University.</h5>
+                            <p className="sd-right-desc text-muted mb-2">
+                              <span>Journal of Advanced Research</span> (abbreviated as J. Adv. Res.) is an official journal of <span className="sd-text-highlight-gold">Cairo University</span>. It is an applied/natural sciences, peer-reviewed journal with interdisciplinary activity. The journal aims to make significant ...
+                            </p>
+                            <a href="/about/aims-scope" className="sd-insight-text-link">View full aims & scope</a>
+                          </>
+                        )}
+
                       </div>
                     </div>
 
@@ -50,13 +60,10 @@ const JournalInsights = () => {
                       <div className="sd-card-divider-line"></div>
                       <div className="sd-card-right-col d-flex align-items-center gap-5">
                         <div className="sd-issn-block">
-                          <span className="sd-issn-label">Online ISSN:</span>
-                          <span className="sd-issn-value ms-2">2090-1224</span>
+                          {home?.e_issn}
+
                         </div>
-                        <div className="sd-issn-block">
-                          <span className="sd-issn-label">Linking ISSN:</span>
-                          <span className="sd-issn-value ms-2">2090-1232</span>
-                        </div>
+
                       </div>
                     </div>
 
@@ -70,7 +77,9 @@ const JournalInsights = () => {
                       </div>
                       <div className="sd-card-divider-line"></div>
                       <div className="sd-card-right-col d-flex align-items-center ">
-                        <span className="sd-issn-block">Chemistry (General), Engineering (General)</span>
+                        <span className="sd-issn-block">
+                          {home?.subjects?.map((item) => item.name).join(', ')}
+                        </span>
                       </div>
                     </div>
 
@@ -85,12 +94,12 @@ const JournalInsights = () => {
                       <div className="sd-card-right-col d-flex align-items-center w-100">
                         <div className="row sd-card-font-style w-100">
                           <div className='col-12 col-md-6'>
-                            <h6>21.7</h6>
+                            <h6>{home?.citescore} </h6>
                             <p>CiteScore</p>
                           </div>
                           <div className='col-12 col-md-6'>
-                            <h6>21.7</h6>
-                            <p>CiteScore</p>
+                            <h6>{home?.impact_factor}</h6>
+                            <p>Impact Factor</p>
                           </div>
                         </div>
                       </div>
@@ -122,7 +131,7 @@ const JournalInsights = () => {
                       </div>
                       <div className="sd-card-divider-line"></div>
                       <div className="sd-card-right-col d-flex flex-column justify-content-center">
-                        <h4 className="sd-stat-number mb-1">144 days</h4>
+                        <h4 className="sd-stat-number mb-1">{home?.submission_to_acceptance_days}</h4>
                         <span className="sd-stat-desc text-muted">Submission to acceptance</span>
                       </div>
                     </div>
@@ -137,7 +146,7 @@ const JournalInsights = () => {
                       </div>
                       <div className="sd-card-divider-line"></div>
                       <div className="sd-card-right-col d-flex flex-column justify-content-center ">
-                        <h4 className="sd-stat-number mb-1">6%</h4>
+                        <h4 className="sd-stat-number mb-1">{home?.acceptance_rate ? `${home.acceptance_rate}%` : 'N/A'}</h4>
                         <span className="sd-stat-desc text-muted">Acceptance Rate</span>
                       </div>
                     </div>

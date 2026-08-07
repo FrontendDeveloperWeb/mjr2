@@ -1,4 +1,8 @@
+import { useHomeData } from "@/hooks/queries";
+
 export default function HeroSection() {
+  const { home } = useHomeData();
+  // console.log('insight home', home);
   return (
     <section className="journal-sec">
       <div className="sd-hero-container">
@@ -25,12 +29,13 @@ export default function HeroSection() {
 
                   {/* MINI OPEN ACCESS INDICATOR */}
                   <div className="sd-jb-oa-indicator-pill mb-3">
-                    <span className="sd-jb-dash-line">—</span> Open access
+                    <span className="sd-jb-dash-line">—</span> {home?.open_access == "1" ? 'Open access' : 'Restricted access'}
                   </div>
 
                   {/* MAIN HERO JOURNAL TITLES */}
                   <h1 className="sd-jb-main-heading-serif mb-3">
-                    <span className="sd-jb-italic-gold-brand">Journal</span> of Advanced Research
+                    {home?.title}
+                    {/* The direct you have directly spare it next to matter smart, like<span className="sd-jb-italic-gold-brand">Journal</span> of Advanced Research */}
                   </h1>
 
                   {/* DESCRIPTION SUBTEXT SUMMARY */}
@@ -41,12 +46,12 @@ export default function HeroSection() {
                   {/* METRIC METERS DATA GRID DISPLAY */}
                   <div className="d-flex align-items-baseline gap-5">
                     <div className="sd-jb-metric-stat-box">
-                      <div className="sd-jb-metric-huge-num">21.7</div>
+                      <div className="sd-jb-metric-huge-num">{home?.citescore}</div>
                       <div className="sd-jb-metric-label">CiteScore</div>
                     </div>
 
                     <div className="sd-jb-metric-stat-box">
-                      <div className="sd-jb-metric-huge-num">17.1</div>
+                      <div className="sd-jb-metric-huge-num">{home?.impact_factor}</div>
                       <div className="sd-jb-metric-label">Impact factor</div>
                     </div>
                   </div>

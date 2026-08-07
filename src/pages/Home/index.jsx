@@ -154,8 +154,12 @@ const items = [
 export default function Home() {
   const { home } = useHomeData();
   console.log('home', home);
-  const journalUser = home?.journal_editorial_board?.map(item => item.user)?.[0];
-  console.log('journalUser', journalUser);
+  const correspondingMember = home?.journal_editorial_board?.find(
+    (member) => member.is_corresponding === 1
+  );
+  const user = correspondingMember?.user;
+  console.log('correspondingMember', correspondingMember);
+  console.log('correspondingMember user', user);
 
 
   const [open, setOpen] = useState(false);
@@ -217,19 +221,30 @@ export default function Home() {
               <div className="col-12">
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <h3 className='d-flex align-items-center m-0 fs-5'>
-                      President of XYZ University <p></p>
-                      <span className='bar ps-4'>|</span>
-                      <span className='d-block ms-3 mt-1 text-muted fs-6 font-weight-normal'>
-                        <Link to="/about/editorial-board"> View full editorial board</Link></span>
+                    <h3 className="d-flex align-items-center m-0 fs-5">
+                      {correspondingMember?.editorial_role_name || "President of XYZ University"}
+                      <span className="bar ps-4">|</span>
+                      <span className="d-block ms-3 mt-1 text-muted fs-6 font-weight-normal">
+                        <Link to="/about/editorial-board">View full editorial board</Link>
+                      </span>
                     </h3>
                   </div>
                 </div>
+
                 <div className="d-flex align-items-center mt-3">
-                  <div className='user-avatar-img'>
-                    <img src={journalUser?.profile_photo || "/assets/img/khaled.png"} alt="" />
+                  {user?.profile_photo && (
+                    <div className="user-avatar-img">
+
+                      <img
+                        src={user.profile_photo}
+                        alt={user?.name || correspondingMember?.name || "Member Avatar"}
+                      />
+
+                    </div>
+                  )}
+                  <div>
+                    <h2 className="ms-4">{user?.name || "ABC XYZ"}</h2>
                   </div>
-                  <div><h2 className='ms-4'>{journalUser?.name || 'ABC XYZ'}</h2></div>
                 </div>
               </div>
             </div>
