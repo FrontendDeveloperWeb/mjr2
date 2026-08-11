@@ -12,6 +12,9 @@ node_modules
 dist-ssr
 *.local
 
+# Local secrets — ORCID client id etc. (.env.local is covered by *.local above)
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

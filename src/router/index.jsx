@@ -20,6 +20,7 @@ const Login = lazy(() => import('../pages/Auth/Login/index.jsx'));
 const Register = lazy(() => import('../pages/Auth/Register/index.jsx'));
 const ForgotPassword = lazy(() => import('../pages/Auth/ForgotPassword/index.jsx'));
 const LoginHelp = lazy(() => import('../pages/Auth/loginHelp/index.jsx'));
+const OrcidCallback = lazy(() => import('../pages/Auth/OrcidCallback/index.jsx'));
 const Policies = lazy(() => import('../pages/Policies/index.jsx'));
 const PolicyView = lazy(() => import('../pages/Policies/PolicyView/index.jsx'));
 const HowToSubmitManuscript = lazy(() => import('../pages/Help/HowToSubmitManuscript/index.jsx'));
@@ -74,6 +75,8 @@ export const routes = [
   { path: '/register', element: Register, },
   { path: '/forgot-password', element: ForgotPassword, },
   { path: '/login-help', element: LoginHelp, },
+  // ORCID OAuth redirect target — public, since the session only exists after it runs.
+  { path: '/orcid/callback', element: OrcidCallback, },
   // Author area — gated by <ProtectedRoute> (see App.jsx)
   { path: '/author/main-menu', element: AuthorMainMenu, requiresAuth: true },
   // Multi-page submission flow — each step is its own route.

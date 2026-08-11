@@ -2,6 +2,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
 import { login } from '../../../auth/session.js';
+import { useMutation } from '../../../hooks/reactQuery/index.js';
+
+// ORCID sandbox OAuth. Vite exposes env vars as VITE_* on import.meta.env
+// (process.env is undefined in the browser here), so set VITE_ORCID_CLIENT_ID
+// in .env — the string below is only a placeholder for local testing.
+
 
 // Roles wired to the four login buttons. Kept as data so the submit
 // handler stays generic and API integration only touches one place.
@@ -16,18 +22,37 @@ export default function Login() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
+  // Author login only sends { user_name, password } — the role buttons above
+  // are UI-only routing into the author area for now.
+  const { mutate: authorLogin, isPending: isLoggingIn } = useMutation('authorLogin', {
+    useFormData: false,
+    onSuccess: (response, variables) => {
+      login({ role: variables.role, username: variables.user_name, ...response?.data });
+      navigate('/author/main-menu');
+    },
+  });
+
+  const handleOrcidLogin = () => {
+    const ORCID_CLIENT_ID = import.meta.env.VITE_ORCID_CLIENT_ID || 'APP-XXXXXXXXXXXXXXXX';
+    const ORCID_REDIRECT_URI = `${window.location.origin}/orcid/callback`;
+
+    const ORCID_AUTH_URL =
+      `https://sandbox.orcid.org/oauth/authorize?client_id=${ORCID_CLIENT_ID}` +
+      `&response_type=code&scope=/read-limited&redirect_uri=${encodeURIComponent(ORCID_REDIRECT_URI)}`;
+    window.location.href = ORCID_AUTH_URL;
+  };
+
   // Single, role-aware submit path. Validates the shared username/password
-  // fields, then hands off a clean payload ready for the future API call.
+  // fields, then submits { user_name, password } to the author-login API.
   const handleLogin = (role) => {
     form
       .validateFields()
       .then((values) => {
-        const payload = { ...values, role };
-        // TODO: integrate auth API — POST payload to /services/api.js helper.
-        console.log('login submit', payload);
-        // Establish the (mock) session and enter the author area.
-        login({ role, username: values.username });
-        navigate('/author/main-menu');
+        authorLogin({
+          data: { user_name: values.username, password: values.password },
+          role,
+          user_name: values.username,
+        });
       })
       .catch(() => {
         /* validation errors are surfaced inline by antd */
@@ -105,6 +130,7 @@ export default function Login() {
                         key={key}
                         htmlType="button"
                         className="auth-role-btn"
+                        loading={isLoggingIn}
                         onClick={() => handleLogin(key)}
                       >
                         {label}
@@ -115,7 +141,14 @@ export default function Login() {
 
                 <div className="auth-orcid-row">
                   <span className="auth-muted">Or Login via:</span>
-                  <span className="auth-orcid-badge">iD</span>
+                  <button
+                    type="button"
+                    className="auth-orcid-inline-btn"
+                    onClick={handleOrcidLogin}
+                  >
+                    <span className="auth-orcid-badge">iD</span>
+                    ORCID
+                  </button>
                   <Link to="" className="auth-link">
                     What is ORCID?
                   </Link>

@@ -5,7 +5,6 @@ import PersonalKeywordsModal from './PersonalKeywordsModal.jsx';
 import {
   TITLE_OPTIONS,
   COUNTRY_OPTIONS,
-  CLASSIFICATION_LABELS,
   MIN_CLASSIFICATIONS,
   MIN_KEYWORDS,
 } from './registerOptions.js';
@@ -21,8 +20,8 @@ function ClassificationsField({ value = [], onChange }) {
         <div className="reg-selector-summary">
           {value.length ? (
             <div className="reg-tag-wrap">
-              {value.map((k) => (
-                <Tag key={k} className="reg-keyword-tag">{CLASSIFICATION_LABELS[k]}</Tag>
+              {value.map((item) => (
+                <Tag key={item.id} className="reg-keyword-tag">{item.name}</Tag>
               ))}
             </div>
           ) : (
@@ -57,9 +56,11 @@ function KeywordsField({ value = [], onChange }) {
         <div className="reg-selector-summary">
           {value.length ? (
             <div className="reg-tag-wrap">
-              {value.map((k) => (
-                <Tag key={k} className="reg-keyword-tag">{k}</Tag>
-              ))}
+              {value.map((k) => {
+                const key = typeof k === 'string' ? k : `id-${k.id}`;
+                const label = typeof k === 'string' ? k : k.name;
+                return <Tag key={key} className="reg-keyword-tag">{label}</Tag>;
+              })}
             </div>
           ) : (
             <span className="reg-selector-empty">(None Defined)</span>
@@ -88,14 +89,17 @@ function KeywordsField({ value = [], onChange }) {
  * required field, then hands the clean Step 2 values up to the controller,
  * which merges them with Step 1 for the final payload.
  */
-export default function RegisterStepTwo({ step1Data, onBack, onSubmit }) {
+export default function RegisterStepTwo({ step1Data, orcidId, onBack, onSubmit, isSubmitting }) {
   const [form] = Form.useForm();
 
   // Seed the fields that Step 1 already collected so the user doesn't re-type.
+  // For an ORCID sign-up these arrived from the ORCID record rather than being
+  // typed, and this is the first step the user actually sees.
   const initialValues = {
     firstName: step1Data?.firstName,
     lastName: step1Data?.lastName,
     email: step1Data?.email,
+    orcid: step1Data?.orcid,
     availableAsReviewer: 'no',
     personalClassifications: [],
     personalKeywords: [],
@@ -223,8 +227,14 @@ export default function RegisterStepTwo({ step1Data, onBack, onSubmit }) {
               </Form.Item>
             </div>
             <div className="col-12 col-md-6">
-              <Form.Item label="ORCID iD" name="orcid">
-                <Input placeholder="0000-0000-0000-0000" />
+              <Form.Item
+                label="ORCID iD"
+                name="orcid"
+                extra={orcidId ? 'Authenticated via ORCID' : undefined}
+              >
+                {/* readOnly rather than disabled: an authenticated iD must not
+                    be edited, but antd still needs to submit its value. */}
+                <Input placeholder="0000-0000-0000-0000" readOnly={Boolean(orcidId)} />
               </Form.Item>
             </div>
           </div>
@@ -335,7 +345,7 @@ export default function RegisterStepTwo({ step1Data, onBack, onSubmit }) {
           <Button className="auth-register-btn" onClick={onBack}>
             &laquo; Back
           </Button>
-          <Button htmlType="submit" className="auth-primary-btn auth-continue-btn">
+          <Button htmlType="submit" className="auth-primary-btn auth-continue-btn" loading={isSubmitting}>
             Complete Registration
           </Button>
         </div>

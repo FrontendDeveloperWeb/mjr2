@@ -5740,6 +5740,32 @@ ul.apc-list {
   font-size: 12px;
 }
 
+/* ORCID sign-in trigger inside .auth-orcid-row — reads as part of the row,
+   not as a third button competing with the role buttons above it. */
+.auth-orcid-inline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: #3C4D4B;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.auth-orcid-inline-btn:hover {
+  color: #a6ce39;
+  text-decoration: underline;
+}
+
+.auth-orcid-inline-btn:focus-visible {
+  outline: 2px solid #a6ce39;
+  outline-offset: 2px;
+}
+
 /* --- Inline links --- */
 .auth-inline-links {
   display: flex;
@@ -5917,6 +5943,47 @@ ul.apc-list {
    ========================================== */
 .auth-alt-text--center {
   text-align: center;
+}
+
+/* ORCID OAuth callback — interstitial while the code is exchanged */
+.auth-callback-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 320px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+.auth-callback-badge {
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+/* Step 1 shown to a user who already authenticated via ORCID */
+.reg-orcid-linked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
+  border: 1px solid #a6ce39;
+  border-radius: 6px;
+  background-color: #f7fbef;
+  color: #3C4D4B;
+  font-size: 14px;
+}
+
+.reg-orcid-linked a {
+  color: #3C4D4B;
+  text-decoration: underline;
 }
 
 /* ORCID record button (reuses .auth-account-btn base) */

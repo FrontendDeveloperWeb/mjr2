@@ -158,8 +158,7 @@ export default function Home() {
     (member) => member.is_corresponding === 1
   );
   const user = correspondingMember?.user;
-  console.log('correspondingMember', correspondingMember);
-  console.log('correspondingMember user', user);
+
 
 
   const [open, setOpen] = useState(false);
@@ -306,7 +305,7 @@ export default function Home() {
           <p className='first-para'>Compare article publishing charges (APCs) for other journals</p>
           <p>Add up to 5 journals (from Elsevier or other publishers) to the table below to compare with Journal of <span className='font-600'>Advanced Research.</span></p>
           <CustomTable columns={columns} data={data} className="mt-5 journal-table" />
-          <Collapse items={items} defaultActiveKey={['1']} onChange={onChange} className='drawer-collapse' />
+          <Collapse items={items} defaultActiveKey={['0']} onChange={onChange} className='drawer-collapse' />
         </div>
       </CustomDrawer>
     </Layout>

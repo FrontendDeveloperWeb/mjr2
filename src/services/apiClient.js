@@ -42,6 +42,8 @@ const apiClient = {
       "forgotPassword",
       "verifyOtp",
       "resetPassword",
+      "authorLogin",
+      "authorRegistration",
     ];
 
     // Add auth token if available and not a public endpoint
@@ -116,8 +118,30 @@ const apiClient = {
     const data = await response.json(); // Consume the response body
 
     if (response.ok) {
+      // The backend always answers with HTTP 200, even on failure — the real
+      // outcome is `data.status`. Treat an explicit `status: false` as an
+      // error the same way an HTTP error status is handled below: notify and
+      // throw, so callers (React Query mutations/queries) land in their error
+      // path instead of onSuccess. Endpoints that don't send a `status` field
+      // at all are left alone, so this doesn't affect responses that never
+      // used this convention (e.g. the journal endpoints).
+      if (data && data.status === false) {
+        const description = data.message || data.error || "Something went wrong";
+        notification.error({
+          message: "",
+          description,
+          duration: 4,
+        });
+        throw { status: response.status, ...data };
+      }
+
       // Handle token updates from response headers for login and signup
-      const tokenUpdateEndpoints = ["signup", "login"];
+      const tokenUpdateEndpoints = [
+        "signup",
+        "login",
+        "authorLogin",
+        "authorRegistration",
+      ];
 
       if (tokenUpdateEndpoints.includes(endpoint)) {
         // Check for access_token in response headers (try multiple header names)

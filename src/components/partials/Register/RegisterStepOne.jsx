@@ -1,37 +1,82 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 
+// Same ORCID sandbox redirect the Login page uses. Deliberately duplicated
+// rather than shared, per this repo's rule that page partials stay isolated.
+const ORCID_CLIENT_ID = import.meta.env.VITE_ORCID_CLIENT_ID || 'APP-XXXXXXXXXXXXXXXX';
+const ORCID_REDIRECT_URI = `${window.location.origin}/orcid/callback`;
+
+const ORCID_AUTH_URL =
+  `https://sandbox.orcid.org/oauth/authorize?client_id=${ORCID_CLIENT_ID}` +
+  `&response_type=code&scope=/read-limited&redirect_uri=${encodeURIComponent(ORCID_REDIRECT_URI)}`;
+
 /**
  * Register — Step 1. Collects the initial name/email details, validates them,
  * and hands a clean object up to the controller via `onNext` so it can be
  * merged with Step 2. `defaultValues` re-hydrates the fields when the user
  * navigates back from Step 2.
+ *
+ * ORCID sign-ups normally never see this step — the controller opens on Step 2
+ * with these fields already filled. It still renders for them if they click
+ * Back, which is why the ORCID iD is carried through `onNext` below: this form
+ * has no field for it, so it would otherwise be dropped on the way forward.
  */
-export default function RegisterStepOne({ defaultValues, onNext }) {
+export default function RegisterStepOne({ defaultValues, orcidId, onNext }) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const handleContinue = () => {
-    form
-      .validateFields()
-      .then((values) => onNext(values))
-      .catch(() => {
-        /* validation errors are surfaced inline by antd */
-      });
+  const handleOrcidRegister = () => {
+    window.location.href = ORCID_AUTH_URL;
+  };
+
+  // Driven by the Form's own onFinish (same pattern as Step 2), so antd runs
+  // validation exactly once and hands over the values. The previous version
+  // called validateFields() from the button's onClick while the button was
+  // also htmlType="submit" — two concurrent validation passes, and the manual
+  // one lost the race, rejecting with `outOfDate` and no error fields. That
+  // rejection landed in the catch-all below, so Continue silently did nothing.
+  const handleContinue = (values) => {
+    // Re-attach the authenticated iD, which lives outside this form.
+    onNext({ ...values, ...(orcidId ? { orcid: orcidId } : {}) });
   };
 
   return (
     <>
       <h3 className="auth-login-title">Register with Elsevier account</h3>
 
-      <p className="auth-alt-text auth-alt-text--center">
-        Retrieve your details from the ORCID registry:
-      </p>
+      {orcidId ? (
+        // Already authenticated — offering the button again would only send
+        // them back to ORCID for details they have already provided.
+        <div className="reg-orcid-linked">
+          <span className="auth-orcid-badge">iD</span>
+          <span>
+            Authenticated as{' '}
+            <a
+              href={`https://orcid.org/${orcidId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {orcidId}
+            </a>
+          </span>
+        </div>
+      ) : (
+        <>
+          <p className="auth-alt-text auth-alt-text--center">
+            Retrieve your details from the ORCID registry:
+          </p>
 
-      <Button block className="auth-account-btn auth-orcid-btn">
-        <span className="auth-orcid-badge">iD</span>
-        Use My ORCID Record
-      </Button>
+          <Button
+            block
+            htmlType="button"
+            className="auth-account-btn auth-orcid-btn"
+            onClick={handleOrcidRegister}
+          >
+            <span className="auth-orcid-badge">iD</span>
+            Use My ORCID Record
+          </Button>
+        </>
+      )}
 
       <div className="auth-or-divider">
         <span>OR</span>
@@ -51,6 +96,8 @@ export default function RegisterStepOne({ defaultValues, onNext }) {
         labelCol={{ xs: 24, sm: 8 }}
         wrapperCol={{ xs: 24, sm: 16 }}
         initialValues={defaultValues}
+        onFinish={handleContinue}
+        scrollToFirstError
       >
         <Form.Item
           label="Given/First Name"
@@ -80,11 +127,7 @@ export default function RegisterStepOne({ defaultValues, onNext }) {
         </Form.Item>
 
         <div className="auth-role-btns auth-role-btns--end">
-          <Button
-            htmlType="submit"
-            className="auth-primary-btn auth-continue-btn"
-            onClick={handleContinue}
-          >
+          <Button htmlType="submit" className="auth-primary-btn auth-continue-btn">
             Continue &raquo;
           </Button>
         </div>

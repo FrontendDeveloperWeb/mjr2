@@ -30,7 +30,7 @@ export function getOrcid() {
 }
 
 /** Link (mock) an ORCID iD and return it. Swap for the real OAuth flow later. */
-export function linkOrcid(id = '0000-0002-1825-0097') {
+export function linkOrcid(id = '0009-0009-3687-0976') {
   localStorage.setItem(ORCID_KEY, id);
   return id;
 }

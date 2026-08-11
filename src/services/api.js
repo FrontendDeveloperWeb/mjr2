@@ -1,12 +1,14 @@
 const api = {
   // Authentication endpoints
-  // signup: { method: "POST", url: "register/user" },
-  // login: { method: "POST", url: "login" },
+  authorLogin: { method: "POST", url: "auth/author-login" },
+  authorRegistration: { method: "POST", url: "auth/author-registration" },
   // forgotPassword: { method: "POST", url: "forgot-password" },
   // verifyOtp: { method: "POST", url: "verify-otp" },
   // resetPassword: { method: "POST", url: "reset-password" },
 
-
+  // Auxiliary listing endpoints
+  getSubjects: { method: "GET", url: "subjects" },
+  getKeywords: { method: "GET", url: "keywords" },
 
   // Journal endpoints
   getJournals: { method: "GET", url: "journal" },
