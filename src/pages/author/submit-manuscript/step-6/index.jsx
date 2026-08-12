@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import RichTextEditor from './RichTextEditor.jsx';
+import RichTextEditor from '../../../../components/shared/RichTextEditor/RichTextEditor.jsx';
 import AddAuthorModal from './AddAuthorModal.jsx';
 import AddFundingModal from './AddFundingModal.jsx';
 import { SEED_AUTHORS } from './manuscriptData.js';

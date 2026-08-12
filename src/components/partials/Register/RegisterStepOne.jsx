@@ -1,5 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
+import {
+  NAME_PATTERN_RULE,
+  EMAIL_PATTERN_RULE,
+  blockNonAlphaKeys,
+} from './registerValidation.js';
 
 // Same ORCID sandbox redirect the Login page uses. Deliberately duplicated
 // rather than shared, per this repo's rule that page partials stay isolated.
@@ -102,17 +107,23 @@ export default function RegisterStepOne({ defaultValues, orcidId, onNext }) {
         <Form.Item
           label="Given/First Name"
           name="firstName"
-          rules={[{ required: true, message: 'Please enter your first name' }]}
+          rules={[
+            { required: true, message: 'Please enter your first name' },
+            NAME_PATTERN_RULE,
+          ]}
         >
-          <Input autoComplete="given-name" />
+          <Input autoComplete="given-name" onKeyDown={blockNonAlphaKeys} />
         </Form.Item>
 
         <Form.Item
           label="Family/Last Name"
           name="lastName"
-          rules={[{ required: true, message: 'Please enter your last name' }]}
+          rules={[
+            { required: true, message: 'Please enter your last name' },
+            NAME_PATTERN_RULE,
+          ]}
         >
-          <Input autoComplete="family-name" />
+          <Input autoComplete="family-name" onKeyDown={blockNonAlphaKeys} />
         </Form.Item>
 
         <Form.Item
@@ -120,7 +131,7 @@ export default function RegisterStepOne({ defaultValues, orcidId, onNext }) {
           name="email"
           rules={[
             { required: true, message: 'Please enter your e-mail address' },
-            { type: 'email', message: 'Please enter a valid e-mail address' },
+            EMAIL_PATTERN_RULE,
           ]}
         >
           <Input autoComplete="email" />

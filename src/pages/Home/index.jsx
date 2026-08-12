@@ -153,7 +153,6 @@ const items = [
 ];
 export default function Home() {
   const { home } = useHomeData();
-  console.log('home', home);
   const correspondingMember = home?.journal_editorial_board?.find(
     (member) => member.is_corresponding === 1
   );

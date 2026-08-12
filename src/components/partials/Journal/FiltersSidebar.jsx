@@ -38,16 +38,20 @@ export default function FiltersSidebar({ onFilterChange }) {
 
             <div className="mb-3">
               <label className="sd-jl-select-lbl">Find articles with the keywords</label>
-              <Select defaultValue="All Subjects areas" className="w-100 sd-jl-antd-select">
-                <Option value="all">All Subjects areas</Option>
-              </Select>
+              <Select
+                defaultValue="All Subjects areas"
+                className="w-100 sd-jl-antd-select"
+                options={[{ value: 'all', label: 'All Subjects areas' }]}
+              />
             </div>
 
             <div className="mb-4">
               <label className="sd-jl-select-lbl">Secondary subject area</label>
-              <Select defaultValue="All Secondary subject areas" className="w-100 sd-jl-antd-select">
-                <Option value="all">All Secondary subject areas</Option>
-              </Select>
+              <Select
+                defaultValue="All Secondary subject areas"
+                className="w-100 sd-jl-antd-select"
+                options={[{ value: 'all', label: 'All Secondary subject areas' }]}
+              />
             </div>
           </div>
 

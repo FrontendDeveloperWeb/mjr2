@@ -7,8 +7,10 @@ import {
 } from '@ant-design/icons';
 
 // Lightweight rich-text editor: a contentEditable surface plus a formatting
-// toolbar driven by document.execCommand — enough for the Title/Abstract
+// toolbar driven by document.execCommand — enough for Title/Abstract-style
 // formatting affordances without pulling in a heavy editor dependency.
+// Promoted to shared/ because it's now used by more than one submit-manuscript
+// step (Step 1 Overview and Step 6 Title/Abstract) — stateless and prop-driven.
 const TOOLS = [
   { cmd: 'bold', icon: <BoldOutlined />, title: 'Bold' },
   { cmd: 'italic', icon: <ItalicOutlined />, title: 'Italic' },

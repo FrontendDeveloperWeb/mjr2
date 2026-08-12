@@ -21,10 +21,16 @@ export default function PublicationsList({
         <h2 className="sd-jl-all-titles-head m-0">All Titles <span className="text-muted fw-normal font-sans">({totalItems})</span></h2>
         <div className="d-flex align-items-center gap-2">
           <span className="sd-jl-sort-label text-muted">Sort by</span>
-          <Select value={sortBy} onChange={onSortChange} className="sd-jl-sort-dropdown" style={{ width: 110 }}>
-            <Option value="A-Z">Title, A-Z</Option>
-            <Option value="Z-A">Title, Z-A</Option>
-          </Select>
+          <Select
+            value={sortBy}
+            onChange={onSortChange}
+            className="sd-jl-sort-dropdown"
+            style={{ width: 110 }}
+            options={[
+              { value: 'A-Z', label: 'Title, A-Z' },
+              { value: 'Z-A', label: 'Title, Z-A' },
+            ]}
+          />
         </div>
       </div>
 

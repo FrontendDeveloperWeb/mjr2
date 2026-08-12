@@ -117,8 +117,6 @@ const Helper = {
     }
   },
   setStorageData: async function (key, value) {
-    console.log("key",key);
-    console.log("value",value);
     try {
       // Encrypt using native crypto
       const ciphertext = await encryptData(JSON.stringify(value), secretKey);

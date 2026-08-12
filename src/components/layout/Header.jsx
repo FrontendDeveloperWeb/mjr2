@@ -1,13 +1,20 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { isAuthenticated, getUser, logout } from '../../auth/session.js';
+import ProfileDropdown from './ProfileDropdown.jsx';
 
 export default function Header() {
-  const naviagate = useNavigate();
-  const isLoggedIn = localStorage.getItem('mjr.auth');
-  console.log('isLoggedIn:', isLoggedIn);
+  const navigate = useNavigate();
+  // useLocation() re-renders Header on every navigation so the logged-in
+  // state (read from localStorage, not React state) stays in sync — e.g.
+  // right after login/logout redirects to a different route.
+  useLocation();
+  const isLoggedIn = isAuthenticated();
+  const user = isLoggedIn ? getUser() : null;
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header>
@@ -31,31 +38,36 @@ export default function Header() {
             <Link to="/">
               <div className='web-logo'>
                 <img src="/assets/img/logo.png" alt="" />
-                {/* <h2>XYZ Logo</h2> */}
               </div>
             </Link>
             <div>
               <ul className='list-area d-flex align-items-center justify-content-between'>
                 <li><Link to="/journals-and-books">Journal & Books</Link></li>
-                <li><a href="#">
-                  <img src="/assets/img/nav-q.png" alt="" /></a></li>
-                <li><a href="#">
 
-                  <img src="/assets/img/h-back-icon.png" alt="" />
-                </a></li>
-                {isLoggedIn ? (
+                {isLoggedIn && user ? (
                   <li>
-                    <button className='custom-btn yellow-btn' onClick={() => { localStorage.removeItem('mjr.auth'); naviagate("/"); }}>Logout</button>
+                    <div className="d-flex align-items-center header-account">
+                      <ProfileDropdown user={user} />
+                      <span className="header-account-sep">|</span>
+                      <button
+                        type="button"
+                        className="header-logout-link"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
                   </li>
                 ) : (
                   <>
                     <li>
-                      <button className='custom-btn transparent-btn' onClick={() => naviagate("/register")}>Register</button>
+                      <button className='custom-btn transparent-btn' onClick={() => navigate("/register")}>Register</button>
                     </li>
                     <li>
-                      <button className='custom-btn yellow-btn' onClick={() => naviagate("/login")}>Sign In</button>
+                      <button className='custom-btn yellow-btn' onClick={() => navigate("/login")}>Sign In</button>
                     </li>
-                  </>)}
+                  </>
+                )}
               </ul>
             </div>
           </div>

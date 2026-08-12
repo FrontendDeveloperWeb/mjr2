@@ -1,20 +1,28 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
+import { useMutation } from '../../../hooks/reactQuery/index.js';
 
 export default function ForgotPassword() {
     const [form] = Form.useForm();
-    const navigate = useNavigate();
 
-    // Single submit path — validates the email field and hands off a clean
-    // payload ready for the future "send login details" API call.
+    // Requests the "reset your password" e-mail. Success/error notifications
+    // are handled automatically by apiClient (see useMutation) — nothing extra
+    // to wire up here beyond the request itself.
+    const { mutate: authorForgotPassword, isPending: isSubmitting } = useMutation('authorForgotPassword', {
+        useFormData: false,
+        onSuccess: () => {
+            form.resetFields();
+        },
+    });
+
+    // Single submit path — validates the email field and sends it to the
+    // author-forgotPassword API.
     const handleSubmit = () => {
         form
             .validateFields()
             .then((values) => {
-                const payload = { ...values };
-                // TODO: integrate reset API — POST payload to /services/api.js helper.
-                console.log('forgot-password submit', payload);
+                authorForgotPassword({ data: { email: values.email } });
             })
             .catch(() => {
                 /* validation errors are surfaced inline by antd */
@@ -70,6 +78,7 @@ export default function ForgotPassword() {
                                         <Button
                                             htmlType="submit"
                                             className="auth-primary-btn auth-continue-btn"
+                                            loading={isSubmitting}
                                             onClick={handleSubmit}
                                         >
                                             Submit

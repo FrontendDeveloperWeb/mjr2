@@ -54,12 +54,16 @@ export default function AdminFooter() {
                                     prefix={<img src='/assets/img/search-icon.png' />}
                                     className="sd-custom-search-input"
                                 />
-                                <Select defaultValue="All Topics" className="sd-custom-select-topic">
-                                    <Option value="All Topics">All Topics</Option>
-                                    <Option value="Science">Science</Option>
-                                    <Option value="Health">Health</Option>
-                                    <Option value="Technology">Technology</Option>
-                                </Select>
+                                <Select
+                                    defaultValue="All Topics"
+                                    className="sd-custom-select-topic"
+                                    options={[
+                                        { value: 'All Topics', label: 'All Topics' },
+                                        { value: 'Science', label: 'Science' },
+                                        { value: 'Health', label: 'Health' },
+                                        { value: 'Technology', label: 'Technology' },
+                                    ]}
+                                />
                                 <Button className="sd-btn-search-trigger d-flex align-items-center justify-content-center">
                                     <SearchOutlined className="me-1" /> Search here
                                 </Button>

@@ -19,6 +19,7 @@ const GuideAuthors = lazy(() => import('../pages/GuideAuthors/index.jsx'));
 const Login = lazy(() => import('../pages/Auth/Login/index.jsx'));
 const Register = lazy(() => import('../pages/Auth/Register/index.jsx'));
 const ForgotPassword = lazy(() => import('../pages/Auth/ForgotPassword/index.jsx'));
+const ResetPassword = lazy(() => import('../pages/Auth/ResetPassword/index.jsx'));
 const LoginHelp = lazy(() => import('../pages/Auth/loginHelp/index.jsx'));
 const OrcidCallback = lazy(() => import('../pages/Auth/OrcidCallback/index.jsx'));
 const Policies = lazy(() => import('../pages/Policies/index.jsx'));
@@ -70,11 +71,13 @@ export const routes = [
   { path: '/submit-article', element: SubmitArticle, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/open-access-Option', element: OpenAccessOption, meta: { hero: 'standard', stats: true, topbar: true } },
   { path: '/guide-for-author', element: GuideAuthors, meta: { hero: 'standard', stats: true, topbar: true } },
-  // Auth Route
-  { path: '/login', element: Login, },
-  { path: '/register', element: Register, },
-  { path: '/forgot-password', element: ForgotPassword, },
-  { path: '/login-help', element: LoginHelp, },
+  // Auth Route — gated by <GuestRoute> (see App.jsx): an already-authenticated
+  // user is bounced to /author/main-menu instead of seeing these again.
+  { path: '/login', element: Login, requiresGuest: true },
+  { path: '/register', element: Register, requiresGuest: true },
+  { path: '/forgot-password', element: ForgotPassword, requiresGuest: true },
+  { path: '/reset-password', element: ResetPassword, requiresGuest: true },
+  { path: '/login-help', element: LoginHelp, requiresGuest: true },
   // ORCID OAuth redirect target — public, since the session only exists after it runs.
   { path: '/orcid/callback', element: OrcidCallback, },
   // Author area — gated by <ProtectedRoute> (see App.jsx)

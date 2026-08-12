@@ -112,6 +112,103 @@ p {
   color: #fff;
 }
 
+.header-account {
+  gap: 8px;
+}
+
+.header-account-sep {
+  color: #333;
+  opacity: 0.6;
+}
+
+.header-logout-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #333;
+  cursor: pointer;
+}
+
+.header-logout-link:hover {
+  text-decoration: underline;
+}
+
+.profile-dropdown-wrapper {
+  position: relative;
+}
+
+.profile-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.profile-dropdown-caret {
+  font-size: 11px;
+}
+
+.avatar-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3C4D4B;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.profile-dropdown-card {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: -12px;
+  z-index: 1000;
+  width: 280px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 6px 20px;
+  color: #333;
+}
+
+.profile-dropdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.profile-dropdown-label {
+  color: #777;
+}
+
+.profile-dropdown-value {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.profile-dropdown-link {
+  display: block;
+  padding: 14px 0;
+  color: #0d6efd;
+}
+
+.profile-dropdown-link:hover {
+  text-decoration: underline;
+}
+
 .header {
   padding: 15px 0;
 }
@@ -5579,6 +5676,14 @@ ul.apc-list {
   padding: 28px;
 }
 
+.auth-register-cover {
+  border-right: 1px solid #eef1f1;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  padding: 40px 28px;
+}
+
 .auth-login-cover img {
   width: 100%;
   height: auto;
@@ -7928,7 +8033,7 @@ ul.apc-list {
   margin: 4px 0;
 }
 
-.ast-table .ant-table-thead > tr > th {
+.ast-table .ant-table-thead>tr>th {
   background: #223333;
   color: #ffffff;
   font-family: 'Afacad-SemiBold', sans-serif;
@@ -8034,7 +8139,7 @@ ul.apc-list {
   padding-left: 4px;
 }
 
-.hlp-bullets > li {
+.hlp-bullets>li {
   position: relative;
   padding-left: 20px;
   color: #344342;
@@ -8043,11 +8148,11 @@ ul.apc-list {
   margin-bottom: 10px;
 }
 
-.hlp-bullets > li:last-child {
+.hlp-bullets>li:last-child {
   margin-bottom: 0;
 }
 
-.hlp-bullets > li::before {
+.hlp-bullets>li::before {
   content: '';
   position: absolute;
   left: 4px;
@@ -8243,17 +8348,17 @@ ul.apc-list {
   padding-left: 4px;
 }
 
-.hlp-video-list > li {
+.hlp-video-list>li {
   position: relative;
   padding: 10px 0 10px 20px;
   border-bottom: 1px solid #f0f3f3;
 }
 
-.hlp-video-list > li:last-child {
+.hlp-video-list>li:last-child {
   border-bottom: none;
 }
 
-.hlp-video-list > li::before {
+.hlp-video-list>li::before {
   content: '▸';
   position: absolute;
   left: 0;
@@ -8340,3 +8445,6 @@ ul.apc-list {
   transform: translateY(-2px);
 }
 
+.date-piker-input .ant-picker {
+  height: 42px;
+}

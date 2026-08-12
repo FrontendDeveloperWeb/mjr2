@@ -1,11 +1,12 @@
-// Minimal client-side session store for the author area. There is no backend
-// yet, so auth state lives in localStorage behind these helpers. When the real
-// API arrives, only this file changes — callers keep using the same functions.
+// Client-side session store for the author area: the full user object
+// returned by the login/registration APIs is persisted here (localStorage),
+// and doubles as this app's global auth state — ProtectedRoute, GuestRoute
+// and the Header all read it through these helpers.
 
 const AUTH_KEY = 'mjr.auth';
 const ORCID_KEY = 'mjr.orcid';
 
-/** Persist a logged-in session. `profile` can carry role/name later. */
+/** Persist a logged-in session. `profile` is the API's user object (role/name/etc). */
 export function login(profile = {}) {
   localStorage.setItem(AUTH_KEY, JSON.stringify({ authed: true, ...profile }));
 }
@@ -21,6 +22,18 @@ export function isAuthenticated() {
     return JSON.parse(localStorage.getItem(AUTH_KEY))?.authed === true;
   } catch {
     return false;
+  }
+}
+
+/** The persisted user object (role/name/user_name/etc), or null when logged out. */
+export function getUser() {
+  try {
+    const session = JSON.parse(localStorage.getItem(AUTH_KEY));
+    if (!session?.authed) return null;
+    const { authed, ...user } = session;
+    return user;
+  } catch {
+    return null;
   }
 }
 

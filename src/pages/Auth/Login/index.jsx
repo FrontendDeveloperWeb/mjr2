@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
 import { login } from '../../../auth/session.js';
+import { extractUserFromResponse } from '../../../auth/userSelectors.js';
 import { useMutation } from '../../../hooks/reactQuery/index.js';
 
 // ORCID sandbox OAuth. Vite exposes env vars as VITE_* on import.meta.env
@@ -27,7 +28,12 @@ export default function Login() {
   const { mutate: authorLogin, isPending: isLoggingIn } = useMutation('authorLogin', {
     useFormData: false,
     onSuccess: (response, variables) => {
-      login({ role: variables.role, username: variables.user_name, ...response?.data });
+      const apiUser = extractUserFromResponse(response);
+      login({
+        ...apiUser,
+        role: apiUser.role || variables.role,
+        user_name: apiUser.user_name || variables.user_name,
+      });
       navigate('/author/main-menu');
     },
   });
@@ -58,16 +64,6 @@ export default function Login() {
         /* validation errors are surfaced inline by antd */
       });
   };
-  // const openHelpPopup = (e) => {
-  //     e.preventDefault();
-
-
-  //     const url = '/login-help';
-  //     const windowName = 'LoginHelpWindow';
-  //     const windowFeatures = 'width=600,height=650,left=200,top=100,resizable=yes,scrollbars=yes';
-
-  //     window.open(url, windowName, windowFeatures);
-  // };
 
   return (
     <AuthLayout>

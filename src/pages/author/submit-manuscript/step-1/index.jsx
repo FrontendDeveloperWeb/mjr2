@@ -1,47 +1,131 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Steps, Select, Button } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { Steps, Select, Input, Button, message } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import { getOrcid, linkOrcid } from '../../../../auth/session.js';
-import { STEP_TITLES } from '../stepTitles.js';
-import { setStepData } from '../manuscriptStore.js';
-import { useDraftId, useDraftAutosave } from '../useManuscriptDraft.js';
+import RichTextEditor from '../../../../components/shared/RichTextEditor/RichTextEditor.jsx';
+import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
+import { useGlobalData } from '../../../../hooks/queries/index.js';
+import { setPaperDraft } from '../paperDraftStore.js';
 
-const ARTICLE_TYPES = [
-  'Original Manuscript',
-  'Review Article',
-  'Short Communication',
-  'Case Report',
-  'Editorial',
-  'Letter to the Editor',
-].map((v) => ({ value: v, label: v }));
+// Local to this page (not the shared stepTitles.js) — steps 2-6 still run
+// their own separate flow/title set, so this can't reuse that shared list
+// without changing their step bar too.
+const OVERVIEW_STEP_TITLES = ['Overview', 'Author', 'Keywords', 'Upload Files', 'Final Submission'];
+
+// The Subjects API returns a parent/children tree (see PersonalClassificationsModal
+// for the same shape) — flattened here since this field is a plain tag
+// multi-select, not a tree.
+function flattenSubjects(nodes = []) {
+  return nodes.flatMap((node) => [
+    { value: node.id, label: node.name },
+    ...(node.children?.length ? flattenSubjects(node.children) : []),
+  ]);
+}
 
 /**
- * Step 1 — Select Article Type. Standalone page in the multi-page submission
- * flow. Picks the article type and, when the user has no ORCID linked, shows
- * the ORCID linking notice. Proceed validates the selection then advances to
- * the Step 2 route.
+ * Step 1 — Overview. Uses the same <Steps>/am-panel/am-field-label shell as
+ * every other submit-manuscript step page — only the fields inside the panel
+ * are new. Journal comes from the shared global journal-data cache (this app
+ * only has one journal); Paper Type and Subject are fetched live. Save/Save &
+ * Next both POST to /papers/store; on success the returned paper (with its
+ * slug) is stashed in paperDraftStore.js for the not-yet-built later steps.
  */
 export default function SubmitManuscriptStep1() {
-  const navigate = useNavigate();
-  const [articleType, setArticleType] = useState('Original Manuscript');
-  const [orcid, setOrcid] = useState(getOrcid());
-  const [error, setError] = useState(false);
+  const { data: journal, isLoading: journalLoading } = useGlobalData();
+  const journalOptions = useMemo(
+    () => (journal?.id ? [{ value: journal.id, label: journal.title }] : []),
+    [journal]
+  );
 
-  const draftId = useDraftId();
-  useDraftAutosave(draftId, 'step1', 1, { articleType, orcid });
+  const [journalId, setJournalId] = useState(undefined);
+  const [paperTypeId, setPaperTypeId] = useState(undefined);
+  const [subjects, setSubjects] = useState([]);
+  const [title, setTitle] = useState('');
+  const [abstractHtml, setAbstractHtml] = useState('');
+  const [abstractText, setAbstractText] = useState('');
+  const [errors, setErrors] = useState({});
+  // Tracks which button triggered the in-flight save, so only that button
+  // shows a spinner (both call the same mutation).
+  const [pendingAction, setPendingAction] = useState(null);
 
-  const handleLinkOrcid = () => setOrcid(linkOrcid());
-
-  const handleProceed = () => {
-    if (!articleType) {
-      setError(true);
-      return;
+  // Single-journal system — auto-select the only journal once it loads,
+  // same as a pre-filled (not user-editable) dropdown would behave.
+  useEffect(() => {
+    if (journal?.id && journalId === undefined) {
+      setJournalId(journal.id);
     }
-    setStepData('step1', { articleType, orcid });
-    navigate('/author/submit-manuscript/step-2');
+  }, [journal, journalId]);
+
+  const { data: subjectsResult, isLoading: subjectsLoading } = useQuery('getSubjects');
+  const subjectOptions = useMemo(
+    () => flattenSubjects(subjectsResult?.data || []),
+    [subjectsResult]
+  );
+
+  const { data: paperTypesResult, isLoading: paperTypesLoading } = useQuery('getPaperTypes');
+  const paperTypeOptions = useMemo(
+    () => (paperTypesResult?.data || []).map((pt) => ({ value: pt.id, label: pt.name })),
+    [paperTypesResult]
+  );
+
+  const { mutate: storePaper, isPending: isSaving } = useMutation('storePaper', {
+    useFormData: false,
+    onSuccess: (response) => {
+      const paper = response?.data?.data || response?.data || {};
+      setPaperDraft(paper);
+      message.success('Overview saved.');
+      setPendingAction(null);
+      // The Author step isn't built yet, so "Save & Next" has nowhere to
+      // navigate to — the draft (with its slug) is ready for it once that
+      // page exists.
+    },
+    onError: () => setPendingAction(null),
+  });
+
+  const buildPayload = () => {
+    const selectedJournal = journalOptions.find((o) => o.value === journalId);
+    const selectedPaperType = paperTypeOptions.find((o) => o.value === paperTypeId);
+    const selectedSubjects = subjects
+      .map((id) => subjectOptions.find((o) => o.value === id))
+      .filter(Boolean)
+      .map((o) => ({ id: o.value, name: o.label }));
+
+    return {
+      journal_id: journalId,
+      journal_title: selectedJournal?.label,
+      paper_type_id: paperTypeId,
+      paper_type_name: selectedPaperType?.label,
+      title,
+      abstract: abstractHtml,
+      // No "Remarks" field in this UI today — sent empty to match the API's
+      // expected payload shape without adding a new form field.
+      remarks: '',
+      subjects: selectedSubjects,
+    };
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!journalId) nextErrors.journal = 'Please select a journal';
+    if (!paperTypeId) nextErrors.paperType = 'Please select a paper type';
+    if (!subjects.length) nextErrors.subjects = 'Please select at least one subject';
+    if (!title.trim()) nextErrors.title = 'Please enter a title';
+    if (!abstractText.trim()) nextErrors.abstract = 'Please enter an abstract';
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (!validate()) return;
+    setPendingAction('save');
+    storePaper({ data: buildPayload() });
+  };
+
+  const handleSaveNext = () => {
+    if (!validate()) return;
+    setPendingAction('next');
+    storePaper({ data: buildPayload() });
   };
 
   return (
@@ -55,18 +139,19 @@ export default function SubmitManuscriptStep1() {
             responsive
             titlePlacement="vertical"
             className="am-steps"
-            items={STEP_TITLES.map((title) => ({ title }))}
+            items={OVERVIEW_STEP_TITLES.map((title) => ({ title }))}
           />
 
           <div className="am-step-body">
             <div className="am-step">
-              <h1 className="am-step-heading">Step 1: Article Type Selection</h1>
+              <h1 className="am-step-heading">Step 1: Overview</h1>
 
               <div className="row g-4">
                 {/* Left helper rail */}
                 <aside className="col-12 col-lg-3">
                   <p className="am-help-strong">
-                    Choose the Article Type of your submission from the drop-down menu.
+                    Provide the journal, paper type, subject area, title and abstract for your
+                    submission.
                   </p>
                   <a
                     href="/help/how-to-submit-manuscript"
@@ -81,73 +166,123 @@ export default function SubmitManuscriptStep1() {
                 {/* Panel */}
                 <div className="col-12 col-lg-9">
                   <div className="am-panel">
-                    <div className="am-panel-head">Select Article Type</div>
+                    <div className="am-panel-head">Overview</div>
                     <div className="am-panel-body">
-                      <Select
-                        className="am-article-select"
-                        value={articleType}
-                        onChange={(value) => {
-                          setArticleType(value);
-                          setError(false);
-                        }}
-                        options={ARTICLE_TYPES}
-                        status={error ? 'error' : ''}
-                        placeholder="Select Article Type"
-                      />
-                      {error && (
-                        <p className="am-error-text">Please select an Article Type to continue.</p>
-                      )}
+                      <div className="row g-4">
+                        {/* Row 1 */}
+                        <div className="col-12 col-md-6">
+                          <label className="am-field-label">
+                            Journal <span className="am-req-star">*</span>
+                          </label>
+                          <Select
+                            className="am-article-select"
+                            style={{ width: '100%' }}
+                            value={journalId}
+                            onChange={(value) => {
+                              setJournalId(value);
+                              setErrors((e) => ({ ...e, journal: undefined }));
+                            }}
+                            options={journalOptions}
+                            loading={journalLoading}
+                            status={errors.journal ? 'error' : ''}
+                          />
+                          {errors.journal && <p className="am-error-text">{errors.journal}</p>}
+                        </div>
 
-                      <div className="am-orcid-block">
-                        {orcid ? (
-                          <p className="am-orcid-linked">
-                            Your ORCID iD is authenticated and permanently associated with your
-                            account. <strong>ORCID iD:</strong>{' '}
-                            <a
-                              href={`https://orcid.org/${orcid}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="am-help-link"
-                            >
-                              {orcid}
-                            </a>
-                          </p>
-                        ) : (
-                          <>
-                            <p>
-                              Before submitting your manuscript, we encourage you to link your
-                              ORCID iD and authenticate it. This will allow you to share
-                              information with other systems, ensure you get recognition for all
-                              your contributions and reduce the risk of errors. Once
-                              authenticated, you can login to this journal using your ORCID iD as
-                              well.
-                            </p>
-                            <p>
-                              You will only need to do this once in this journal to permanently
-                              associate your ORCID iD with your EM user record.
-                            </p>
-                            <div className="am-orcid-row">
-                              <span className="am-orcid-label">
-                                ORCID iD: <em>(None)</em>
-                              </span>
-                              <div className="am-orcid-actions">
-                                <Button className="am-btn-grey" onClick={handleLinkOrcid}>
-                                  Link to ORCID Record
-                                </Button>
-                                <a href="#what-is-orcid" className="am-help-link">
-                                  What is ORCID?
-                                </a>
-                              </div>
-                            </div>
-                          </>
-                        )}
+                        <div className="col-12 col-md-6">
+                          <label className="am-field-label">
+                            Paper Type <span className="am-req-star">*</span>
+                          </label>
+                          <Select
+                            className="am-article-select"
+                            style={{ width: '100%' }}
+                            placeholder="Select Paper Type"
+                            value={paperTypeId}
+                            onChange={(value) => {
+                              setPaperTypeId(value);
+                              setErrors((e) => ({ ...e, paperType: undefined }));
+                            }}
+                            options={paperTypeOptions}
+                            loading={paperTypesLoading}
+                            status={errors.paperType ? 'error' : ''}
+                          />
+                          {errors.paperType && <p className="am-error-text">{errors.paperType}</p>}
+                        </div>
+
+                        {/* Row 2 */}
+                        <div className="col-12 col-md-6">
+                          <label className="am-field-label">
+                            Subject <span className="am-req-star">*</span>
+                          </label>
+                          <Select
+                            className="am-article-select"
+                            style={{ width: '100%' }}
+                            mode="multiple"
+                            placeholder="Select one or more subjects"
+                            value={subjects}
+                            onChange={(value) => {
+                              setSubjects(value);
+                              setErrors((e) => ({ ...e, subjects: undefined }));
+                            }}
+                            options={subjectOptions}
+                            loading={subjectsLoading}
+                            status={errors.subjects ? 'error' : ''}
+                          />
+                          {errors.subjects && <p className="am-error-text">{errors.subjects}</p>}
+                        </div>
+
+                        <div className="col-12 col-md-6">
+                          <label className="am-field-label">
+                            Title <span className="am-req-star">*</span>
+                          </label>
+                          <Input
+                            value={title}
+                            onChange={(e) => {
+                              setTitle(e.target.value);
+                              setErrors((err) => ({ ...err, title: undefined }));
+                            }}
+                            status={errors.title ? 'error' : ''}
+                            placeholder="Enter the paper title"
+                          />
+                          {errors.title && <p className="am-error-text">{errors.title}</p>}
+                        </div>
+
+                        {/* Row 3 */}
+                        <div className="col-12">
+                          <label className="am-field-label">
+                            Abstract <span className="am-req-star">*</span>
+                          </label>
+                          <RichTextEditor
+                            placeholder="Enter the abstract"
+                            minHeight={250}
+                            onChange={(html, text) => {
+                              setAbstractHtml(html);
+                              setAbstractText(text);
+                              setErrors((e) => ({ ...e, abstract: undefined }));
+                            }}
+                          />
+                          {errors.abstract && <p className="am-error-text">{errors.abstract}</p>}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="am-actions">
-                    <Button className="am-btn-primary" onClick={handleProceed}>
-                      Proceed <ArrowRightOutlined />
+                    <Button
+                      className="am-btn-secondary"
+                      onClick={handleSave}
+                      loading={isSaving && pendingAction === 'save'}
+                      disabled={isSaving && pendingAction !== 'save'}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      className="am-btn-primary"
+                      onClick={handleSaveNext}
+                      loading={isSaving && pendingAction === 'next'}
+                      disabled={isSaving && pendingAction !== 'next'}
+                    >
+                      Save &amp; Next <ArrowRightOutlined />
                     </Button>
                   </div>
                 </div>

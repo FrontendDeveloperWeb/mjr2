@@ -119,7 +119,7 @@ export default function TopBar() {
 												<Input
 													placeholder="Search in this journal"
 													className="sd-search-pill-input"
-													bordered={false}
+													variant="borderless"
 												/>
 												<button className="sd-search-pill-btn px-4">
 													Search

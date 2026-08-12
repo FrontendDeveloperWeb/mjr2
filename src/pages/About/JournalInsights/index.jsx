@@ -7,7 +7,6 @@ import { useHomeData } from '@/hooks/queries';
 
 const JournalInsights = () => {
   const { home } = useHomeData();
-  console.log('insight home', home);
   return (
     // 2-Column Layout Container
     <>

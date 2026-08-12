@@ -4,7 +4,9 @@ import AuthLayout from '../../../components/authlayout/AuthLayout.jsx';
 import RegisterStepOne from '../../../components/partials/Register/RegisterStepOne.jsx';
 import RegisterStepTwo from '../../../components/partials/Register/RegisterStepTwo.jsx';
 import { login, linkOrcid } from '../../../auth/session.js';
+import { extractUserFromResponse } from '../../../auth/userSelectors.js';
 import { useMutation } from '../../../hooks/reactQuery/index.js';
+import { dateHelper } from '../../../helpers/dateHelper.js';
 
 const STEPS = [
   { key: 1, label: 'Account Details' },
@@ -35,8 +37,7 @@ function readOrcidUser() {
 /**
  * Map the merged Step 1 + Step 2 form values onto the author-registration
  * API's payload shape. Only the institution-related fields the form actually
- * collects go into a single `affiliations` entry — start_date/end_date aren't
- * captured by the form, so they're left out rather than sent empty.
+ * collects go into a single `affiliations` entry.
  */
 function buildAuthorRegistrationPayload(payload) {
   const {
@@ -58,6 +59,9 @@ function buildAuthorRegistrationPayload(payload) {
     stateProvince,
     streetAddress,
     zipPostalCode,
+    isCurrent,
+    startDate,
+    endDate,
     personalClassifications = [],
     personalKeywords = [],
   } = payload;
@@ -78,24 +82,23 @@ function buildAuthorRegistrationPayload(payload) {
     orcid,
     affiliations: hasAffiliationData
       ? [
-          {
-            institution_name: institution,
-            department,
-            designation: position,
-            is_current: 1,
-            country,
-            city,
-            state: stateProvince,
-            address: streetAddress,
-            zip: zipPostalCode,
-          },
-        ]
+        {
+          institution_name: institution,
+          department,
+          designation: position,
+          is_current: isCurrent ? 1 : 0,
+          start_date: dateHelper.formatForAPI(startDate),
+          end_date: isCurrent ? '' : dateHelper.formatForAPI(endDate),
+          country,
+          city,
+          state: stateProvince,
+          address: streetAddress,
+          zip: zipPostalCode,
+        },
+      ]
       : [],
-    // personalClassifications already arrives as [{ id, name }] from the
-    // Subjects API via the classifications modal.
+
     subjects: personalClassifications.map(({ id, name }) => ({ id, name })),
-    // personalKeywords mixes existing API keywords ({ id, name }, picked in
-    // the keywords modal) with freshly-typed custom strings — split them here.
     keywords: personalKeywords
       .filter((k) => typeof k !== 'string')
       .map(({ id, name }) => ({ id, name })),
@@ -103,15 +106,7 @@ function buildAuthorRegistrationPayload(payload) {
   };
 }
 
-/**
- * Register controller. Owns the 2-step flow: it keeps a single `/register`
- * route and switches between Step 1 and Step 2 in place, so the Step 1 data
- * survives navigating forward/back. Each transition is mirrored into the
- * persisted draft, which is what lets an ORCID sign-up resume here after the
- * full-page trip to orcid.org — and what makes a mid-wizard refresh survivable.
- * On the final submit it merges both steps into one clean payload ready for
- * the registration API.
- */
+
 export default function Register() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -130,10 +125,14 @@ export default function Register() {
   const { mutate: authorRegistration, isPending: isRegistering } = useMutation('authorRegistration', {
     useFormData: false,
     onSuccess: (response, variables) => {
+      const apiUser = extractUserFromResponse(response);
       login({
-        username: variables.user_name || variables.email,
         ...(variables.orcid ? { provider: 'orcid', orcidId: variables.orcid } : {}),
-        ...response?.data,
+        ...apiUser,
+        role: apiUser.role || 'author',
+        user_name: apiUser.user_name || variables.user_name,
+        first_name: apiUser.first_name || variables.first_name,
+        last_name: apiUser.last_name || variables.last_name,
       });
       if (variables.orcid) linkOrcid(variables.orcid);
       navigate('/author/main-menu');
@@ -171,7 +170,7 @@ export default function Register() {
           <div className="auth-login-card">
             <div className="row g-0">
               {/* LEFT — JOURNAL COVER */}
-              <div className="col-12 col-lg-5 auth-login-cover">
+              <div className="col-12 col-lg-5 auth-register-cover">
                 <img src="/assets/img/golf-banner.png" alt="Journal cover" />
               </div>
 
@@ -182,9 +181,8 @@ export default function Register() {
                   {STEPS.map(({ key, label }) => (
                     <li
                       key={key}
-                      className={`reg-stepper-item ${
-                        step === key ? 'is-active' : ''
-                      } ${step > key ? 'is-done' : ''}`}
+                      className={`reg-stepper-item ${step === key ? 'is-active' : ''
+                        } ${step > key ? 'is-done' : ''}`}
                     >
                       <span className="reg-stepper-num">{key}</span>
                       <span className="reg-stepper-label">{label}</span>

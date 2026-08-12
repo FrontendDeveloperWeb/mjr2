@@ -11,6 +11,33 @@ import "@/hooks/sweetalert.css";
  */
 const apiClient = {
   /**
+   * The auth token, read fresh at call time rather than trusting whatever
+   * window.user happened to hold since the last bootstrap/login. Falls back
+   * to re-hydrating window.user from persisted storage if it's momentarily
+   * empty — covers the case where a request is dispatched in the same tick
+   * a token was just written elsewhere.
+   * @returns {Promise<string|null>}
+   */
+  async getFreshToken() {
+    let token = window.user?.api_token || window.user?.access_token;
+    if (token) return token;
+
+    if (window.helper?.getStorageData) {
+      try {
+        const stored = await window.helper.getStorageData("session");
+        if (stored?.api_token || stored?.access_token) {
+          window.user = { ...(window.user || {}), ...stored };
+          token = stored.api_token || stored.access_token;
+        }
+      } catch (error) {
+        console.error("[apiClient] Failed to re-read session storage for token:", error);
+      }
+    }
+
+    return token || null;
+  },
+
+  /**
    * Create a fetch request with common headers and options
    * @param {string} url - API URL
    * @param {Object} options - Fetch options
@@ -30,8 +57,11 @@ const apiClient = {
 
     headers.append("Accept", "application/json");
 
-    // Don't set Content-Type for FormData
-    if (!useFormData && options.method !== "GET") {
+    // Don't set Content-Type for FormData (the browser needs to set its own
+    // multipart boundary). Otherwise always send it, GET included — some
+    // backends key their JSON-vs-HTML response/auth handling off this header
+    // being present on every request, not just ones with a body.
+    if (!useFormData) {
       headers.append("Content-Type", "application/json");
     }
 
@@ -44,16 +74,26 @@ const apiClient = {
       "resetPassword",
       "authorLogin",
       "authorRegistration",
+      "authorForgotPassword",
+      "authorResetPassword",
     ];
 
-    // Add auth token if available and not a public endpoint
-    if (
-      window.user &&
-      (window.user.api_token || window.user.access_token) &&
-      !publicEndpoints.includes(endpoint)
-    ) {
-      const token = window.user.api_token || window.user.access_token;
+    // Add auth token if available and not a public endpoint. Re-read it from
+    // persisted storage right here (rather than trusting whatever window.user
+    // happened to hold since bootstrap) so a token captured moments ago by
+    // another in-flight request is never missed by this one.
+    const isPublicEndpoint = publicEndpoints.includes(endpoint);
+    const token = isPublicEndpoint ? null : await this.getFreshToken();
+    const hasToken = Boolean(token);
+
+    if (hasToken) {
       headers.append("Authorization", `Bearer ${token}`);
+    } else if (!isPublicEndpoint) {
+      // Protected endpoint with nothing to send — surface this loudly so a
+      // missing/never-captured token is obvious instead of silently 401ing.
+      console.warn(
+        `[apiClient] "${endpoint}" is not public but no auth token is set on window.user — request will be sent without Authorization.`
+      );
     }
 
     // Add custom headers
@@ -86,7 +126,14 @@ const apiClient = {
       }
     }
 
-    return fetch(url, requestOptions);
+    // Log right before dispatch so it's easy to confirm the token that made
+    // it into the headers is the one we expect (never logs the raw token).
+    console.log(
+      `[apiClient] ${options.method || "GET"} ${url} — Authorization: ${hasToken ? "Bearer ***" + token.slice(-6) : "(none)"}`
+    );
+
+    const response = await fetch(url, requestOptions);
+    return { response, hasToken };
   },
 
   /**
@@ -101,7 +148,8 @@ const apiClient = {
     response,
     showSuccessNotification = false,
     endpoint = "",
-    method = ""
+    method = "",
+    hasToken = false
   ) {
     // Get all headers into a plain object before consuming the response body
     const headers = {};
@@ -144,15 +192,31 @@ const apiClient = {
       ];
 
       if (tokenUpdateEndpoints.includes(endpoint)) {
-        // Check for access_token in response headers (try multiple header names)
-        const accessToken =
+        // The token can arrive as a response header OR inside the JSON body
+        // (this backend uses the body — headers alone were silently missing
+        // it, so window.user.api_token never got set and every later
+        // authenticated call 401'd immediately, e.g. on Step 1's mount).
+        // Check every shape we've seen before falling back to nothing.
+        const bodyToken =
+          data?.access_token ||
+          data?.token ||
+          data?.api_token ||
+          data?.data?.access_token ||
+          data?.data?.token ||
+          data?.data?.api_token ||
+          data?.data?.user?.access_token ||
+          data?.data?.user?.token;
+
+        const headerToken =
           headers["access_token"] ||
           headers["access-token"] ||
           headers["authorization"];
 
-        if (accessToken) {
+        const rawToken = bodyToken || headerToken;
+
+        if (rawToken) {
           // Clean the token (remove 'Bearer ' prefix if present)
-          const cleanToken = accessToken.replace(/^Bearer\s+/i, "");
+          const cleanToken = rawToken.replace(/^Bearer\s+/i, "");
 
           // Add token to response data if not already present
           if (!data.access_token && !data.api_token) {
@@ -174,6 +238,11 @@ const apiClient = {
               }
             }
           }
+          console.log(`[apiClient] Captured auth token from "${endpoint}" response (${bodyToken ? "body" : "header"}).`);
+        } else {
+          console.warn(
+            `[apiClient] "${endpoint}" succeeded but no access token was found in its response body or headers — subsequent authenticated requests will fail.`
+          );
         }
       }
 
@@ -201,38 +270,50 @@ const apiClient = {
 
     // Always handle errors with notifications
     if (response.status === 401) {
-      // Show SweetAlert for 401 errors and handle storage clearing
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "custom-swal-confirm-btn",
-          cancelButton: "custom-swal-cancel-btn",
-          popup: "custom-swal-popup",
-          title: "custom-swal-title",
-          content: "custom-swal-content",
-        },
-      });
-
-      await swalWithBootstrapButtons
-        .fire({
-          title: "Session Expired",
-          text: "Your session has expired. Please log in again.",
-          icon: "warning",
-          confirmButtonText: "OK",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        })
-        .then(() => {
-          // Clear storage and redirect after user clicks OK
-          if (window.helper && window.helper.removeStorageData) {
-            window.helper.removeStorageData();
-          } else {
-            // Fallback if helper is not available
-            localStorage.clear();
-            window.user = {};
-            // Use window.location.replace to prevent back navigation
-            window.location.replace("/login");
-          }
+      if (hasToken) {
+        // We sent a token and the server still rejected it — a genuine
+        // expired/invalid session. Show the modal and clear storage.
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "custom-swal-confirm-btn",
+            cancelButton: "custom-swal-cancel-btn",
+            popup: "custom-swal-popup",
+            title: "custom-swal-title",
+            content: "custom-swal-content",
+          },
         });
+
+        await swalWithBootstrapButtons
+          .fire({
+            title: "Session Expired",
+            text: "Your session has expired. Please log in again.",
+            icon: "warning",
+            confirmButtonText: "OK",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          })
+          .then(() => {
+            // Clear storage and redirect after user clicks OK
+            if (window.helper && window.helper.removeStorageData) {
+              window.helper.removeStorageData();
+            } else {
+              // Fallback if helper is not available
+              localStorage.clear();
+              window.user = {};
+              // Use window.location.replace to prevent back navigation
+              window.location.replace("/login");
+            }
+          });
+      } else {
+        // No token was ever sent on this request — this isn't an expired
+        // session, it's a call made without one (e.g. the token was never
+        // captured after login, see the tokenUpdateEndpoints block above).
+        // Surfacing "Session Expired" here would be misleading, so just log
+        // it; the caller's own error handling (React Query's onError) still runs.
+        console.warn(
+          `[apiClient] 401 on "${endpoint}" with no auth token attached — not treating as a session expiry.`
+        );
+      }
     } else if (response.status === 400 || response.status === 422) {
       // Handle 400 and 422 validation errors
       if (data.message && Array.isArray(data.message)) {
@@ -344,8 +425,10 @@ const apiClient = {
     // hasn't run yet, instead of silently falling back to a stale hardcoded host.
     const baseUrl = window.constants?.api_base_url || constants.api_base_url;
 
-    // Build the URL with the slug if provided
-    let fullUrl = `${baseUrl}${url}`;
+    // Join with exactly one slash regardless of whether baseUrl ends with
+    // one and/or the endpoint's url starts with one — avoids both "//" and
+    // missing-slash mismatches against the backend's route definitions.
+    let fullUrl = `${baseUrl.replace(/\/+$/, "")}/${url.replace(/^\/+/, "")}`;
 
     // Append the slug to the URL if provided
     if (slug) {
@@ -384,7 +467,7 @@ const apiClient = {
 
     try {
       const url = this.getUrl(endpoint, params, slug);
-      const response = await this.fetchApi(
+      const { response, hasToken } = await this.fetchApi(
         url,
         { method, ...fetchOptions },
         endpoint
@@ -394,7 +477,8 @@ const apiClient = {
         response,
         showSuccessNotification,
         endpoint,
-        method
+        method,
+        hasToken
       );
     } catch (error) {
       // Check if it's a network error (not handled by handleResponse)

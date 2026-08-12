@@ -1,4 +1,3 @@
-import "@ant-design/v5-patch-for-react-19";
 import { createRoot } from "react-dom/client";
 import queryClient from "@/services/queryClient";
 import "bootstrap/dist/css/bootstrap.min.css";
