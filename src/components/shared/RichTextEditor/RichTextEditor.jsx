@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   BoldOutlined,
   ItalicOutlined,
@@ -21,8 +21,19 @@ const TOOLS = [
   { cmd: 'removeFormat', label: 'Tx', title: 'Remove formatting' },
 ];
 
-export default function RichTextEditor({ onChange, placeholder = '', minHeight = 140 }) {
+export default function RichTextEditor({ onChange, placeholder = '', minHeight = 140, defaultValue = '' }) {
   const ref = useRef(null);
+
+  // Uncontrolled by design (see file comment) — this only seeds the initial
+  // HTML once on mount, e.g. when a step page rehydrates saved content after
+  // a Back-navigation. Later `defaultValue` changes are intentionally
+  // ignored so it never clobbers what the user is actively typing.
+  useEffect(() => {
+    if (defaultValue && ref.current) {
+      ref.current.innerHTML = defaultValue;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const emit = () => {
     const el = ref.current;

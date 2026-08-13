@@ -1,63 +1,225 @@
-import { useNavigate } from 'react-router-dom';
-import { Steps, Form, Select, Radio, Input, Button } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Steps, Select, Button, Input, Table, message, Popconfirm } from 'antd';
+import {
+  DeleteOutlined,
+  PlusOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  EyeOutlined,
+  FileOutlined,
+} from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import { STEP_TITLES } from '../stepTitles.js';
-import { setStepData } from '../manuscriptStore.js';
-import { useDraftId, useDraftAutosave } from '../useManuscriptDraft.js';
+import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
+import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
+import { getWizardState, setStep4Data } from '../paperDraftStore.js';
 
-// Sentinel for the pre-selected "Please select a response" option — treated as
-// unanswered by the validators below.
-const NONE = 'none';
-
-const YES_NO_OPTIONS = [
-  { value: NONE, label: 'Please select a response' },
-  { value: 'Yes', label: 'Yes' },
-  { value: 'No', label: 'No' },
-];
-
-const SCOPUS_LIMIT = 200;
-
-// Reject the sentinel (or empty) so a real choice is required.
-const requireResponse = {
-  validator: (_, value) =>
-    value && value !== NONE ? Promise.resolve() : Promise.reject(new Error('Please select a response.')),
-};
-
-const CONFIRM_FUNDING =
-  'I confirm that I have mentioned all organizations that funded my research in the Acknowledgements section of my submission, including grant numbers where appropriate.';
-
-/** Card wrapper for a single questionnaire item. */
-function QCard({ statement, children }) {
-  return (
-    <div className="am-q-card">
-      <div className="am-q-statement">{statement}</div>
-      {children}
-    </div>
-  );
+// useQuery's default `select` already tries to normalize a GET response
+// into `{ data: [...] }`, but that assumes the backend wraps its array as
+// `{ data: [...] }` too — if it instead sends the array bare, or wraps it as
+// `{ data: { data: [...] } }` / `{ data: { files: [...] } }`, `.data` ends
+// up holding a non-array object and any `.map()` on it throws. Try every
+// shape actually seen from this backend before giving up to `[]`.
+function toArray(queryResult) {
+  const raw = queryResult?.data;
+  if (Array.isArray(raw)) return raw;
+  if (Array.isArray(raw?.data)) return raw.data;
+  if (Array.isArray(raw?.files)) return raw.files;
+  return [];
 }
 
+function emptyRow() {
+  return {
+    id: crypto.randomUUID?.() ?? `row-${Date.now()}-${Math.random()}`,
+    fileTypeId: undefined,
+    file: null,
+  };
+}
+
+// Backend file records aren't a fixed shape — cover the field names likely
+// to appear (same fallback-chain approach as formatAuthorLabel in Step 2).
+function formatFileRow(f) {
+  return {
+    id: f.id,
+    type: f.file_type_name || f.file_type?.name || f.type || '—',
+    name: f.file_name || f.name || f.original_name || 'File',
+    version: f.version || 'v1',
+    size: f.size || f.file_size || '—',
+    uploadedAt: f.created_at || f.uploaded_at || '',
+    url: f.file_url || f.url || f.path || null,
+  };
+}
+
+/**
+ * Step 4 — Upload Files. Part of the (new) Overview-first flow (see
+ * overviewStepTitles.js).
+ *
+ * Unlike the local-only version of this page, the Uploaded Files table is
+ * now backend-driven (GET papers/get-files/{slug}) rather than mirrored in
+ * frontend state — that's what makes Back/Forward safe here: the table
+ * always reflects what's actually saved server-side on every mount, instead
+ * of a client-side copy that could drift or vanish on reload. Only the
+ * *pending, not-yet-uploaded* rows (file type + file picked but not saved
+ * yet) are ordinary transient form state, same as any unsaved field
+ * elsewhere in this wizard.
+ */
 export default function SubmitManuscriptStep4() {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [searchParams] = useSearchParams();
+  const slug = searchParams.get('slug') || getWizardState()?.slug || null;
 
-  const scopus = Form.useWatch('scopus', form) || '';
-  const allAnswers = Form.useWatch([], form) || {};
+  useEffect(() => {
+    if (!slug) {
+      message.warning('Please complete Step 1 first.');
+      navigate('/author/submit-manuscript/step-1', { replace: true });
+    }
+  }, [slug, navigate]);
 
-  const draftId = useDraftId();
-  useDraftAutosave(draftId, 'step4', 4, allAnswers);
+  const { data: fileTypesResult, isLoading: fileTypesLoading } = useQuery('getFileTypes');
+  const fileTypeOptions = useMemo(
+    () => toArray(fileTypesResult).map((t) => ({ value: t.id, label: t.name })),
+    [fileTypesResult]
+  );
 
-  const handleProceed = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        setStepData('step4', values);
-        navigate('/author/submit-manuscript/step-5');
-      })
-      .catch(() => {
-        /* antd surfaces the per-field errors inline */
-      });
+  const {
+    data: filesResult,
+    isLoading: filesLoading,
+    refetch: refetchFiles,
+  } = useQuery('getPaperFiles', { slug, enabled: Boolean(slug) });
+  const uploadedFiles = useMemo(
+    () => toArray(filesResult).map(formatFileRow),
+    [filesResult]
+  );
+
+  // Keeps Step 5's summary in sync with whatever the table currently shows,
+  // any time the backend list changes (initial fetch, after upload, after delete).
+  // Stores the RAW backend records (not the display-mapped `uploadedFiles`)
+  // so Step 5 can map file_type_name/original_name/version/file_size itself,
+  // same as it does with step1Data — no separate normalized shape to drift
+  // out of sync with what the backend actually calls these fields.
+  useEffect(() => {
+    if (filesResult) {
+      setStep4Data(toArray(filesResult));
+    }
+  }, [filesResult]);
+
+  const [rows, setRows] = useState([emptyRow()]);
+  const [error, setError] = useState('');
+
+  const [search, setSearch] = useState('');
+  const [pageSize, setPageSize] = useState(10);
+
+  const addRow = () => setRows((prev) => [...prev, emptyRow()]);
+  const removeRow = (id) => setRows((prev) => (prev.length > 1 ? prev.filter((r) => r.id !== id) : prev));
+  const updateRow = (id, patch) =>
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+
+  const { mutate: deleteFile, isPending: isDeleting } = useMutation('deletePaperFile', {
+    useFormData: false,
+    showSuccessNotification: false,
+    onSuccess: () => {
+      message.success('File removed.');
+      refetchFiles();
+    },
+  });
+
+  const viewFile = (row) => {
+    if (row.url) window.open(row.url, '_blank', 'noopener,noreferrer');
+  };
+
+  const filteredFiles = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return uploadedFiles;
+    return uploadedFiles.filter(
+      (f) => f.name.toLowerCase().includes(q) || f.type.toLowerCase().includes(q)
+    );
+  }, [uploadedFiles, search]);
+
+  const columns = [
+    { title: 'SL', dataIndex: 'sl', width: 60, render: (_, __, i) => i + 1 },
+    { title: 'File', dataIndex: 'file', width: 60, render: () => <FileOutlined className="am-file-icon" /> },
+    { title: 'File Type', dataIndex: 'type', width: 160 },
+    { title: 'File Name', dataIndex: 'name', render: (v) => <span className="am-file-name">{v}</span> },
+    { title: 'Version', dataIndex: 'version', width: 90 },
+    { title: 'Size', dataIndex: 'size', width: 100 },
+    { title: 'Uploaded', dataIndex: 'uploadedAt', width: 170 },
+    {
+      title: 'Action',
+      key: 'action',
+      width: 100,
+      render: (_, row) => (
+        <div className="am-table-actions">
+          <button
+            type="button"
+            className="am-icon-btn"
+            aria-label="View file"
+            disabled={!row.url}
+            onClick={() => viewFile(row)}
+          >
+            <EyeOutlined />
+          </button>
+          <Popconfirm
+            title="Remove this file?"
+            okText="Remove"
+            okButtonProps={{ danger: true }}
+            onConfirm={() => deleteFile({ slug, data: { id: row.id } })}
+          >
+            <button type="button" className="am-icon-btn am-icon-btn-danger" aria-label="Remove file" disabled={isDeleting}>
+              <DeleteOutlined />
+            </button>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+
+  const { mutate: uploadFiles, isPending: isUploading } = useMutation('updatePaperFiles', {
+    useFormData: true,
+    showSuccessNotification: false,
+    // apiClient already throws (→ onError, not onSuccess) whenever the body
+    // says `status: false`, so reaching here means the backend accepted the
+    // upload — no need to re-check `status` ourselves.
+    onSuccess: () => {
+      // Navigate the moment the upload itself resolves — Step 5 fetches
+      // its own fresh copy of the files list, so there's no need to wait
+      // on a refetch here first. Kick it off in the background purely to
+      // keep paperDraftStore's step4Data snapshot current for anyone who
+      // navigates Back into this page later.
+      refetchFiles().then((refetched) => setStep4Data(toArray(refetched)));
+
+      message.success('Files uploaded.');
+      setRows([emptyRow()]);
+      navigate('/author/submit-manuscript/step-5');
+    },
+  });
+
+  const handleBack = () => {
+    navigate('/author/submit-manuscript/step-3');
+  };
+
+  const handleNext = () => {
+    const ready = rows.filter((r) => r.fileTypeId && r.file);
+
+    if (!ready.length) {
+      // Nothing new picked this visit — the table above already reflects
+      // everything saved so far, so just move on.
+      navigate('/author/submit-manuscript/step-5');
+      return;
+    }
+
+    // Backend expects each row nested under files[i][...] rather than flat
+    // file_type_id[i]/file[i] keys — it reassembles this into the
+    // { files: [{ file_type_id, file_type_name, file }] } shape server-side.
+    const formData = new FormData();
+    ready.forEach((r, index) => {
+      const typeName = fileTypeOptions.find((o) => o.value === r.fileTypeId)?.label || '';
+      formData.append(`files[${index}][file_type_id]`, r.fileTypeId);
+      formData.append(`files[${index}][file_type_name]`, typeName);
+      formData.append(`files[${index}][file]`, r.file, r.file.name);
+    });
+    setError('');
+    uploadFiles({ slug, data: formData });
   };
 
   return (
@@ -71,122 +233,114 @@ export default function SubmitManuscriptStep4() {
             responsive
             titlePlacement="vertical"
             className="am-steps"
-            items={STEP_TITLES.map((title) => ({ title }))}
+            items={OVERVIEW_STEP_TITLES.map((title) => ({ title }))}
           />
 
           <div className="am-step-body">
             <div className="am-step">
-              <h1 className="am-step-heading">Step 4: Additional Information</h1>
+              <h1 className="am-step-heading">Step 4: Upload Files</h1>
 
-              <div className="am-attach-topbar">
-                <a href="#insert-char" className="am-help-link am-insert-link">Insert Special Character</a>
-              </div>
-
-              <div className="row g-4">
-                {/* Left rail: helper + warning callout */}
-                <aside className="col-12 col-lg-3">
-                  <p className="am-help-strong">Please respond to the presented questions/statements.</p>
-                  <p className="am-q-warning">
-                    If there are duplicate submissions made elsewhere, it can lead to immediate
-                    rejection of the paper in JAR and flagging the author in the system.
-                  </p>
-                </aside>
-
-                {/* Questionnaire */}
-                <div className="col-12 col-lg-9">
-                  <div className="am-q-headbar">Questionnaire</div>
-
-                  <Form
-                    form={form}
-                    layout="horizontal"
-                    requiredMark={false}
-                    className="am-q-form"
-                    labelCol={{ flex: '120px' }}
-                    wrapperCol={{ flex: 'auto' }}
-                    initialValues={{ q1: NONE, q2: NONE, q3: NONE, q4: NONE, q6: NONE }}
-                  >
-                    {/* Q1 */}
-                    <QCard statement="Please confirm whether this manuscript, or any portion of it, is a simultaneous submission. In other words, if the manuscript has been submitted elsewhere.">
-                      <Form.Item name="q1" label="Answer Required:" colon={false} className="am-q-item" rules={[requireResponse]}>
-                        <Select className="am-q-select" options={YES_NO_OPTIONS} />
-                      </Form.Item>
-                    </QCard>
-
-                    {/* Q2 */}
-                    <QCard
-                      statement={
-                        <>
-                          Please note that your paper must follow the format as listed in the
-                          &ldquo;Submission Checklist&rdquo; for the journal. Can you please confirm
-                          that your paper has followed the correct format by entering{' '}
-                          <strong>Yes</strong> or <strong>No</strong> in the below field?{' '}
-                          <a href="#checklist" className="am-help-link am-q-link">Checklist available to view here</a>
-                        </>
-                      }
-                    >
-                      <Form.Item name="q2" label="Answer Required:" colon={false} className="am-q-item" rules={[requireResponse]}>
-                        <Select className="am-q-select" options={YES_NO_OPTIONS} />
-                      </Form.Item>
-                    </QCard>
-
-                    {/* Q3 */}
-                    <QCard statement="Please confirm that you have mentioned all organizations that funded your research in the Acknowledgements section of your submission, including grant numbers where appropriate.">
-                      <Form.Item name="q3" label="Answer Required:" colon={false} className="am-q-item" rules={[requireResponse]}>
-                        <Radio.Group className="am-q-radio">
-                          <Radio value={NONE}>Please select a response</Radio>
-                          <Radio value="confirm">{CONFIRM_FUNDING}</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </QCard>
-
-                    {/* Q4 */}
-                    <QCard statement="If the MS is accepted for publication, I agree to pay the publication fee of Four Thousand Four Hundred Dollars (4,400 USD) excluding taxes">
-                      <span className="am-q-instructions">Instructions</span>
-                      <Form.Item name="q4" label="Answer Required:" colon={false} className="am-q-item" rules={[requireResponse]}>
-                        <Radio.Group className="am-q-radio">
-                          <Radio value={NONE}>Please select a response</Radio>
-                          <Radio value="Yes">Yes</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </QCard>
-
-                    {/* Q5 */}
-                    <QCard statement="Please copy paste the Scopus profile weblink of the corresponding author">
-                      <div className="am-q-charcount-row">
-                        <span className="am-q-charcount">Character Count: {scopus.length}</span>
+              <h2 className="am-section-heading">Files</h2>
+              <div className="am-panel am-upload-card">
+                <div className="am-panel-body">
+                  {rows.map((row) => (
+                    <div key={row.id} className="am-upload-row">
+                      <div className="am-upload-field">
+                        <label className="am-field-label">File Type</label>
+                        <Select
+                          className="w-100"
+                          placeholder="Select File Type"
+                          options={fileTypeOptions}
+                          loading={fileTypesLoading}
+                          value={row.fileTypeId}
+                          onChange={(value) => updateRow(row.id, { fileTypeId: value })}
+                        />
                       </div>
-                      <Form.Item
-                        name="scopus"
-                        label="Answer Required:"
-                        colon={false}
-                        className="am-q-item"
-                        rules={[{ required: true, message: 'Please enter a response.' }]}
-                        extra={<span className="am-q-limit">Limit {SCOPUS_LIMIT} characters</span>}
-                      >
-                        <Input maxLength={SCOPUS_LIMIT} className="am-q-scopus-input" />
-                      </Form.Item>
-                    </QCard>
 
-                    {/* Q6 */}
-                    <QCard statement="Please confirm that your paper is not a resubmission of a previously rejected paper. Rejected papers may not be resubmitted. Also, please make sure that even papers rejected due to high iThenticate score cannot be resubmitted.">
-                      <Form.Item name="q6" label="Answer Required:" colon={false} className="am-q-item" rules={[requireResponse]}>
-                        <Radio.Group className="am-q-radio">
-                          <Radio value={NONE}>Please select a response</Radio>
-                          <Radio value="Confirm">Confirm</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </QCard>
-                  </Form>
+                      <div className="am-upload-field">
+                        <label className="am-field-label">Upload File</label>
+                        <div className="am-file-picker">
+                          <input
+                            type="file"
+                            id={`file-input-${row.id}`}
+                            className="am-file-native-input-hidden"
+                            onChange={(e) => updateRow(row.id, { file: e.target.files?.[0] || null })}
+                          />
+                          <label htmlFor={`file-input-${row.id}`} className="am-file-picker-btn">
+                            Choose file
+                          </label>
+                          <span className="am-file-picker-name">
+                            {row.file?.name || 'No file chosen'}
+                          </span>
+                        </div>
+                      </div>
 
-                  <div className="am-actions">
-                    <Button className="am-btn-secondary" onClick={() => navigate('/author/submit-manuscript/step-3')}>
-                      <ArrowLeftOutlined /> Back
-                    </Button>
-                    <Button className="am-btn-primary" onClick={handleProceed}>
-                      Proceed <ArrowRightOutlined />
+                      <Button
+                        className="am-author-delete"
+                        icon={<DeleteOutlined />}
+                        disabled={rows.length === 1 && !row.fileTypeId && !row.file}
+                        onClick={() => removeRow(row.id)}
+                        aria-label="Remove row"
+                      />
+                    </div>
+                  ))}
+
+                  {error && <p className="am-error-text">{error}</p>}
+
+                  <div className="am-author-actions">
+                    <Button className="am-btn-blue" icon={<PlusOutlined />} onClick={addRow}>
+                      Add More
                     </Button>
                   </div>
                 </div>
+              </div>
+
+              <h2 className="am-section-heading am-mt-24">Uploaded Files</h2>
+              <div className="am-panel">
+                <div className="am-panel-body">
+                  <div className="am-table-toolbar">
+                    <div className="am-entries-control">
+                      <span>Show</span>
+                      <Select
+                        size="small"
+                        value={pageSize}
+                        style={{ width: 72 }}
+                        options={[10, 25, 50, 100].map((n) => ({ value: n, label: n }))}
+                        onChange={setPageSize}
+                      />
+                      <span>entries</span>
+                    </div>
+                    <div className="am-search-control">
+                      <span>Search:</span>
+                      <Input
+                        size="small"
+                        style={{ width: 220 }}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <Table
+                    className="am-file-table"
+                    columns={columns}
+                    dataSource={filteredFiles}
+                    loading={filesLoading}
+                    rowKey="id"
+                    size="small"
+                    pagination={{ pageSize }}
+                    scroll={{ x: 'max-content' }}
+                  />
+                </div>
+              </div>
+
+              <div className="am-actions am-mt-24">
+                <Button className="am-btn-secondary" onClick={handleBack}>
+                  <ArrowLeftOutlined /> Back
+                </Button>
+                <Button className="am-btn-blue" onClick={handleNext} loading={isUploading}>
+                  Save &amp; Next <ArrowRightOutlined />
+                </Button>
               </div>
             </div>
           </div>

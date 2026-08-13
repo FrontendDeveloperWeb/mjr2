@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Steps, Select, Input, Button, message } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
@@ -6,12 +7,8 @@ import TopBar from '../../../../components/shared/TopBar';
 import RichTextEditor from '../../../../components/shared/RichTextEditor/RichTextEditor.jsx';
 import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
 import { useGlobalData } from '../../../../hooks/queries/index.js';
-import { setPaperDraft } from '../paperDraftStore.js';
-
-// Local to this page (not the shared stepTitles.js) — steps 2-6 still run
-// their own separate flow/title set, so this can't reuse that shared list
-// without changing their step bar too.
-const OVERVIEW_STEP_TITLES = ['Overview', 'Author', 'Keywords', 'Upload Files', 'Final Submission'];
+import { setStep1Data, getWizardState } from '../paperDraftStore.js';
+import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
 
 // The Subjects API returns a parent/children tree (see PersonalClassificationsModal
 // for the same shape) — flattened here since this field is a plain tag
@@ -23,30 +20,57 @@ function flattenSubjects(nodes = []) {
   ]);
 }
 
+// Plain-text fallback for the abstract's stored HTML, only needed so
+// `validate()` sees hydrated content as non-empty before the user has
+// touched the editor again (RichTextEditor itself supplies the real
+// innerText on every subsequent edit via onChange).
+function stripHtml(html = '') {
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 /**
  * Step 1 — Overview. Uses the same <Steps>/am-panel/am-field-label shell as
  * every other submit-manuscript step page — only the fields inside the panel
  * are new. Journal comes from the shared global journal-data cache (this app
  * only has one journal); Paper Type and Subject are fetched live. Save/Save &
- * Next both POST to /papers/store; on success the returned paper (with its
- * slug) is stashed in paperDraftStore.js for the not-yet-built later steps.
+ * Next both POST to /papers/store, unchanged — on success the returned paper
+ * (with its slug) is stashed in paperDraftStore.js purely so a Back-navigation
+ * lands with the form already filled in, not blank. No conditional
+ * create-vs-update branching: this is a UI-state fix only, not an API change.
  */
 export default function SubmitManuscriptStep1() {
+  const navigate = useNavigate();
   const { data: journal, isLoading: journalLoading } = useGlobalData();
   const journalOptions = useMemo(
     () => (journal?.id ? [{ value: journal.id, label: journal.title }] : []),
     [journal]
   );
 
-  const [journalId, setJournalId] = useState(undefined);
-  const [paperTypeId, setPaperTypeId] = useState(undefined);
-  const [subjects, setSubjects] = useState([]);
-  const [title, setTitle] = useState('');
-  const [abstractHtml, setAbstractHtml] = useState('');
-  const [abstractText, setAbstractText] = useState('');
+  // Rehydrate from whatever was last successfully saved via /papers/store.
+  // Read once via a lazy initializer so a Back-navigation from Step 2 lands
+  // with the form already filled in, not blank — but also re-run as an
+  // effect below, since wizardState.step1Data can still be null on first
+  // render (e.g. this component was already mounted once and Step 1 was
+  // saved, then the user came back without a full remount).
+  const draftPaper = useMemo(() => getWizardState()?.step1Data || null, []);
+
+  // Ids can come back from the API as numeric strings ("5") while every
+  // Select's `options` list uses numbers for `value` — Antd only shows a
+  // field as "selected" on an exact `===` match, so an un-coerced string id
+  // silently renders as blank even though the value is technically set.
+  const toId = (v) => (v === undefined || v === null || v === '' ? undefined : Number(v));
+
+  const [journalId, setJournalId] = useState(() => toId(draftPaper?.journal_id));
+  const [paperTypeId, setPaperTypeId] = useState(() => toId(draftPaper?.paper_type_id));
+  const [subjects, setSubjects] = useState(
+    () => (draftPaper?.subjects || []).map((s) => toId(s.id))
+  );
+  const [title, setTitle] = useState(draftPaper?.title || '');
+  const [abstractHtml, setAbstractHtml] = useState(draftPaper?.abstract || '');
+  const [abstractText, setAbstractText] = useState(stripHtml(draftPaper?.abstract || ''));
   const [errors, setErrors] = useState({});
   // Tracks which button triggered the in-flight save, so only that button
-  // shows a spinner (both call the same mutation).
+  // shows a spinner (both Save and Save & Next call the same mutation).
   const [pendingAction, setPendingAction] = useState(null);
 
   // Single-journal system — auto-select the only journal once it loads,
@@ -56,6 +80,23 @@ export default function SubmitManuscriptStep1() {
       setJournalId(journal.id);
     }
   }, [journal, journalId]);
+
+  // Explicit hydration pass, same pattern Step 4/Step 5 use to rehydrate
+  // from wizardState — covers Back-navigation landing on an
+  // already-mounted Step 1 where the lazy initializer above never re-runs.
+  useEffect(() => {
+    const wizardState = getWizardState();
+    if (!wizardState?.step1Data) return;
+    const savedPaper = wizardState.step1Data.paper || wizardState.step1Data;
+
+    setJournalId((prev) => (prev === undefined ? toId(savedPaper.journal_id) : prev));
+    setPaperTypeId((prev) => (prev === undefined ? toId(savedPaper.paper_type_id) : prev));
+    setSubjects((prev) => (prev.length ? prev : (savedPaper.subjects || []).map((s) => toId(s.id))));
+    setTitle((prev) => (prev ? prev : savedPaper.title || ''));
+    setAbstractHtml((prev) => (prev ? prev : savedPaper.abstract || ''));
+    setAbstractText((prev) => (prev ? prev : stripHtml(savedPaper.abstract || '')));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: subjectsResult, isLoading: subjectsLoading } = useQuery('getSubjects');
   const subjectOptions = useMemo(
@@ -73,12 +114,17 @@ export default function SubmitManuscriptStep1() {
     useFormData: false,
     onSuccess: (response) => {
       const paper = response?.data?.data || response?.data || {};
-      setPaperDraft(paper);
+      setStep1Data(paper);
       message.success('Overview saved.');
+      if (pendingAction === 'next') {
+        // Slug is handed to Step 2 both via the URL (so a page refresh/deep
+        // link on Step 2 still knows which paper it's editing) and via
+        // paperDraftStore as a sessionStorage-backed fallback — unchanged
+        // from the original flow.
+        const query = paper.slug ? `?slug=${encodeURIComponent(paper.slug)}` : '';
+        navigate(`/author/submit-manuscript/step-2${query}`);
+      }
       setPendingAction(null);
-      // The Author step isn't built yet, so "Save & Next" has nowhere to
-      // navigate to — the draft (with its slug) is ready for it once that
-      // page exists.
     },
     onError: () => setPendingAction(null),
   });
@@ -89,17 +135,17 @@ export default function SubmitManuscriptStep1() {
     const selectedSubjects = subjects
       .map((id) => subjectOptions.find((o) => o.value === id))
       .filter(Boolean)
-      .map((o) => ({ id: o.value, name: o.label }));
+      .map((o) => ({ id: Number(o.value), name: String(o.label) }));
 
     return {
-      journal_id: journalId,
+      journal_id: Number(journalId),
       journal_title: selectedJournal?.label,
-      paper_type_id: paperTypeId,
+      paper_type_id: Number(paperTypeId),
       paper_type_name: selectedPaperType?.label,
       title,
       abstract: abstractHtml,
-      // No "Remarks" field in this UI today — sent empty to match the API's
-      // expected payload shape without adding a new form field.
+      // No "Remarks" field in this UI today — always an explicit empty
+      // string (never undefined/null) to match the API's expected shape.
       remarks: '',
       subjects: selectedSubjects,
     };
@@ -255,6 +301,7 @@ export default function SubmitManuscriptStep1() {
                           <RichTextEditor
                             placeholder="Enter the abstract"
                             minHeight={250}
+                            defaultValue={draftPaper?.abstract || ''}
                             onChange={(html, text) => {
                               setAbstractHtml(html);
                               setAbstractText(text);

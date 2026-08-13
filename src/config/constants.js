@@ -2,7 +2,7 @@
 const constants = {
   base_path: "/",
 
-  api_base_url: "http://192.168.90.75:8000/api/v1/",
+  api_base_url: "http://192.168.70.20:8000/api/v1/",
 
   node_chat_url: "http://chat.moddedmarket.com/",
 

@@ -1,59 +1,102 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Steps, Select, Button, Tag } from 'antd';
-import {
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  DownOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  CheckOutlined,
-  ExclamationCircleFilled,
-} from '@ant-design/icons';
+import { useMemo, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Steps, Select, Button, message } from 'antd';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import ClassificationsModal from './ClassificationsModal.jsx';
-import { SECTION_OPTIONS, CLASSIFICATION_LABELS } from './classificationData.js';
-import { STEP_TITLES } from '../stepTitles.js';
-import { setStepData } from '../manuscriptStore.js';
-import { useDraftId, useDraftAutosave } from '../useManuscriptDraft.js';
+import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
+import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
+import { getWizardState, setStep3Data } from '../paperDraftStore.js';
 
-/** Collapsible card matching the reference panels (header toggles the body). */
-function CollapsibleCard({ title, defaultOpen = true, invalid = false, children }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className={`am-panel ${invalid ? 'am-panel-error' : ''}`}>
-      <button type="button" className="am-panel-head am-panel-toggle" onClick={() => setOpen((o) => !o)}>
-        <span className="am-panel-toggle-icon">{open ? <MinusOutlined /> : <PlusOutlined />}</span>
-        <span className="am-panel-toggle-title">{title}</span>
-        {invalid && <ExclamationCircleFilled className="am-panel-warn" />}
-      </button>
-      {open && <div className="am-panel-body">{children}</div>}
-    </div>
-  );
-}
-
+/**
+ * Step 3 — Keywords. Part of the (new) Overview-first flow (see
+ * overviewStepTitles.js) — replaces the old step-3 "General Information"
+ * page from the separate step-1..step-6 flow at this same route (same
+ * situation as Step 2's replacement of the old "Attach Files" page).
+ */
 export default function SubmitManuscriptStep3() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const slug = searchParams.get('slug') || getWizardState()?.slug || null;
 
-  const [section, setSection] = useState('None');
-  const [classifications, setClassifications] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [showErrors, setShowErrors] = useState(false);
+  useEffect(() => {
+    if (!slug) {
+      message.warning('Please complete Step 1 first.');
+      navigate('/author/submit-manuscript/step-1', { replace: true });
+    }
+  }, [slug, navigate]);
 
-  const sectionMissing = !section || section === 'None';
-  const classMissing = classifications.length === 0;
+  const { data: keywordsResult, isLoading: keywordsLoading } = useQuery('getKeywords');
+  const keywordOptions = useMemo(
+    () => (keywordsResult?.data || []).map((k) => ({ value: k.id, label: k.name })),
+    [keywordsResult]
+  );
 
-  const draftId = useDraftId();
-  useDraftAutosave(draftId, 'step3', 3, { section, classifications });
+  // Rehydrate from whatever was last successfully saved via
+  // update-keywords, so a Back-navigation from Step 4 doesn't blank this out.
+  const savedKeywords = useMemo(() => getWizardState()?.step3Data, []);
+  const [existingKeywordIds, setExistingKeywordIds] = useState(savedKeywords?.existingIds || []);
+  const [newKeywords, setNewKeywords] = useState(savedKeywords?.newKeywords || []);
+  const [tagInput, setTagInput] = useState('');
 
-  const handleProceed = () => {
-    if (sectionMissing || classMissing) {
-      setShowErrors(true);
+  const addTag = (raw) => {
+    const value = raw.trim();
+    if (!value) return;
+    setNewKeywords((prev) => (prev.includes(value) ? prev : [...prev, value]));
+    setTagInput('');
+  };
+
+  const removeTag = (value) => setNewKeywords((prev) => prev.filter((k) => k !== value));
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag(tagInput);
+    } else if (e.key === 'Backspace' && !tagInput && newKeywords.length) {
+      // Convenience: backspacing on an empty field pops the last chip,
+      // same as most chip-input widgets (Gmail's To field, antd tags, etc).
+      setNewKeywords((prev) => prev.slice(0, -1));
+    }
+  };
+
+  const { mutate: updateKeywords, isPending: isSaving } = useMutation('updatePaperKeywords', {
+    useFormData: false,
+    showSuccessNotification: false,
+    onSuccess: () => {
+      message.success('Keywords saved.');
+      navigate('/author/submit-manuscript/step-4');
+    },
+  });
+
+  const handleBack = () => {
+    navigate('/author/submit-manuscript/step-2');
+  };
+
+  const handleNext = () => {
+    // Keywords are optional — nothing to require or block on. If the user
+    // hasn't touched either field, skip the API call entirely (nothing to
+    // save) and just move on to Step 4.
+    if (!existingKeywordIds.length && !newKeywords.length) {
+      navigate('/author/submit-manuscript/step-4');
       return;
     }
-    setStepData('step3', { section, classifications });
-    navigate('/author/submit-manuscript/step-4');
+
+    // Keeps the IDs (to re-hydrate the Select on a later visit) alongside
+    // resolved labels (for Step 5's summary, without re-fetching keywords).
+    setStep3Data({
+      existingIds: existingKeywordIds,
+      existingLabels: existingKeywordIds
+        .map((id) => keywordOptions.find((o) => o.value === id)?.label || '')
+        .filter(Boolean),
+      newKeywords,
+    });
+    updateKeywords({
+      slug,
+      data: {
+        keyword_ids: existingKeywordIds.map(Number),
+        new_keywords: newKeywords,
+      },
+    });
   };
 
   return (
@@ -67,94 +110,67 @@ export default function SubmitManuscriptStep3() {
             responsive
             titlePlacement="vertical"
             className="am-steps"
-            items={STEP_TITLES.map((title) => ({ title }))}
+            items={OVERVIEW_STEP_TITLES.map((title) => ({ title }))}
           />
 
           <div className="am-step-body">
             <div className="am-step">
-              <h1 className="am-step-heading">Step 3: General Information</h1>
-
-              <div className="am-attach-topbar">
-                <a href="#insert-char" className="am-help-link am-insert-link">Insert Special Character</a>
-              </div>
+              <h1 className="am-step-heading">Step 3: Keywords</h1>
 
               <div className="row g-4">
                 {/* Left helper rail */}
                 <aside className="col-12 col-lg-3">
-                  <p className="am-help-strong">Please provide the requested information.</p>
+                  <p className="am-help-strong">
+                    Select from existing keywords or add new ones that best describe your
+                    manuscript.
+                  </p>
                 </aside>
 
-                {/* Cards */}
                 <div className="col-12 col-lg-9">
-                  {/* Section / Category */}
-                  <CollapsibleCard title="Section/Category" invalid={showErrors && sectionMissing}>
-                    <p className="am-panel-desc">
-                      Select the Section or Category related to your manuscript from the drop-down
-                      menu below.
-                    </p>
+                  <label className="am-field-label">Select Existing Keywords</label>
+                  <Select
+                    className="w-100"
+                    mode="multiple"
+                    showSearch
+                    optionFilterProp="label"
+                    placeholder="Search and select keywords"
+                    value={existingKeywordIds}
+                    options={keywordOptions}
+                    loading={keywordsLoading}
+                    onChange={setExistingKeywordIds}
+                  />
 
-                    <label className="am-field-label am-req-label">
-                      Required
-                      {!sectionMissing && <CheckOutlined className="am-req-ok" />}
-                      {showErrors && sectionMissing && <span className="am-req-star"> *</span>}
-                    </label>
-                    <Select
-                      className="am-section-select"
-                      value={section}
-                      options={SECTION_OPTIONS}
-                      onChange={(value) => {
-                        setSection(value);
-                        if (value !== 'None') setShowErrors((s) => s && classMissing);
-                      }}
-                      status={showErrors && sectionMissing ? 'error' : ''}
+                  <label className="am-field-label am-mt-24">New Keywords</label>
+                  <div className="am-tag-input">
+                    {newKeywords.map((k) => (
+                      <span key={k} className="am-tag-chip">
+                        {k}
+                        <button
+                          type="button"
+                          className="am-tag-chip-remove"
+                          aria-label={`Remove ${k}`}
+                          onClick={() => removeTag(k)}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                    <input
+                      className="am-tag-input-field"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={handleTagKeyDown}
+                      onBlur={() => addTag(tagInput)}
+                      placeholder={newKeywords.length ? '' : 'Type a keyword and press Enter or ,'}
                     />
-                    {showErrors && sectionMissing && (
-                      <p className="am-error-text">Please select a Section/Category to continue.</p>
-                    )}
-
-                    <div className="am-panel-inline-actions">
-                      <Button className="am-btn-primary am-btn-sm">
-                        <DownOutlined /> Next
-                      </Button>
-                    </div>
-                  </CollapsibleCard>
-
-                  {/* Classifications */}
-                  <CollapsibleCard title="Classifications" invalid={showErrors && classMissing}>
-                    <p className="am-panel-desc">
-                      Please identify your submission&rsquo;s areas of interest and specialization by
-                      selecting one or more classifications.
-                    </p>
-
-                    <p className="am-field-label am-req-label">
-                      Required <span className="am-req-star">*</span> Select 1 or more Classifications
-                    </p>
-                    <div className="am-class-summary">
-                      {classifications.length ? (
-                        <div className="am-tag-wrap">
-                          {classifications.map((k) => (
-                            <Tag key={k} className="am-class-tag">{CLASSIFICATION_LABELS[k]}</Tag>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="am-muted">(None Selected)</span>
-                      )}
-                    </div>
-                    {showErrors && classMissing && (
-                      <p className="am-error-text">Please select at least one classification.</p>
-                    )}
-
-                    <Button className="am-btn-primary am-btn-sm" onClick={() => setModalOpen(true)}>
-                      Add Classifications
-                    </Button>
-                  </CollapsibleCard>
+                  </div>
 
                   <div className="am-actions">
-                    <Button className="am-btn-secondary" onClick={() => navigate('/author/submit-manuscript/step-2')}>
+                    <Button className="am-btn-secondary" onClick={handleBack}>
                       <ArrowLeftOutlined /> Back
                     </Button>
-                    <Button className="am-btn-primary" onClick={handleProceed}>
-                      Proceed <ArrowRightOutlined />
+                    <Button className="am-btn-blue" onClick={handleNext} loading={isSaving}>
+                      Save &amp; Next <ArrowRightOutlined />
                     </Button>
                   </div>
                 </div>
@@ -163,17 +179,6 @@ export default function SubmitManuscriptStep3() {
           </div>
         </div>
       </section>
-
-      <ClassificationsModal
-        open={modalOpen}
-        value={classifications}
-        onCancel={() => setModalOpen(false)}
-        onSubmit={(keys) => {
-          setClassifications(keys);
-          setModalOpen(false);
-          setShowErrors((s) => s && sectionMissing);
-        }}
-      />
     </Layout>
   );
 }

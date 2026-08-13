@@ -65,6 +65,14 @@ export function useQuery(endpoint, options = {}) {
   const queryFn = useMemo(() => {
     return async () => {
       try {
+        // Debug visibility for the paper-types dropdown (Step 1 overview) —
+        // confirms at the call site whether a token was actually resolved
+        // before the request fires, distinct from apiClient's generic log.
+        if (endpoint === "getPaperTypes") {
+          const debugToken = await apiClient.getFreshToken();
+          console.log("Sending Token:", debugToken);
+        }
+
         const response = await apiClient.request(endpoint, {
           params: finalParams,
           slug,

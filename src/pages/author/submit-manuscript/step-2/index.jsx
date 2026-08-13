@@ -1,239 +1,138 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Steps, Upload, Select, Input, InputNumber, Button, Table, Checkbox } from 'antd';
-import {
-  InboxOutlined,
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  DownloadOutlined,
-} from '@ant-design/icons';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Steps, Select, Switch, Button, message } from 'antd';
+import { DeleteOutlined, MailOutlined, PlusOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import { STEP_TITLES } from '../stepTitles.js';
-import { setStepData } from '../manuscriptStore.js';
-import { useDraftId, useDraftAutosave } from '../useManuscriptDraft.js';
+import RichTextEditor from '../../../../components/shared/RichTextEditor/RichTextEditor.jsx';
+import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
+import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
+import { getWizardState, setStep2Data } from '../paperDraftStore.js';
 
-const { Dragger } = Upload;
+// Backend author records aren't a fixed shape across environments — cover
+// the field names we've seen elsewhere in this app (userSelectors.js does
+// the same fallback chain for the logged-in user).
+function formatAuthorLabel(a) {
+  const first = a.first_name?.trim();
+  const last = a.last_name?.trim();
+  if (first || last) return [first, last].filter(Boolean).join(' ');
+  return a.name || a.user_name || a.email || `Author #${a.id}`;
+}
 
-// Item types offered for each attached file (asterisk = required title page).
-const ITEM_TYPES = [
-  'Cover Letter',
-  '*Title Page with author details',
-  'Manuscript without author details',
-  'Conflict of interest',
-  'Compliance with Ethics Requirements',
-  'Graphical Abstract',
-  'Research Highlights',
-].map((v) => ({ value: v, label: v }));
-
-// Sidebar checklist shown once a file is attached.
-const REQUIRED_ITEMS = [
-  'Cover Letter',
-  'Title Page with author details',
-  'Manuscript without author details',
-  'Conflict of interest',
-  'Compliance with Ethics Requirements',
-  'Graphical Abstract',
-  'Research Highlights',
-];
-
-// Italic guidance notes rendered as cards under the checklist (verbatim).
-const SUBMISSION_NOTES = [
-  'Note: As an open access journal with no subscription charges, a fee (Article Publishing Charge, APC) is payable by the author or research funder to cover the costs associated with publication. This ensures your article will be immediately and permanently free to access by everyone. The Article Publishing Charge for this journal is $4400.',
-  'For title page, please ensure to update the complete list of authors, corresponding affiliation, corresponding author information and footnotes, if any.',
-  'Please upload tables in editable format and Kindly ensure that all the references, tables and figures are cited correctly within the text of the article before submitting the revised version.',
-  'Authors should note that the acceptance rate in this journal is exceptionally low, around 5%; only the most novel, methodologically rigorous, and impactful manuscripts are selected for peer review.',
-];
-
-const DEFAULT_ITEM = ITEM_TYPES[1].value; // "*Title Page with author details"
-
-// Format a file timestamp roughly like the reference ("Jul 29 2026 05:27PM").
-function formatDate(ts) {
-  const d = new Date(ts || Date.now());
-  const date = d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-  const time = d
-    .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
-    .replace(' ', '');
-  return `${date} ${time}`;
+function emptyAuthor(isCorresponding = false) {
+  return {
+    id: crypto.randomUUID?.() ?? `author-${Date.now()}-${Math.random()}`,
+    authorId: undefined,
+    isCorresponding,
+    contributionHtml: '',
+    contributionText: '',
+  };
 }
 
 /**
- * Step 2 — Attach Files. Standalone page in the multi-page submission flow.
- * Empty state shows a single drop zone; once files are attached the layout
- * switches to the submission checklist + item controls + a data table.
+ * Step 2 — Author. Part of the (new) Overview-first flow (see
+ * overviewStepTitles.js). Continues the paper started in Step 1: the `slug`
+ * returned by POST /papers/store is required to submit this step, and is
+ * read from the URL (`?slug=`) with paperDraftStore as an in-memory fallback
+ * for same-session navigation.
  */
 export default function SubmitManuscriptStep2() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const slug = searchParams.get('slug') || getWizardState()?.slug || null;
 
-  const [files, setFiles] = useState([]);
-  const [pendingType, setPendingType] = useState(DEFAULT_ITEM);
-  const [pendingDesc, setPendingDesc] = useState(DEFAULT_ITEM.replace('*', ''));
-  const [selected, setSelected] = useState([]);
-  const [bulkFrom, setBulkFrom] = useState();
-  const [bulkTo, setBulkTo] = useState();
-  const [note, setNote] = useState('');
-  const [error, setError] = useState(false);
+  // Step 2 is meaningless without a paper to attach authors to — bounce back
+  // to Step 1 rather than letting the user fill this out and hit a guaranteed
+  // failure on submit.
+  useEffect(() => {
+    if (!slug) {
+      message.warning('Please complete Step 1 first.');
+      navigate('/author/submit-manuscript/step-1', { replace: true });
+    }
+  }, [slug, navigate]);
 
-  const hasFiles = files.length > 0;
-
-  // Strip the non-serializable `raw` File object before this leaves the page
-  // (draft persists to localStorage; File instances don't survive JSON).
-  const draftFiles = useMemo(
-    () => files.map(({ order, itemType, description, name, size }) => ({ order, itemType, description, name, size })),
-    [files],
+  const { data: authorsResult, isLoading: authorsLoading } = useQuery('getAuthors');
+  const authorOptions = useMemo(
+    () => (authorsResult?.data || []).map((a) => ({ value: a.id, label: formatAuthorLabel(a) })),
+    [authorsResult]
   );
 
-  const draftId = useDraftId();
-  useDraftAutosave(draftId, 'step2', 2, { files: draftFiles });
+  // Rehydrate from whatever was last successfully saved via
+  // update-authors — read once via a lazy initializer so a Back-navigation
+  // from Step 3 lands with every author block already filled in. Falls back
+  // to a single blank corresponding-author block for a first-time visit.
+  const [authors, setAuthors] = useState(() => {
+    const saved = getWizardState()?.step2Data;
+    if (saved?.length) {
+      return saved.map((a) => ({
+        id: crypto.randomUUID?.() ?? `author-${Date.now()}-${Math.random()}`,
+        authorId: a.authorId,
+        isCorresponding: a.isCorresponding,
+        contributionHtml: a.contributionHtml || '',
+        contributionText: a.contributionText || '',
+      }));
+    }
+    // The first block represents the logged-in submitter and defaults to
+    // corresponding author; every block (including this one) stays freely
+    // toggleable — no locking, unlike an earlier iteration of this page.
+    return [emptyAuthor(true)];
+  });
 
-  // Capture the dropped/browsed file into our own table; returning false keeps
-  // antd from actually uploading it (no backend yet). Functional update so a
-  // multi-file batch appends every file, not just the last.
-  const addFile = (file) => {
-    setFiles((prev) => [
-      ...prev,
-      {
-        uid: `${Date.now()}-${file.name}-${prev.length}`,
-        order: prev.length + 1,
-        itemType: pendingType,
-        description: pendingDesc || pendingType.replace('*', ''),
-        name: file.name,
-        size: `${(file.size / 1024).toFixed(1)} KB`,
-        lastModified: formatDate(file.lastModified),
-        raw: file,
-      },
-    ]);
-    setError(false);
-    return false;
+  const addAuthor = () => setAuthors((prev) => [...prev, emptyAuthor(false)]);
+
+  const removeAuthor = (id) =>
+    setAuthors((prev) => (prev.length > 1 ? prev.filter((a) => a.id !== id) : prev));
+
+  const updateAuthorField = (id, field, value) =>
+    setAuthors((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
+
+  const { mutate: updateAuthors, isPending: isSaving } = useMutation('updatePaperAuthors', {
+    useFormData: false,
+    showSuccessNotification: false,
+    onSuccess: () => {
+      message.success('Authors saved.');
+      navigate('/author/submit-manuscript/step-3');
+    },
+  });
+
+  const handleBack = () => {
+    navigate('/author/submit-manuscript/step-1');
   };
 
-  const patchRow = (uid, patch) =>
-    setFiles((prev) => prev.map((f) => (f.uid === uid ? { ...f, ...patch } : f)));
+  const handleNext = () => {
+    // Step 2 is optional: only authors the user actually picked count.
+    // Blank/untouched blocks are dropped rather than blocking navigation.
+    const filledAuthors = authors.filter((a) => a.authorId);
 
-  const removeSelected = () => {
-    setFiles((prev) => prev.filter((f) => !selected.includes(f.uid)));
-    setSelected([]);
-  };
-
-  const applyBulkType = () => {
-    if (!bulkTo) return;
-    setFiles((prev) =>
-      prev.map((f) => (!bulkFrom || f.itemType === bulkFrom ? { ...f, itemType: bulkTo } : f)),
+    // Stores authorId + contributionHtml too (not just display fields) so
+    // this same data can re-hydrate the form on the next visit, not just
+    // populate Step 5's read-only summary.
+    setStep2Data(
+      filledAuthors.map((a) => ({
+        authorId: a.authorId,
+        name: authorOptions.find((o) => o.value === a.authorId)?.label || '',
+        isCorresponding: a.isCorresponding,
+        contributionHtml: a.contributionHtml,
+        contributionText: a.contributionText,
+      }))
     );
-  };
 
-  const updateOrder = () =>
-    setFiles((prev) =>
-      [...prev].sort((a, b) => a.order - b.order).map((f, i) => ({ ...f, order: i + 1 })),
-    );
-
-  const toggle = (uid) =>
-    setSelected((prev) => (prev.includes(uid) ? prev.filter((u) => u !== uid) : [...prev, uid]));
-
-  const checklistDone = (label) =>
-    files.some((f) => f.itemType.replace('*', '').trim() === label);
-
-  // Genuine download of the captured file via an object URL.
-  const downloadFile = (row) => {
-    const url = URL.createObjectURL(row.raw);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = row.name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
-
-  const downloadZip = () => {
-    if (!selected.length) return;
-    setNote(`Preparing a ZIP of ${selected.length} selected file(s)…`);
-    setTimeout(() => setNote(''), 4000);
-  };
-
-  const handleProceed = () => {
-    if (!hasFiles) {
-      setError(true);
+    if (!filledAuthors.length) {
+      navigate('/author/submit-manuscript/step-3');
       return;
     }
-    setStepData('step2', { files: draftFiles });
-    navigate('/author/submit-manuscript/step-3');
+
+    updateAuthors({
+      slug,
+      data: {
+        authors: filledAuthors.map((a) => ({
+          author_id: Number(a.authorId),
+          is_corresponding: a.isCorresponding,
+          contribution: a.contributionHtml,
+        })),
+      },
+    });
   };
-
-  const allChecked = hasFiles && selected.length === files.length;
-
-  const columns = [
-    {
-      title: 'Order',
-      dataIndex: 'order',
-      width: 72,
-      render: (val, row) => (
-        <InputNumber
-          size="small"
-          min={1}
-          className="am-order-input"
-          value={val}
-          onChange={(v) => patchRow(row.uid, { order: v || 1 })}
-        />
-      ),
-    },
-    {
-      title: 'Item',
-      dataIndex: 'itemType',
-      width: 230,
-      render: (val, row) => (
-        <Select
-          size="small"
-          className="w-100"
-          value={val}
-          options={ITEM_TYPES}
-          onChange={(v) => patchRow(row.uid, { itemType: v })}
-        />
-      ),
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      width: 200,
-      render: (val, row) => (
-        <Input
-          size="small"
-          value={val}
-          onChange={(e) => patchRow(row.uid, { description: e.target.value })}
-        />
-      ),
-    },
-    { title: 'File Name', dataIndex: 'name', render: (v) => <span className="am-file-name">{v}</span> },
-    { title: 'Size', dataIndex: 'size', width: 90 },
-    { title: 'Last Modified', dataIndex: 'lastModified', width: 170 },
-    {
-      title: 'Actions',
-      key: 'actions',
-      width: 110,
-      render: (_, row) => (
-        <button type="button" className="am-help-link am-linkbtn" onClick={() => downloadFile(row)}>
-          <DownloadOutlined /> Download
-        </button>
-      ),
-    },
-    {
-      title: (
-        <div className="am-select-head">
-          <span>Select</span>
-          <div className="am-check-links">
-            <button type="button" className="am-help-link am-linkbtn" onClick={() => setSelected(files.map((f) => f.uid))}>Check All</button>
-            <button type="button" className="am-help-link am-linkbtn" onClick={() => setSelected([])}>Clear All</button>
-          </div>
-        </div>
-      ),
-      key: 'select',
-      width: 110,
-      align: 'center',
-      render: (_, row) => (
-        <Checkbox checked={selected.includes(row.uid)} onChange={() => toggle(row.uid)} />
-      ),
-    },
-  ];
 
   return (
     <Layout>
@@ -246,145 +145,93 @@ export default function SubmitManuscriptStep2() {
             responsive
             titlePlacement="vertical"
             className="am-steps"
-            items={STEP_TITLES.map((title) => ({ title }))}
+            items={OVERVIEW_STEP_TITLES.map((title) => ({ title }))}
           />
 
           <div className="am-step-body">
             <div className="am-step">
-              <h1 className="am-step-heading">Step 2: Attach Files</h1>
-
-              <div className="am-attach-topbar">
-                <a href="#insert-char" className="am-help-link am-insert-link">Insert Special Character</a>
-              </div>
+              <h1 className="am-step-heading">Step 2: Author</h1>
 
               <div className="row g-4">
-                {/* Left rail: helper (empty) or checklist + note cards (populated) */}
+                {/* Left helper rail */}
                 <aside className="col-12 col-lg-3">
-                  {hasFiles ? (
-                    <>
-                      <p className="am-help-strong">Required For Submission:</p>
-                      <ul className="am-checklist">
-                        {REQUIRED_ITEMS.map((item) => (
-                          <li key={item} className={`am-checklist-item ${checklistDone(item) ? 'is-done' : ''}`}>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="am-notes">
-                        {SUBMISSION_NOTES.map((n, i) => (
-                          <p key={i} className="am-note-card">{n}</p>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <p className="am-help-strong">
-                      Please provide a single file containing your manuscript now. Data included
-                      in your manuscript may be used to populate information for you later in the
-                      submission process.
-                    </p>
-                  )}
+                  <p className="am-help-strong">
+                    Add every author on this manuscript and mark which one is the corresponding
+                    author. Describe each author&rsquo;s contribution below their entry.
+                  </p>
                 </aside>
 
-                {/* Right: upload bar + table */}
+                {/* Author cards */}
                 <div className="col-12 col-lg-9">
-                  <div className={`am-attach-bar ${hasFiles ? 'am-attach-bar-loaded' : 'am-attach-bar-initial'}`}>
-                    {hasFiles && (
-                      <div className="am-attach-fields">
-                        <label className="am-field-label">Select Item Type</label>
-                        <Select
-                          className="w-100"
-                          value={pendingType}
-                          options={ITEM_TYPES}
-                          onChange={(v) => {
-                            setPendingType(v);
-                            setPendingDesc(v.replace('*', ''));
-                          }}
+                  {authors.map((author, index) => (
+                    <div key={author.id} className="am-author-card">
+                      <div className="am-author-card-head">
+                        <h2 className="am-author-card-title">Author</h2>
+                        <Button
+                          className="am-author-delete"
+                          icon={<DeleteOutlined />}
+                          disabled={authors.length === 1}
+                          onClick={() => removeAuthor(author.id)}
+                          aria-label="Remove author"
                         />
-                        <label className="am-field-label mt-2">Description</label>
-                        <Input value={pendingDesc} onChange={(e) => setPendingDesc(e.target.value)} />
-                      </div>
-                    )}
-
-                    <Dragger
-                      className={`am-drop ${hasFiles ? 'am-drop-compact' : 'am-drop-initial'}`}
-                      multiple
-                      showUploadList={false}
-                      beforeUpload={addFile}
-                    >
-                      <p className="am-drop-inner">
-                        <span className="am-drop-browse">Browse…</span>
-                        <span className="am-drop-or">OR</span>
-                        <span className="am-drop-dd">
-                          <InboxOutlined className="am-drop-icon" /> Drag &amp; Drop Files Here
-                        </span>
-                      </p>
-                    </Dragger>
-                  </div>
-
-                  {hasFiles && (
-                    <div className="am-file-panel">
-                      <p className="am-file-hint">
-                        The order in which the attached items appear in the list will be the order in
-                        which they appear in the PDF file that is produced. You can re-order the items
-                        manually if necessary.
-                      </p>
-
-                      <div className="am-bulk-row">
-                        <span>Change Item Type of all</span>
-                        <Select
-                          size="small"
-                          placeholder="Choose"
-                          allowClear
-                          style={{ width: 180 }}
-                          value={bulkFrom}
-                          options={ITEM_TYPES}
-                          onChange={setBulkFrom}
-                        />
-                        <span>files to</span>
-                        <Select
-                          size="small"
-                          placeholder="Choose"
-                          style={{ width: 180 }}
-                          value={bulkTo}
-                          options={ITEM_TYPES}
-                          onChange={setBulkTo}
-                        />
-                        <Button size="small" className="am-btn-grey" onClick={applyBulkType}>Change Now</Button>
                       </div>
 
-                      <Table
-                        className="am-file-table"
-                        columns={columns}
-                        dataSource={files}
-                        rowKey="uid"
-                        pagination={false}
-                        size="small"
-                        scroll={{ x: 'max-content' }}
+                      <div className="am-author-row">
+                        <div className="am-author-field">
+                          <label className="am-field-label">Author</label>
+                          <Select
+                            className="w-100"
+                            placeholder="Select an author"
+                            showSearch
+                            optionFilterProp="label"
+                            suffixIcon={<MailOutlined />}
+                            value={author.authorId}
+                            options={authorOptions}
+                            loading={authorsLoading}
+                            onChange={(value) => updateAuthorField(author.id, 'authorId', value)}
+                          />
+                        </div>
+
+                        <div className="am-author-field am-author-field-toggle">
+                          <label className="am-field-label">Corresponding</label>
+                          <div className="am-corresponding-toggle">
+                            <span className={!author.isCorresponding ? 'is-active' : ''}>No</span>
+                            <Switch
+                              checked={author.isCorresponding}
+                              onChange={(checked) =>
+                                updateAuthorField(author.id, 'isCorresponding', checked)
+                              }
+                            />
+                            <span className={author.isCorresponding ? 'is-active' : ''}>Yes</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <label className="am-field-label">Contribution</label>
+                      <RichTextEditor
+                        placeholder="Describe this author's contribution"
+                        minHeight={180}
+                        defaultValue={author.contributionHtml}
+                        onChange={(html, text) => {
+                          updateAuthorField(author.id, 'contributionHtml', html);
+                          updateAuthorField(author.id, 'contributionText', text);
+                        }}
                       />
-
-                      <div className="am-file-actions">
-                        <Button size="small" className="am-btn-grey" onClick={updateOrder}>Update File Order</Button>
-                        <Button size="small" className="am-btn-grey" disabled={!selected.length} onClick={downloadZip}>
-                          Download Selections as Zip File
-                        </Button>
-                        <Button size="small" className="am-btn-grey" disabled={!selected.length} onClick={removeSelected}>
-                          Remove
-                        </Button>
-                      </div>
-
-                      {note && <p className="am-action-note">{note}</p>}
                     </div>
-                  )}
+                  ))}
 
-                  {error && <p className="am-error-text">Please attach at least one file to continue.</p>}
-
-                  <div className="am-actions">
-                    <Button className="am-btn-secondary" onClick={() => navigate('/author/submit-manuscript/step-1')}>
-                      <ArrowLeftOutlined /> Back
+                  <div className="am-author-actions">
+                    <Button className="am-btn-blue" icon={<PlusOutlined />} onClick={addAuthor}>
+                      Add More
                     </Button>
-                    <Button className="am-btn-primary" onClick={handleProceed}>
-                      Proceed <ArrowRightOutlined />
-                    </Button>
+                    <div className="am-author-actions-right">
+                      <Button className="am-btn-secondary" onClick={handleBack}>
+                        <ArrowLeftOutlined /> Back
+                      </Button>
+                      <Button className="am-btn-blue" onClick={handleNext} loading={isSaving}>
+                        Save &amp; Next <ArrowRightOutlined />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

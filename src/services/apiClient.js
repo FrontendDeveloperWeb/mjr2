@@ -33,6 +33,23 @@ const apiClient = {
         console.error("[apiClient] Failed to re-read session storage for token:", error);
       }
     }
+    if (token) return token;
+
+    // Fallback: the author-area session (login()/register() in
+    // src/auth/session.js) is written straight to a plain localStorage key
+    // ('mjr.auth') independently of window.user/the encrypted "session"
+    // blob above. If the token only ever landed there (e.g. the backend's
+    // response shape wasn't one handleResponse's token-capture recognizes),
+    // this is the last place left to check before giving up.
+    try {
+      const authSession = JSON.parse(localStorage.getItem("mjr.auth"));
+      token = authSession?.api_token || authSession?.access_token || authSession?.token;
+      if (token) {
+        window.user = { ...(window.user || {}), api_token: token, access_token: token };
+      }
+    } catch (error) {
+      console.error("[apiClient] Failed to read mjr.auth for token fallback:", error);
+    }
 
     return token || null;
   },
@@ -87,6 +104,12 @@ const apiClient = {
     const hasToken = Boolean(token);
 
     if (hasToken) {
+      // This backend expects the token under custom header keys ('Bearer',
+      // 'token') rather than (or in addition to) the standard Authorization
+      // header — sent on every protected request so it applies uniformly to
+      // GET (paper-types) and POST (store) alike, not per-endpoint.
+      headers.append("Bearer", token);
+      headers.append("token", token);
       headers.append("Authorization", `Bearer ${token}`);
     } else if (!isPublicEndpoint) {
       // Protected endpoint with nothing to send — surface this loudly so a
@@ -131,6 +154,17 @@ const apiClient = {
     console.log(
       `[apiClient] ${options.method || "GET"} ${url} — Authorization: ${hasToken ? "Bearer ***" + token.slice(-6) : "(none)"}`
     );
+
+    // TEMP DEBUG — dumps the exact headers being sent for paper-types and
+    // any future protected write (papers/store) so header formatting can be
+    // eyeballed directly, not just inferred from the token-suffix log above.
+    // Remove once the 401 is confirmed fixed.
+    if (endpoint === "getPaperTypes" || endpoint === "storePaper") {
+      console.log(
+        `[apiClient][DEBUG] Exact headers for "${endpoint}":`,
+        Object.fromEntries(headers.entries())
+      );
+    }
 
     const response = await fetch(url, requestOptions);
     return { response, hasToken };
