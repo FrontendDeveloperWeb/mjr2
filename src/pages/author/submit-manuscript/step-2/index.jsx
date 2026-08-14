@@ -1,32 +1,47 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Steps, Select, Switch, Button, message } from 'antd';
-import { DeleteOutlined, MailOutlined, PlusOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Steps, Button, message } from 'antd';
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  InfoCircleFilled,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
-import RichTextEditor from '../../../../components/shared/RichTextEditor/RichTextEditor.jsx';
-import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
+import { useMutation } from '../../../../hooks/reactQuery/index.js';
 import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
 import { getWizardState, setStep2Data } from '../paperDraftStore.js';
+import AddAuthorModal from './AddAuthorModal.jsx';
 
-// Backend author records aren't a fixed shape across environments — cover
-// the field names we've seen elsewhere in this app (userSelectors.js does
-// the same fallback chain for the logged-in user).
-function formatAuthorLabel(a) {
-  const first = a.first_name?.trim();
-  const last = a.last_name?.trim();
-  if (first || last) return [first, last].filter(Boolean).join(' ');
-  return a.name || a.user_name || a.email || `Author #${a.id}`;
+function newAuthorId() {
+  return crypto.randomUUID?.() ?? `author-${Date.now()}-${Math.random()}`;
 }
 
-function emptyAuthor(isCorresponding = false) {
+// Default entry shown when the paper has no authors yet — the manuscript's
+// creator, named straight off Step 1's /papers/store response
+// (`paper.created_by_name`). It's a read-only placeholder (no real
+// first_name/last_name to submit) rather than an editable draft — the modal
+// collects a much richer shape than "just a name", so letting someone "edit"
+// this into a real author would mean silently guessing at every other
+// required field. It's excluded from the update-authors payload for the
+// same reason (see `filledAuthors` below).
+function seedAuthorFromPaper(paperObj) {
   return {
-    id: crypto.randomUUID?.() ?? `author-${Date.now()}-${Math.random()}`,
-    authorId: undefined,
-    isCorresponding,
-    contributionHtml: '',
-    contributionText: '',
+    id: newAuthorId(),
+    displayName: paperObj?.created_by_name || '',
+    is_corresponding: 1,
+    subjects: [],
+    affiliations: [],
+    isYou: true,
   };
+}
+
+function authorFullName(a) {
+  return a.displayName || [a.first_name, a.last_name].filter(Boolean).join(' ') || 'Unnamed Author';
 }
 
 /**
@@ -35,6 +50,13 @@ function emptyAuthor(isCorresponding = false) {
  * returned by POST /papers/store is required to submit this step, and is
  * read from the URL (`?slug=`) with paperDraftStore as an in-memory fallback
  * for same-session navigation.
+ *
+ * Authors are entered inline via the "Add New Author" modal, which builds
+ * the exact nested payload shape the API expects (personal/identifier/
+ * location fields + `subjects: [{id,name}]` + `affiliations: [{...}]`) —
+ * rather than picked from a pre-registered author list. This step is
+ * entirely optional: Save & Next always proceeds, and only hits the API
+ * when at least one real author has been added.
  */
 export default function SubmitManuscriptStep2() {
   const navigate = useNavigate();
@@ -51,46 +73,89 @@ export default function SubmitManuscriptStep2() {
     }
   }, [slug, navigate]);
 
-  const { data: authorsResult, isLoading: authorsLoading } = useQuery('getAuthors');
-  const authorOptions = useMemo(
-    () => (authorsResult?.data || []).map((a) => ({ value: a.id, label: formatAuthorLabel(a) })),
-    [authorsResult]
-  );
+  // Step 1's saved paper object — only source for `created_by_name` and the
+  // paper's own `authors` list (server-side, distinct from the locally-added
+  // ones this page manages before they're saved).
+  const paperObj = getWizardState()?.step1Data?.paper || getWizardState()?.step1Data || {};
 
-  // Rehydrate from whatever was last successfully saved via
-  // update-authors — read once via a lazy initializer so a Back-navigation
-  // from Step 3 lands with every author block already filled in. Falls back
-  // to a single blank corresponding-author block for a first-time visit.
+  // Rehydrate from whatever was last saved via update-authors so a
+  // Back-navigation from Step 3 lands with the list already filled in.
+  // Older saved drafts (pre-refactor, flat shape with no `affiliations`)
+  // can't be rehydrated into this nested shape, so fall through to the
+  // paper-seeded default instead of showing broken rows. When the paper
+  // itself already has authors (`paper.authors` non-empty), those take
+  // priority over the seeded placeholder.
   const [authors, setAuthors] = useState(() => {
     const saved = getWizardState()?.step2Data;
-    if (saved?.length) {
-      return saved.map((a) => ({
-        id: crypto.randomUUID?.() ?? `author-${Date.now()}-${Math.random()}`,
-        authorId: a.authorId,
-        isCorresponding: a.isCorresponding,
-        contributionHtml: a.contributionHtml || '',
-        contributionText: a.contributionText || '',
+    if (saved?.length && saved.every((a) => 'affiliations' in a)) {
+      return saved.map((a) => ({ ...a, id: newAuthorId() }));
+    }
+    if (Array.isArray(paperObj.authors) && paperObj.authors.length > 0) {
+      return paperObj.authors.map((pa, i) => ({
+        id: newAuthorId(),
+        title: pa.title || '',
+        gender: pa.gender || '',
+        first_name: pa.first_name || '',
+        last_name: pa.last_name || '',
+        date_of_birth: pa.date_of_birth || undefined,
+        email: pa.email || '',
+        phone: pa.phone || '',
+        orcid: pa.orcid || '',
+        scopus_id: pa.scopus_id || '',
+        researcher_id: pa.researcher_id || '',
+        country: pa.country || undefined,
+        city: pa.city || '',
+        address: pa.address || '',
+        biography: pa.biography || '',
+        author_order: pa.author_order ?? i + 1,
+        contribution: pa.contribution || '',
+        is_corresponding: pa.is_corresponding ? 1 : 0,
+        subjects: pa.subjects || [],
+        affiliations: pa.affiliations || [],
+        isYou: false,
       }));
     }
-    // The first block represents the logged-in submitter and defaults to
-    // corresponding author; every block (including this one) stays freely
-    // toggleable — no locking, unlike an earlier iteration of this page.
-    return [emptyAuthor(true)];
+    return [seedAuthorFromPaper(paperObj)];
   });
 
-  const addAuthor = () => setAuthors((prev) => [...prev, emptyAuthor(false)]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
-  const removeAuthor = (id) =>
-    setAuthors((prev) => (prev.length > 1 ? prev.filter((a) => a.id !== id) : prev));
+  const editingAuthor = authors.find((a) => a.id === editingId) || null;
 
-  const updateAuthorField = (id, field, value) =>
-    setAuthors((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
+  const openAddModal = () => {
+    setEditingId(null);
+    setModalOpen(true);
+  };
+
+  const openEditModal = (id) => {
+    setEditingId(id);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingId(null);
+  };
+
+  const saveAuthor = (payload) => {
+    if (editingId) {
+      // Editing replaces the seeded/imported display fields with a real
+      // first/last name, so the placeholder `displayName` no longer
+      // applies — authorFullName() should use the name fields from here on.
+      setAuthors((prev) => prev.map((a) => (a.id === editingId ? { ...a, ...payload, displayName: undefined } : a)));
+    } else {
+      setAuthors((prev) => [...prev, { id: newAuthorId(), isYou: false, ...payload }]);
+    }
+    closeModal();
+  };
+
+  const removeAuthor = (id) => setAuthors((prev) => prev.filter((a) => a.id !== id));
 
   const { mutate: updateAuthors, isPending: isSaving } = useMutation('updatePaperAuthors', {
     useFormData: false,
-    showSuccessNotification: false,
+    showSuccessNotification: true,
     onSuccess: () => {
-      message.success('Authors saved.');
       navigate('/author/submit-manuscript/step-3');
     },
   });
@@ -100,23 +165,13 @@ export default function SubmitManuscriptStep2() {
   };
 
   const handleNext = () => {
-    // Step 2 is optional: only authors the user actually picked count.
-    // Blank/untouched blocks are dropped rather than blocking navigation.
-    const filledAuthors = authors.filter((a) => a.authorId);
+    setStep2Data(authors);
 
-    // Stores authorId + contributionHtml too (not just display fields) so
-    // this same data can re-hydrate the form on the next visit, not just
-    // populate Step 5's read-only summary.
-    setStep2Data(
-      filledAuthors.map((a) => ({
-        authorId: a.authorId,
-        name: authorOptions.find((o) => o.value === a.authorId)?.label || '',
-        isCorresponding: a.isCorresponding,
-        contributionHtml: a.contributionHtml,
-        contributionText: a.contributionText,
-      }))
-    );
-
+    // Fully optional — the auto-seeded "You" placeholder doesn't count as a
+    // real entry (it has no first_name; it's never editable), so this
+    // correctly navigates straight through when the list was left untouched,
+    // same as when it's empty.
+    const filledAuthors = authors.filter((a) => a.first_name);
     if (!filledAuthors.length) {
       navigate('/author/submit-manuscript/step-3');
       return;
@@ -125,11 +180,7 @@ export default function SubmitManuscriptStep2() {
     updateAuthors({
       slug,
       data: {
-        authors: filledAuthors.map((a) => ({
-          author_id: Number(a.authorId),
-          is_corresponding: a.isCorresponding,
-          contribution: a.contributionHtml,
-        })),
+        authors: filledAuthors.map(({ id, isYou, displayName, ...rest }) => rest),
       },
     });
   };
@@ -157,81 +208,79 @@ export default function SubmitManuscriptStep2() {
                 <aside className="col-12 col-lg-3">
                   <p className="am-help-strong">
                     Add every author on this manuscript and mark which one is the corresponding
-                    author. Describe each author&rsquo;s contribution below their entry.
+                    author. This step is optional — you can continue without adding anyone.
                   </p>
                 </aside>
 
-                {/* Author cards */}
                 <div className="col-12 col-lg-9">
-                  {authors.map((author, index) => (
-                    <div key={author.id} className="am-author-card">
-                      <div className="am-author-card-head">
-                        <h2 className="am-author-card-title">Author</h2>
-                        <Button
-                          className="am-author-delete"
-                          icon={<DeleteOutlined />}
-                          disabled={authors.length === 1}
-                          onClick={() => removeAuthor(author.id)}
-                          aria-label="Remove author"
-                        />
-                      </div>
+                  <div className="am6-callout">
+                    <InfoCircleFilled className="am6-callout-icon" />
+                    <span className="am6-callout-title">Important information about corresponding authors</span>
+                    <InfoCircleOutlined className="am6-callout-info" />
+                  </div>
+                  <p className="am-panel-desc am6-callout-text">
+                    The corresponding author will communicate during the editorial process. Their
+                    institution determines if any publishing agreements are applicable, which can
+                    affect the price of publishing open access and who pays. Use their main
+                    institution, not their department.
+                  </p>
+                  <p className="am-panel-desc am6-callout-text">
+                    This selection does not prevent additional corresponding authors from being
+                    referenced in the final published article.
+                  </p>
 
-                      <div className="am-author-row">
-                        <div className="am-author-field">
-                          <label className="am-field-label">Author</label>
-                          <Select
-                            className="w-100"
-                            placeholder="Select an author"
-                            showSearch
-                            optionFilterProp="label"
-                            suffixIcon={<MailOutlined />}
-                            value={author.authorId}
-                            options={authorOptions}
-                            loading={authorsLoading}
-                            onChange={(value) => updateAuthorField(author.id, 'authorId', value)}
-                          />
-                        </div>
+                  <div className="am6-list">
+                    <div className="am6-list-head">
+                      <span>Current Author List</span>
+                      <button type="button" className="am6-list-add" onClick={openAddModal}>
+                        <PlusOutlined /> Add Another Author
+                      </button>
+                    </div>
 
-                        <div className="am-author-field am-author-field-toggle">
-                          <label className="am-field-label">Corresponding</label>
-                          <div className="am-corresponding-toggle">
-                            <span className={!author.isCorresponding ? 'is-active' : ''}>No</span>
-                            <Switch
-                              checked={author.isCorresponding}
-                              onChange={(checked) =>
-                                updateAuthorField(author.id, 'isCorresponding', checked)
-                              }
-                            />
-                            <span className={author.isCorresponding ? 'is-active' : ''}>Yes</span>
+                    {authors.map((a, index) => (
+                      <div key={a.id} className="am6-author-row">
+                        {!a.isYou && (
+                          <button
+                            type="button"
+                            className="am-icon-btn"
+                            aria-label={`Edit ${authorFullName(a)}`}
+                            onClick={() => openEditModal(a.id)}
+                          >
+                            <EditOutlined />
+                          </button>
+                        )}
+                        <div className="am6-author-info">
+                          <div className="am6-author-name">
+                            {authorFullName(a)}{' '}
+                            {!!a.is_corresponding && <span className="am6-role">[Corresponding Author]</span>}
+                            {index === 0 && <span className="am6-role">[First Author]</span>}
+                            {a.isYou && <span className="am6-role">[You]</span>}
                           </div>
+                          <div className="am6-author-meta">{a.affiliations?.[0]?.institution_name || 'none'}</div>
                         </div>
+                        <button
+                          type="button"
+                          className="am-icon-btn am-icon-btn-danger"
+                          aria-label={`Remove ${authorFullName(a)}`}
+                          onClick={() => removeAuthor(a.id)}
+                        >
+                          <DeleteOutlined />
+                        </button>
                       </div>
+                    ))}
 
-                      <label className="am-field-label">Contribution</label>
-                      <RichTextEditor
-                        placeholder="Describe this author's contribution"
-                        minHeight={180}
-                        defaultValue={author.contributionHtml}
-                        onChange={(html, text) => {
-                          updateAuthorField(author.id, 'contributionHtml', html);
-                          updateAuthorField(author.id, 'contributionText', text);
-                        }}
-                      />
-                    </div>
-                  ))}
+                    <button type="button" className="am6-list-foot-add" onClick={openAddModal}>
+                      <PlusOutlined /> Add Another Author
+                    </button>
+                  </div>
 
-                  <div className="am-author-actions">
-                    <Button className="am-btn-blue" icon={<PlusOutlined />} onClick={addAuthor}>
-                      Add More
+                  <div className="am-actions">
+                    <Button className="am-btn-secondary" onClick={handleBack}>
+                      <ArrowLeftOutlined /> Back
                     </Button>
-                    <div className="am-author-actions-right">
-                      <Button className="am-btn-secondary" onClick={handleBack}>
-                        <ArrowLeftOutlined /> Back
-                      </Button>
-                      <Button className="am-btn-blue" onClick={handleNext} loading={isSaving}>
-                        Save &amp; Next <ArrowRightOutlined />
-                      </Button>
-                    </div>
+                    <Button className="am-btn-theme" onClick={handleNext} loading={isSaving}>
+                      Save &amp; Next <ArrowRightOutlined />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -239,6 +288,13 @@ export default function SubmitManuscriptStep2() {
           </div>
         </div>
       </section>
+
+      <AddAuthorModal
+        open={modalOpen}
+        onCancel={closeModal}
+        onSave={saveAuthor}
+        initialValues={editingAuthor}
+      />
     </Layout>
   );
 }

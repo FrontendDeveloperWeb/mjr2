@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Steps, Select, Input, Button, message } from 'antd';
+import { Steps, Select, Input, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
@@ -46,18 +46,11 @@ export default function SubmitManuscriptStep1() {
     [journal]
   );
 
-  // Rehydrate from whatever was last successfully saved via /papers/store.
-  // Read once via a lazy initializer so a Back-navigation from Step 2 lands
-  // with the form already filled in, not blank — but also re-run as an
-  // effect below, since wizardState.step1Data can still be null on first
-  // render (e.g. this component was already mounted once and Step 1 was
-  // saved, then the user came back without a full remount).
-  const draftPaper = useMemo(() => getWizardState()?.step1Data || null, []);
 
-  // Ids can come back from the API as numeric strings ("5") while every
-  // Select's `options` list uses numbers for `value` — Antd only shows a
-  // field as "selected" on an exact `===` match, so an un-coerced string id
-  // silently renders as blank even though the value is technically set.
+  const draftPaper = useMemo(() => getWizardState()?.step1Data?.paper || null, []);
+
+
+
   const toId = (v) => (v === undefined || v === null || v === '' ? undefined : Number(v));
 
   const [journalId, setJournalId] = useState(() => toId(draftPaper?.journal_id));
@@ -115,7 +108,6 @@ export default function SubmitManuscriptStep1() {
     onSuccess: (response) => {
       const paper = response?.data?.data || response?.data || {};
       setStep1Data(paper);
-      message.success('Overview saved.');
       if (pendingAction === 'next') {
         // Slug is handed to Step 2 both via the URL (so a page refresh/deep
         // link on Step 2 still knows which paper it's editing) and via
@@ -324,7 +316,7 @@ export default function SubmitManuscriptStep1() {
                       Save
                     </Button>
                     <Button
-                      className="am-btn-primary"
+                      className="am-btn-theme"
                       onClick={handleSaveNext}
                       loading={isSaving && pendingAction === 'next'}
                       disabled={isSaving && pendingAction !== 'next'}

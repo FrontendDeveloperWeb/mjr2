@@ -6897,12 +6897,12 @@ ul.apc-list {
 
 /* ---------- Panels ---------- */
 .am-panel {
-  border: 1px solid #d9dede;
-  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
   background: #ffffff;
-  box-shadow: 0 8px 24px -20px rgba(60, 77, 75, 0.35);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .am-panel-head {
@@ -6915,7 +6915,7 @@ ul.apc-list {
 }
 
 .am-panel-body {
-  padding: 20px 18px;
+  padding: 24px;
 }
 
 .am-panel-desc {
@@ -6988,22 +6988,23 @@ ul.apc-list {
 }
 
 .am-btn-secondary.ant-btn {
-  background: #eef2f2;
-  border-color: #d9dede;
-  color: #3c4d4b;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
   font-family: 'Afacad-SemiBold', sans-serif;
-  border-radius: 8px;
+  font-weight: 600;
+  border-radius: 6px;
   height: auto;
-  padding: 8px 20px;
+  padding: 10px 24px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .am-btn-secondary.ant-btn:hover {
-  background: #e2e8e7 !important;
-  border-color: #cfd6d5 !important;
-  color: #3c4d4b !important;
+  background: #f9fafb !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
 }
 
 .am-btn-grey.ant-btn {
@@ -7182,23 +7183,35 @@ ul.apc-list {
   gap: 12px;
 }
 
-.am-btn-blue.ant-btn {
-  background: #3f6ad8;
-  border-color: #3f6ad8;
-  color: #ffffff;
+/* Primary action (Next/Submit/Add Author) across the wizard — recolored to
+   the app's actual primary theme accent (matches .auth-primary-btn on the
+   Signup/Login page) instead of the one-off blue/dark-green used
+   previously. No `.am-btn-blue` class exists anymore — every wizard button
+   that used it now uses this. */
+.am-btn-theme.ant-btn {
+  background: #CFB28D;
+  border-color: #CFB28D;
+  color: #4a3b2c;
   font-family: 'Afacad-SemiBold', sans-serif;
-  border-radius: 8px;
+  font-weight: 600;
+  border-radius: 6px;
   height: auto;
-  padding: 8px 22px;
+  padding: 10px 24px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-.am-btn-blue.ant-btn:hover {
-  background: #3459b8 !important;
-  border-color: #3459b8 !important;
-  color: #ffffff !important;
+.am-btn-theme.ant-btn:hover {
+  background: #c2a279 !important;
+  border-color: #c2a279 !important;
+  color: #4a3b2c !important;
+}
+
+.am-btn-theme.ant-btn:disabled {
+  background: #e4d9c7 !important;
+  border-color: #e4d9c7 !important;
+  color: #8a7a63 !important;
 }
 
 .am-mt-24 {
@@ -7450,10 +7463,31 @@ ul.apc-list {
 }
 
 .am-summary-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
   color: #889999;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+}
+
+.am-inline-edit-btn {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.am-section-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.am-section-heading-row .am-section-heading {
+  margin-bottom: 0;
 }
 
 .am-summary-value {
@@ -7463,6 +7497,206 @@ ul.apc-list {
 
 .am-checklist-row {
   margin-bottom: 12px;
+}
+
+/* ==========================================
+   AUTHOR SUBMISSION — Thank You / Submission Success (standalone page)
+   ========================================== */
+.am-ty-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7f7;
+}
+
+.am-ty-topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 0;
+}
+
+.am-ty-topbar .container {
+  display: flex;
+  justify-content: center;
+}
+
+.am-ty-logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.am-ty-content {
+  flex: 1;
+  padding: 32px 0;
+}
+
+.am-ty-hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.am-ty-check-icon {
+  font-size: 56px;
+  color: #1c9a5b;
+  margin-bottom: 12px;
+}
+
+.am-ty-heading {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 28px;
+  color: #223333;
+  margin: 0 0 8px;
+}
+
+.am-ty-subheading {
+  color: #556666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.am-ty-card {
+  max-width: 896px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.am-ty-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 767px) {
+  .am-ty-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.am-ty-field-full {
+  grid-column: 1 / -1;
+}
+
+.am-ty-label {
+  display: block;
+  color: #889999;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.am-ty-value {
+  color: #223333;
+  font-size: 15px;
+}
+
+.am-ty-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #eaf7f0;
+  color: #1c7a4f;
+  border: 1px solid #b7e4cc;
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.am-ty-tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.am-ty-tag {
+  background: #eef2f2;
+  color: #3c4d4b;
+  font-size: 13px;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.am-ty-section-title {
+  font-family: 'Afacad-SemiBold', sans-serif;
+  font-size: 15px;
+  color: #223333;
+  margin: 20px 0 10px;
+  padding-top: 16px;
+  border-top: 1px solid #eef2f2;
+}
+
+.am-ty-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.am-ty-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f3;
+}
+
+.am-ty-author-row:last-child {
+  border-bottom: none;
+}
+
+.am-ty-author-name {
+  color: #223333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.am-ty-author-email {
+  color: #667777;
+  font-size: 13px;
+}
+
+.am-ty-author-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.am-ty-role-badge {
+  font-size: 11px;
+  background: #f0ede3;
+  color: #8a6d3b;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.am-ty-file-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f3;
+  font-size: 14px;
+  color: #223333;
+}
+
+.am-ty-file-row:last-child {
+  border-bottom: none;
+}
+
+.am-ty-file-type {
+  color: #889999;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.am-ty-actions {
+  text-align: center;
+  margin-top: 28px;
 }
 
 /* ==========================================
@@ -7563,10 +7797,130 @@ ul.apc-list {
 
 .am-field-label {
   display: block;
-  color: #3c4d4b;
-  font-size: 13px;
-  font-family: 'Afacad-SemiBold', sans-serif;
-  margin-bottom: 4px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Afacad-Medium', sans-serif;
+  margin-bottom: 6px;
+}
+
+/* ==========================================
+   Wizard form-control baseline (Steps 1-5 + Add Author modal)
+   Matches the Signup/Login page's input styling (.auth-login-form)
+   exactly, so every text input, select, multi-select and date picker
+   across the wizard shares one visual baseline. `input.ant-input` (not
+   `.ant-input`) deliberately excludes <textarea> — those keep their
+   own responsive row-based height.
+   ========================================== */
+.am-wizard input.ant-input,
+.am-wizard textarea.ant-input,
+.am-wizard .ant-input-affix-wrapper,
+.am-wizard .ant-input-number,
+.am-wizard .ant-picker,
+.am-wizard .ant-select-single .ant-select-selector,
+.am6-modal-form input.ant-input,
+.am6-modal-form textarea.ant-input,
+.am6-modal-form .ant-input-affix-wrapper,
+.am6-modal-form .ant-input-number,
+.am6-modal-form .ant-picker,
+.am6-modal-form .ant-select-single .ant-select-selector {
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+/* Fixed height on every control except <textarea> — those keep their own
+   responsive row-based height, but still share the border/background/
+   typography/focus treatment via the shared selectors above. */
+.am-wizard input.ant-input,
+.am-wizard .ant-input-affix-wrapper,
+.am-wizard .ant-input-number,
+.am-wizard .ant-picker,
+.am-wizard .ant-select-single .ant-select-selector,
+.am6-modal-form input.ant-input,
+.am6-modal-form .ant-input-affix-wrapper,
+.am6-modal-form .ant-input-number,
+.am6-modal-form .ant-picker,
+.am6-modal-form .ant-select-single .ant-select-selector {
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.am-wizard .ant-select-multiple .ant-select-selector,
+.am6-modal-form .ant-select-multiple .ant-select-selector {
+  min-height: 44px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  align-items: center;
+}
+
+.am-wizard .ant-input-affix-wrapper .ant-input,
+.am6-modal-form .ant-input-affix-wrapper .ant-input {
+  height: auto;
+  border: none;
+  color: #1f2937;
+}
+
+.am-wizard input.ant-input:hover,
+.am-wizard textarea.ant-input:hover,
+.am-wizard .ant-input-affix-wrapper:hover,
+.am-wizard .ant-input-number:hover,
+.am-wizard .ant-picker:hover,
+.am-wizard .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+.am6-modal-form input.ant-input:hover,
+.am6-modal-form textarea.ant-input:hover,
+.am6-modal-form .ant-input-affix-wrapper:hover,
+.am6-modal-form .ant-input-number:hover,
+.am6-modal-form .ant-picker:hover,
+.am6-modal-form .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #cfb28d !important;
+}
+
+.am-wizard input.ant-input:focus,
+.am-wizard textarea.ant-input:focus,
+.am-wizard .ant-input-affix-wrapper-focused,
+.am-wizard .ant-input-number-focused,
+.am-wizard .ant-picker-focused,
+.am-wizard .ant-select-focused .ant-select-selector,
+.am6-modal-form input.ant-input:focus,
+.am6-modal-form textarea.ant-input:focus,
+.am6-modal-form .ant-input-affix-wrapper-focused,
+.am6-modal-form .ant-input-number-focused,
+.am6-modal-form .ant-picker-focused,
+.am6-modal-form .ant-select-focused .ant-select-selector {
+  border-color: #cfb28d !important;
+  box-shadow: 0 0 0 3px rgba(207, 178, 141, 0.2) !important;
+}
+
+.am-wizard input.ant-input::placeholder,
+.am-wizard textarea.ant-input::placeholder,
+.am-wizard .ant-select-selection-placeholder,
+.am-wizard .ant-picker-input>input::placeholder,
+.am6-modal-form input.ant-input::placeholder,
+.am6-modal-form textarea.ant-input::placeholder,
+.am6-modal-form .ant-select-selection-placeholder,
+.am6-modal-form .ant-picker-input>input::placeholder {
+  color: #9ca3af;
+}
+
+/* Multi-select tag chips (Subjects, Keywords, etc) — small neutral pills
+   that wrap within the selector instead of stretching its height. */
+.am-wizard .ant-select-multiple .ant-select-selection-item,
+.am6-modal-form .ant-select-multiple .ant-select-selection-item {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 4px;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 6px;
+  margin: 3px 4px 3px 0;
+  height: 22px;
+  line-height: 22px;
 }
 
 /* ---- Left rail: checklist + note cards ---- */
@@ -7733,7 +8087,8 @@ ul.apc-list {
 }
 
 .am-req-star {
-  color: #d0021b;
+  color: #ef4444;
+  margin-left: 2px;
 }
 
 /* ---- Section / Category ---- */
@@ -8246,6 +8601,10 @@ ul.apc-list {
   margin-top: 2px;
 }
 
+.am6-author-row .am6-author-info {
+  flex: 1 1 auto;
+}
+
 .am6-fund-name {
   color: #223333;
   font-family: 'Afacad-SemiBold', sans-serif;
@@ -8297,16 +8656,27 @@ ul.apc-list {
 }
 
 .am6-modal-form .ant-form-item {
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
 .am6-modal-form .ant-form-item-label>label {
-  font-family: 'Afacad-SemiBold', sans-serif;
-  color: #344342;
+  font-family: 'Afacad-Medium', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #374151;
+  height: auto;
+}
+
+.am6-modal-form .ant-form-item-required::before {
+  color: #ef4444 !important;
 }
 
 .am6-modal-check .ant-form-item-control-input {
   min-height: auto;
+}
+
+.am6-modal-section-title {
+  margin-top: 8px;
 }
 
 .am6-fetch-link {
@@ -8825,4 +9195,45 @@ ul.apc-list {
 
 .date-piker-input .ant-picker {
   height: 42px;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 11px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 6px !important;
+  border-color: #e5e7eb !important;
+  /* border-gray-200 */
+}
+
+/* Align Ant Design Select Selection Item & Placeholder */
+.ant-select-single .ant-select-selection-item,
+.ant-select-single .ant-select-selection-placeholder {
+  line-height: 42px !important;
+  align-self: center !important;
+}
+
+/* Force Ant Design Input & Input Number Height */
+.ant-input,
+.ant-input-number,
+.ant-picker {
+  height: 44px !important;
+  border-radius: 6px !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Fix Multi-Select Tags inside Ant Select */
+.ant-select-multiple .ant-select-selector {
+  min-height: 44px !important;
+  height: auto !important;
+  padding: 4px 8px !important;
+}
+
+.ant-select-multiple .ant-select-selection-item {
+  height: 28px !important;
+  line-height: 26px !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
 }

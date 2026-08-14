@@ -38,12 +38,14 @@ export default function SubmitManuscriptStep3() {
   const [existingKeywordIds, setExistingKeywordIds] = useState(savedKeywords?.existingIds || []);
   const [newKeywords, setNewKeywords] = useState(savedKeywords?.newKeywords || []);
   const [tagInput, setTagInput] = useState('');
+  const [error, setError] = useState('');
 
   const addTag = (raw) => {
     const value = raw.trim();
     if (!value) return;
     setNewKeywords((prev) => (prev.includes(value) ? prev : [...prev, value]));
     setTagInput('');
+    setError('');
   };
 
   const removeTag = (value) => setNewKeywords((prev) => prev.filter((k) => k !== value));
@@ -61,9 +63,8 @@ export default function SubmitManuscriptStep3() {
 
   const { mutate: updateKeywords, isPending: isSaving } = useMutation('updatePaperKeywords', {
     useFormData: false,
-    showSuccessNotification: false,
+    showSuccessNotification: true,
     onSuccess: () => {
-      message.success('Keywords saved.');
       navigate('/author/submit-manuscript/step-4');
     },
   });
@@ -73,11 +74,12 @@ export default function SubmitManuscriptStep3() {
   };
 
   const handleNext = () => {
-    // Keywords are optional — nothing to require or block on. If the user
-    // hasn't touched either field, skip the API call entirely (nothing to
-    // save) and just move on to Step 4.
+    // Keywords are now mandatory — at least one (existing or new) is
+    // required before Step 4 is reachable.
     if (!existingKeywordIds.length && !newKeywords.length) {
-      navigate('/author/submit-manuscript/step-4');
+      const msg = 'Please enter at least one keyword to proceed.';
+      setError(msg);
+      message.error(msg);
       return;
     }
 
@@ -137,7 +139,10 @@ export default function SubmitManuscriptStep3() {
                     value={existingKeywordIds}
                     options={keywordOptions}
                     loading={keywordsLoading}
-                    onChange={setExistingKeywordIds}
+                    onChange={(value) => {
+                      setExistingKeywordIds(value);
+                      setError('');
+                    }}
                   />
 
                   <label className="am-field-label am-mt-24">New Keywords</label>
@@ -164,12 +169,13 @@ export default function SubmitManuscriptStep3() {
                       placeholder={newKeywords.length ? '' : 'Type a keyword and press Enter or ,'}
                     />
                   </div>
+                  {error && <p className="am-error-text">{error}</p>}
 
                   <div className="am-actions">
                     <Button className="am-btn-secondary" onClick={handleBack}>
                       <ArrowLeftOutlined /> Back
                     </Button>
-                    <Button className="am-btn-blue" onClick={handleNext} loading={isSaving}>
+                    <Button className="am-btn-theme" onClick={handleNext} loading={isSaving}>
                       Save &amp; Next <ArrowRightOutlined />
                     </Button>
                   </div>

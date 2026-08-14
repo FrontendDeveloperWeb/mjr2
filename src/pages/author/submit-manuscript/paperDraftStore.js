@@ -27,7 +27,7 @@ function emptyState() {
   return {
     slug: null,
     step1Data: null, // full paper object returned by /papers/store (or its update endpoint)
-    step2Data: [], // authors [{ authorId, name, isCorresponding, contributionHtml, contributionText }]
+    step2Data: [], // authors [{ id, first_name, middle_name, last_name, degree, email, orcid, institution, country, is_corresponding, isYou }]
     step3Data: { existingIds: [], existingLabels: [], newKeywords: [] },
     step4Data: [], // uploaded files [{ type, name, version, size }] — raw File objects never survive a reload
     step5Data: { checked: {}, remarks: '' },

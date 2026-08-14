@@ -33,6 +33,7 @@ const SubmitManuscriptStep3 = lazy(() => import('../pages/author/submit-manuscri
 const SubmitManuscriptStep4 = lazy(() => import('../pages/author/submit-manuscript/step-4/index.jsx'));
 const SubmitManuscriptStep5 = lazy(() => import('../pages/author/submit-manuscript/step-5/index.jsx'));
 const SubmitManuscriptStep6 = lazy(() => import('../pages/author/submit-manuscript/step-6/index.jsx'));
+const ThankYouPage = lazy(() => import('../pages/author/ThankYouPage/index.jsx'));
 // Author submissions dashboard — one status-filtered list page per route.
 const SubmissionsIncomplete = lazy(() => import('../pages/author/submissions/Incomplete/index.jsx'));
 const SubmissionsSentBack = lazy(() => import('../pages/author/submissions/SentBack/index.jsx'));
@@ -89,6 +90,10 @@ export const routes = [
   { path: '/author/submit-manuscript/step-4', element: SubmitManuscriptStep4, requiresAuth: true },
   { path: '/author/submit-manuscript/step-5', element: SubmitManuscriptStep5, requiresAuth: true },
   { path: '/author/submit-manuscript/step-6', element: SubmitManuscriptStep6, requiresAuth: true },
+  // Standalone confirmation page, only reachable via Step 5's own navigation
+  // (carries the submission result as router state) — see ThankYouPage's own
+  // guard for the direct-URL-access case.
+  { path: '/submission-success', element: ThankYouPage, requiresAuth: true },
   // Author submissions dashboard
   { path: '/author/submissions/incomplete', element: SubmissionsIncomplete, requiresAuth: true },
   { path: '/author/submissions/sent-back', element: SubmissionsSentBack, requiresAuth: true },

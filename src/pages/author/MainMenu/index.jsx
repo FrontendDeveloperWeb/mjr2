@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../../../components/layout/Layout';
 import TopBar from '../../../components/shared/TopBar';
 import { listDrafts } from '../submit-manuscript/draftStorage.js';
+import { clearWizardState } from '../submit-manuscript/paperDraftStore.js';
 import {
   SENT_BACK,
   WAITING_APPROVAL,
@@ -104,7 +105,15 @@ export default function AuthorMainMenu() {
                     <button
                       type="button"
                       className="am-menu-link am-menu-action"
-                      onClick={() => navigate('/author/submit-manuscript/step-1')}
+                      onClick={() => {
+                        // A fresh submission must start clean — clear any
+                        // in-progress draft's wizard state (Overview-first
+                        // flow only; completed/submitted papers already
+                        // clear this themselves on final submission, and are
+                        // otherwise untouched since they live server-side).
+                        clearWizardState();
+                        navigate('/author/submit-manuscript/step-1');
+                      }}
                     >
                       Submit New Manuscript
                     </button>

@@ -62,7 +62,6 @@ export default function AddAuthorModal({ open, onCancel, onSave }) {
           extra={<a href="#what-is-orcid" className="am-help-link">What is ORCID?</a>}
         >
           <Input
-            addonAfter={<span className="am6-fetch-link">Fetch</span>}
             placeholder="0000-0000-0000-0000"
           />
         </Form.Item>

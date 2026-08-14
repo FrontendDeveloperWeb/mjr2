@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Steps, Table, Checkbox, Input, Button, Tag, message } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { Steps, Table, Checkbox, Input, Button, Tag, message, Popconfirm } from 'antd';
+import { ArrowLeftOutlined, EditOutlined, PlusOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import Layout from '../../../../components/layout/Layout';
 import TopBar from '../../../../components/shared/TopBar';
 import { useQuery, useMutation } from '../../../../hooks/reactQuery/index.js';
 import { OVERVIEW_STEP_TITLES } from '../overviewStepTitles.js';
-import { getWizardState, setStep5Data, clearWizardState } from '../paperDraftStore.js';
+import { getWizardState, setStep3Data, setStep5Data, clearWizardState } from '../paperDraftStore.js';
 
 // Keys match the final-submission payload's confirm_* fields directly —
 // checkbox state doubles as the request body, no separate mapping step.
@@ -17,6 +18,36 @@ const CHECKLIST_ITEMS = [
 ];
 
 const DEFAULT_REMARKS = 'Please consider this paper for publication.';
+
+// Removes a deleted file from the cached getPaperFiles response in place, so
+// the table updates instantly without an extra GET round-trip. `old` is the
+// RAW (pre-select) cache entry — `{ data: <full backend body>, pagination }`
+// — mirroring every files-array shape this endpoint's response can take:
+// bare array, `{data: [...]}`, `{data: {files: [...]}}` (the shape this
+// endpoint actually uses), or `{files: [...]}`.
+function removeFileFromFilesCache(old, deletedId) {
+  if (!old) return old;
+  const apiData = old.data;
+  if (Array.isArray(apiData)) {
+    return { ...old, data: apiData.filter((f) => f.id !== deletedId) };
+  }
+  if (Array.isArray(apiData?.data?.files)) {
+    return {
+      ...old,
+      data: {
+        ...apiData,
+        data: { ...apiData.data, files: apiData.data.files.filter((f) => f.id !== deletedId) },
+      },
+    };
+  }
+  if (Array.isArray(apiData?.data)) {
+    return { ...old, data: { ...apiData, data: apiData.data.filter((f) => f.id !== deletedId) } };
+  }
+  if (Array.isArray(apiData?.files)) {
+    return { ...old, data: { ...apiData, files: apiData.files.filter((f) => f.id !== deletedId) } };
+  }
+  return old;
+}
 
 /**
  * Step 5 — Final Submission. Part of the (new) Overview-first flow (see
@@ -35,6 +66,7 @@ export default function SubmitManuscriptStep5() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const slug = searchParams.get('slug') || getWizardState()?.slug || null;
+  const queryClient = useQueryClient();
 
   // useEffect(() => {
   //   if (!slug) {
@@ -45,7 +77,37 @@ export default function SubmitManuscriptStep5() {
 
   const wizardState = useMemo(() => getWizardState(), []);
   const authors = wizardState.step2Data || [];
-  const keywords = [...(wizardState.step3Data?.existingLabels || []), ...(wizardState.step3Data?.newKeywords || [])];
+
+  // Keywords are edited inline here (removal), so they need to live in local
+  // state rather than being derived fresh from wizardState on every render —
+  // otherwise a removed tag would just reappear. Each entry remembers whether
+  // it came from `existingLabels` or `newKeywords` so a removal can be
+  // written back to the matching half of step3Data.
+  const [keywords, setKeywords] = useState(() => [
+    ...(wizardState.step3Data?.existingLabels || []).map((label) => ({ label, source: 'existing' })),
+    ...(wizardState.step3Data?.newKeywords || []).map((label) => ({ label, source: 'new' })),
+  ]);
+
+  const removeKeyword = (label, source) => {
+    setKeywords((prev) => prev.filter((k) => !(k.label === label && k.source === source)));
+
+    // `existingIds`/`existingLabels` are parallel arrays (same index refers
+    // to the same keyword) — drop the matching index from both, not just
+    // the label, so the id list stays in sync for anything read after this.
+    const existingLabels = wizardState.step3Data?.existingLabels || [];
+    const existingIds = wizardState.step3Data?.existingIds || [];
+    const removeIndex = source === 'existing' ? existingLabels.indexOf(label) : -1;
+
+    const nextStep3Data = {
+      existingIds: removeIndex === -1 ? existingIds : existingIds.filter((_, i) => i !== removeIndex),
+      existingLabels: removeIndex === -1 ? existingLabels : existingLabels.filter((_, i) => i !== removeIndex),
+      newKeywords: (wizardState.step3Data?.newKeywords || []).filter(
+        (l) => !(source === 'new' && l === label)
+      ),
+    };
+    wizardState.step3Data = nextStep3Data;
+    setStep3Data(nextStep3Data);
+  };
 
   // Step 1 Data Extraction — wizardState.step1Data is `{ id, slug, paper: {...} }`;
   // the actual overview fields live under the nested `paper` object, not
@@ -68,12 +130,38 @@ export default function SubmitManuscriptStep5() {
 
   const files = Array.isArray(overviewData?.files)
     ? overviewData.files.map((f) => ({
+      id: f.id,
       type: f.file_type_name || '—',
       name: f.original_name || '—',
       version: f.version || '—',
       size: f.file_size || '—',
+      url: f.file_path || f.file_url || f.url || f.path || null,
     }))
     : [];
+
+  const { mutate: deleteFile, isPending: isDeletingFile } = useMutation('deletePaperFile', {
+    useFormData: false,
+    showSuccessNotification: true,
+    onSuccess: (_response, variables) => {
+      // Update the cached list directly instead of refetching — the delete
+      // already succeeded, so there's nothing new to fetch.
+      queryClient.setQueryData(['getPaperFiles', slug], (old) =>
+        removeFileFromFilesCache(old, variables?.data?.id)
+      );
+    },
+  });
+
+  const handleDeleteFile = (row) => {
+    if (files.length === 1) {
+      message.warning('At least one file is required.');
+      return;
+    }
+    deleteFile({ slug, data: { id: row.id } });
+  };
+
+  const handleViewFile = (row) => {
+    if (row.url) window.open(row.url, '_blank', 'noopener,noreferrer');
+  };
 
   // Rehydrate the checklist/remarks too, same as every other step, in case
   // the user comes back here after navigating away without submitting.
@@ -96,14 +184,23 @@ export default function SubmitManuscriptStep5() {
   };
 
   const authorColumns = [
-    { title: 'Name', dataIndex: 'name' },
+    {
+      title: 'Name',
+      key: 'name',
+      render: (_, a) => a.displayName || [a.first_name, a.last_name].filter(Boolean).join(' ') || '—',
+    },
+    { title: 'Email', dataIndex: 'email' },
+    {
+      title: 'Institution',
+      key: 'institution',
+      render: (_, a) => a.affiliations?.[0]?.institution_name || '—',
+    },
     {
       title: 'Corresponding',
-      dataIndex: 'isCorresponding',
+      dataIndex: 'is_corresponding',
       width: 150,
       render: (v) => (v ? <Tag color="green">Yes</Tag> : 'No'),
     },
-    { title: 'Contribution', dataIndex: 'contributionText' },
   ];
 
   const fileColumns = [
@@ -111,17 +208,69 @@ export default function SubmitManuscriptStep5() {
     { title: 'File', dataIndex: 'name' },
     { title: 'Version', dataIndex: 'version', width: 100 },
     { title: 'Size', dataIndex: 'size', width: 100 },
+    {
+      title: 'Action',
+      key: 'action',
+      width: 100,
+      render: (_, row) => (
+        <div className="am-table-actions">
+          <button
+            type="button"
+            className="am-icon-btn"
+            aria-label="View file"
+            disabled={!row.url}
+            onClick={() => handleViewFile(row)}
+          >
+            <EyeOutlined />
+          </button>
+          <Popconfirm
+            title="Remove this file?"
+            okText="Remove"
+            okButtonProps={{ danger: true }}
+            onConfirm={() => handleDeleteFile(row)}
+          >
+            <button type="button" className="am-icon-btn am-icon-btn-danger" aria-label="Remove file" disabled={isDeletingFile}>
+              <DeleteOutlined />
+            </button>
+          </Popconfirm>
+        </div>
+      ),
+    },
   ];
 
   const { mutate: finalSubmit, isPending: isSubmitting } = useMutation('finalSubmitPaper', {
     useFormData: false,
-    showSuccessNotification: false,
+    // Lets apiClient show the backend's own response message (data.message)
+    // as the success notification — fired synchronously before onSuccess
+    // runs below, so it's already on screen by the time this navigates away.
+    showSuccessNotification: true,
     // apiClient already throws (→ onError, not onSuccess) whenever the body
     // says `status: false`, so reaching here already means `status: true` —
     // no separate check needed.
-    onSuccess: () => {
+    onSuccess: (response) => {
+      // ThankYouPage has nothing of its own to fetch a completed submission
+      // from (final-submission is a one-shot action, not a "get paper"
+      // endpoint), so hand it everything it needs to render as router state —
+      // the same data this page already assembled for its own summary above,
+      // plus whatever the backend's own response body included.
+      const responseData = response?.data?.data || response?.data || {};
+      const submission = {
+        manuscriptNo: responseData.manuscript_no || manuscriptNo,
+        journalName: responseData.journal_title || journalName,
+        paperTypeName: responseData.paper_type_name || paperTypeName,
+        paperTitle: responseData.title || paperTitle,
+        submittedAt: responseData.submitted_at || responseData.created_at || new Date().toISOString(),
+        subjects: Array.isArray(paperObj.subjects)
+          ? paperObj.subjects.map((sub) => sub.name || sub)
+          : [],
+        keywords: keywords.map((k) => k.label),
+        authors,
+        files,
+        message: response?.data?.message || '',
+      };
+
       clearWizardState();
-      navigate('/author/main-menu', { replace: true });
+      navigate('/submission-success', { replace: true, state: { submission } });
     },
   });
 
@@ -192,14 +341,43 @@ export default function SubmitManuscriptStep5() {
                       <span className="am-summary-value">{paperTypeName}</span>
                     </div>
                     <div className="am-summary-item">
-                      <span className="am-summary-label">Subjects</span>
+                      <span className="am-summary-label">
+                        Subjects
+                        <button
+                          type="button"
+                          className="am-icon-btn am-inline-edit-btn"
+                          aria-label="Edit subjects"
+                          onClick={() => navigate('/author/submit-manuscript/step-1')}
+                        >
+                          <EditOutlined />
+                        </button>
+                      </span>
                       <span className="am-summary-value">{subjectsText}</span>
                     </div>
                     <div className="am-summary-item">
-                      <span className="am-summary-label">Keywords</span>
+                      <span className="am-summary-label">
+                        Keywords
+                        <button
+                          type="button"
+                          className="am-icon-btn am-inline-edit-btn"
+                          aria-label="Add or edit keywords"
+                          onClick={() => navigate('/author/submit-manuscript/step-3')}
+                        >
+                          <PlusOutlined />
+                        </button>
+                      </span>
                       <div className="am-tag-wrap">
                         {keywords.length
-                          ? keywords.map((k) => <Tag key={k} color="cyan">{k}</Tag>)
+                          ? keywords.map((k) => (
+                            <Tag
+                              key={`${k.source}-${k.label}`}
+                              color="cyan"
+                              closable
+                              onClose={() => removeKeyword(k.label, k.source)}
+                            >
+                              {k.label}
+                            </Tag>
+                          ))
                           : <span className="am-muted">—</span>}
                       </div>
                     </div>
@@ -207,22 +385,35 @@ export default function SubmitManuscriptStep5() {
                 </div>
               </div>
 
-              <h2 className="am-section-heading am-mt-24">Authors</h2>
-              <div className="am-panel">
-                <div className="am-panel-body">
-                  <Table
-                    className="am-file-table"
-                    columns={authorColumns}
-                    dataSource={authors}
-                    rowKey="name"
-                    size="small"
-                    pagination={false}
-                    scroll={{ x: 'max-content' }}
-                  />
-                </div>
-              </div>
+              {authors.length > 0 && (
+                <>
+                  <h2 className="am-section-heading am-mt-24">Authors</h2>
+                  <div className="am-panel">
+                    <div className="am-panel-body">
+                      <Table
+                        className="am-file-table"
+                        columns={authorColumns}
+                        dataSource={authors}
+                        rowKey="id"
+                        size="small"
+                        pagination={false}
+                        scroll={{ x: 'max-content' }}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
 
-              <h2 className="am-section-heading am-mt-24">Uploaded Files</h2>
+              <div className="am-section-heading-row am-mt-24">
+                <h2 className="am-section-heading">Uploaded Files</h2>
+                <Button
+                  className="am-btn-theme"
+                  icon={<PlusOutlined />}
+                  onClick={() => navigate('/author/submit-manuscript/step-4')}
+                >
+                  Upload File
+                </Button>
+              </div>
               <div className="am-panel">
                 <div className="am-panel-body">
                   <Table
@@ -251,7 +442,7 @@ export default function SubmitManuscriptStep5() {
                       </Checkbox>
                     </div>
                   ))}
-
+                  {error && <p className="am-error-text">{error}</p>}
                   <label className="am-field-label am-mt-24">Remarks (Optional)</label>
                   <Input.TextArea
                     rows={4}
@@ -260,7 +451,7 @@ export default function SubmitManuscriptStep5() {
                     onChange={(e) => handleRemarksChange(e.target.value)}
                   />
 
-                  {error && <p className="am-error-text">{error}</p>}
+
                 </div>
               </div>
 
@@ -269,7 +460,7 @@ export default function SubmitManuscriptStep5() {
                   <ArrowLeftOutlined /> Back
                 </Button>
                 <Button
-                  className="am-btn-blue"
+                  className="am-btn-theme"
                   onClick={handleSubmit}
                   loading={isSubmitting}
                 >

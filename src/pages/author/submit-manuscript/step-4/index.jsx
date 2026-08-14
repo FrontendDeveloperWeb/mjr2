@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Steps, Select, Button, Input, Table, message, Popconfirm } from 'antd';
 import {
   DeleteOutlined,
@@ -29,6 +30,36 @@ function toArray(queryResult) {
   return [];
 }
 
+// Removes a deleted file from the cached getPaperFiles response in place, so
+// the table updates instantly without an extra GET round-trip. `old` is the
+// RAW (pre-select) cache entry — `{ data: <full backend body>, pagination }`
+// — so this mirrors every files-array shape toArray() tolerates post-select,
+// one level deeper: bare array, `{data: [...]}`, `{data: {files: [...]}}`
+// (the shape this endpoint actually uses), or `{files: [...]}`.
+function removeFileFromFilesCache(old, deletedId) {
+  if (!old) return old;
+  const apiData = old.data;
+  if (Array.isArray(apiData)) {
+    return { ...old, data: apiData.filter((f) => f.id !== deletedId) };
+  }
+  if (Array.isArray(apiData?.data?.files)) {
+    return {
+      ...old,
+      data: {
+        ...apiData,
+        data: { ...apiData.data, files: apiData.data.files.filter((f) => f.id !== deletedId) },
+      },
+    };
+  }
+  if (Array.isArray(apiData?.data)) {
+    return { ...old, data: { ...apiData, data: apiData.data.filter((f) => f.id !== deletedId) } };
+  }
+  if (Array.isArray(apiData?.files)) {
+    return { ...old, data: { ...apiData, files: apiData.files.filter((f) => f.id !== deletedId) } };
+  }
+  return old;
+}
+
 function emptyRow() {
   return {
     id: crypto.randomUUID?.() ?? `row-${Date.now()}-${Math.random()}`,
@@ -47,7 +78,7 @@ function formatFileRow(f) {
     version: f.version || 'v1',
     size: f.size || f.file_size || '—',
     uploadedAt: f.created_at || f.uploaded_at || '',
-    url: f.file_url || f.url || f.path || null,
+    url: f.file_path || f.file_url || f.url || f.path || null,
   };
 }
 
@@ -68,6 +99,7 @@ export default function SubmitManuscriptStep4() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const slug = searchParams.get('slug') || getWizardState()?.slug || null;
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!slug) {
@@ -117,10 +149,13 @@ export default function SubmitManuscriptStep4() {
 
   const { mutate: deleteFile, isPending: isDeleting } = useMutation('deletePaperFile', {
     useFormData: false,
-    showSuccessNotification: false,
-    onSuccess: () => {
-      message.success('File removed.');
-      refetchFiles();
+    showSuccessNotification: true,
+    onSuccess: (_response, variables) => {
+      // Update the cached list directly instead of refetching — the delete
+      // already succeeded, so there's nothing new to fetch.
+      queryClient.setQueryData(['getPaperFiles', slug], (old) =>
+        removeFileFromFilesCache(old, variables?.data?.id)
+      );
     },
   });
 
@@ -143,7 +178,6 @@ export default function SubmitManuscriptStep4() {
     { title: 'File Name', dataIndex: 'name', render: (v) => <span className="am-file-name">{v}</span> },
     { title: 'Version', dataIndex: 'version', width: 90 },
     { title: 'Size', dataIndex: 'size', width: 100 },
-    { title: 'Uploaded', dataIndex: 'uploadedAt', width: 170 },
     {
       title: 'Action',
       key: 'action',
@@ -176,7 +210,7 @@ export default function SubmitManuscriptStep4() {
 
   const { mutate: uploadFiles, isPending: isUploading } = useMutation('updatePaperFiles', {
     useFormData: true,
-    showSuccessNotification: false,
+    showSuccessNotification: true,
     // apiClient already throws (→ onError, not onSuccess) whenever the body
     // says `status: false`, so reaching here means the backend accepted the
     // upload — no need to re-check `status` ourselves.
@@ -188,7 +222,6 @@ export default function SubmitManuscriptStep4() {
       // navigates Back into this page later.
       refetchFiles().then((refetched) => setStep4Data(toArray(refetched)));
 
-      message.success('Files uploaded.');
       setRows([emptyRow()]);
       navigate('/author/submit-manuscript/step-5');
     },
@@ -203,7 +236,14 @@ export default function SubmitManuscriptStep4() {
 
     if (!ready.length) {
       // Nothing new picked this visit — the table above already reflects
-      // everything saved so far, so just move on.
+      // everything saved so far, so just move on, unless it's empty too:
+      // at least one file (new or already-saved) is required to proceed.
+      if (!uploadedFiles.length) {
+        const msg = 'Please upload at least one required file to proceed.';
+        setError(msg);
+        message.error(msg);
+        return;
+      }
       navigate('/author/submit-manuscript/step-5');
       return;
     }
@@ -288,57 +328,61 @@ export default function SubmitManuscriptStep4() {
                   {error && <p className="am-error-text">{error}</p>}
 
                   <div className="am-author-actions">
-                    <Button className="am-btn-blue" icon={<PlusOutlined />} onClick={addRow}>
+                    <Button className="am-btn-theme" icon={<PlusOutlined />} onClick={addRow}>
                       Add More
                     </Button>
                   </div>
                 </div>
               </div>
 
-              <h2 className="am-section-heading am-mt-24">Uploaded Files</h2>
-              <div className="am-panel">
-                <div className="am-panel-body">
-                  <div className="am-table-toolbar">
-                    <div className="am-entries-control">
-                      <span>Show</span>
-                      <Select
+              {uploadedFiles.length > 0 && (
+                <>
+                  <h2 className="am-section-heading am-mt-24">Uploaded Files</h2>
+                  <div className="am-panel">
+                    <div className="am-panel-body">
+                      <div className="am-table-toolbar">
+                        <div className="am-entries-control">
+                          <span>Show</span>
+                          <Select
+                            size="small"
+                            value={pageSize}
+                            style={{ width: 72 }}
+                            options={[10, 25, 50, 100].map((n) => ({ value: n, label: n }))}
+                            onChange={setPageSize}
+                          />
+                          <span>entries</span>
+                        </div>
+                        <div className="am-search-control">
+                          <span>Search:</span>
+                          <Input
+                            size="small"
+                            style={{ width: 220 }}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <Table
+                        className="am-file-table"
+                        columns={columns}
+                        dataSource={filteredFiles}
+                        loading={filesLoading}
+                        rowKey="id"
                         size="small"
-                        value={pageSize}
-                        style={{ width: 72 }}
-                        options={[10, 25, 50, 100].map((n) => ({ value: n, label: n }))}
-                        onChange={setPageSize}
-                      />
-                      <span>entries</span>
-                    </div>
-                    <div className="am-search-control">
-                      <span>Search:</span>
-                      <Input
-                        size="small"
-                        style={{ width: 220 }}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        pagination={{ pageSize }}
+                        scroll={{ x: 'max-content' }}
                       />
                     </div>
                   </div>
-
-                  <Table
-                    className="am-file-table"
-                    columns={columns}
-                    dataSource={filteredFiles}
-                    loading={filesLoading}
-                    rowKey="id"
-                    size="small"
-                    pagination={{ pageSize }}
-                    scroll={{ x: 'max-content' }}
-                  />
-                </div>
-              </div>
+                </>
+              )}
 
               <div className="am-actions am-mt-24">
                 <Button className="am-btn-secondary" onClick={handleBack}>
                   <ArrowLeftOutlined /> Back
                 </Button>
-                <Button className="am-btn-blue" onClick={handleNext} loading={isUploading}>
+                <Button className="am-btn-theme" onClick={handleNext} loading={isUploading}>
                   Save &amp; Next <ArrowRightOutlined />
                 </Button>
               </div>
